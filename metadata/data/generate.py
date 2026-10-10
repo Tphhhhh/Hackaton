@@ -337,7 +337,9 @@ def make_candidate(rng, cid, signals, network=None):
 
     domain = rng.choice(DISPOSABLE) if "disposable_email" in signals else rng.choice(EMAIL_DOMAINS)
     email = f"{first.lower()}.{last.lower().replace(' ', '')}{rng.randint(1, 99)}@{domain}"
-    phone = f"{PHONE_PREFIX.get(country, '+44 7')}{rng.randint(10_000_000, 99_999_999)}"
+    n = rng.randint(10_000_000, 99_999_999)
+    # Les mobiles britanniques ont 10 chiffres après +44 (7 + 9), les autres pays de la liste 9.
+    phone = f"{PHONE_PREFIX.get(country, '+44 7')}{n}{n % 10 if country == 'UK' else ''}"
     if network and network.get("phone"):
         phone = network["phone"]
 

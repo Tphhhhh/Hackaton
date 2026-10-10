@@ -1,4 +1,14 @@
 {
-  "_note": "Domaines d'emails jetables (échantillon) utilisés par le contrôle C9.",
-  "domains": ["mailinator.com", "tempmail.dev", "guerrillamail.com", "10minutemail.net", "throwmail.io"]
+  "_note": "Domaines d'emails jetables (échantillon public) utilisés par le contrôle C10. Les sous-domaines sont couverts. Les relais de confidentialité (Apple « Masquer mon adresse », Firefox Relay, DuckDuckGo) ne sont PAS listés : ce sont des outils de vie privée légitimes. En production : liste open source tenue à jour (disposable-email-domains).",
+  "domains": [
+    "mailinator.com", "mailinator.net", "tempmail.dev", "throwmail.io",
+    "guerrillamail.com", "guerrillamail.net", "guerrillamail.org", "guerrillamail.info", "sharklasers.com", "grr.la",
+    "10minutemail.com", "10minutemail.net", "yopmail.com", "yopmail.fr", "yopmail.net", "jetable.org",
+    "temp-mail.org", "tempmail.com", "tempmail.net", "tempmailo.com", "tempinbox.com", "tempr.email", "tmpmail.org",
+    "maildrop.cc", "trashmail.com", "trashmail.de", "trashmail.net", "getnada.com", "dispostable.com",
+    "mohmal.com", "emailondeck.com", "throwawaymail.com", "fakeinbox.com", "burnermail.io", "mailnesia.com",
+    "discard.email", "mytemp.email", "1secmail.com", "mail.tm", "spamgourmet.com", "mintemail.com",
+    "mailcatch.com", "inboxkitten.com", "emailfake.com", "crazymailing.com", "moakt.com", "minuteinbox.com",
+    "mailpoof.com", "spambox.us", "getairmail.com", "fakemail.net", "tempmailaddress.com", "emltmp.com"
+  ]
 }

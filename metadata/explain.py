@@ -21,6 +21,13 @@ QUESTIONS = {
     "C9_CRYPTO": "Pouvez-vous fournir un RIB à votre nom dans une banque de votre pays de résidence ?",
     "C11_PAYEE": "Pouvez-vous fournir un RIB à votre nom ? Qui est le titulaire du compte indiqué ?",
     "C10_DISPOSABLE_EMAIL": "Pouvez-vous confirmer une adresse email personnelle durable ?",
+    "C12_PHONE_INVALID": "Pouvez-vous confirmer votre numéro ? Nous vous appelons pour le vérifier avant l'entretien.",
+    "C13_PHONE_VOIP": "Avez-vous un numéro mobile personnel ? Celui indiqué est un numéro virtuel.",
+    "C14_PHONE_COUNTRY": "Ce numéro est-il celui où vous joindre au quotidien ? (Garder un ancien numéro est fréquent.)",
+    "C15_EMAIL_RANDOM": "Pouvez-vous confirmer votre adresse email ? Nous y envoyons un code de vérification.",
+    "C16_EMAIL_NAME": "Pouvez-vous confirmer votre adresse email ? Nous y envoyons un code de vérification.",
+    "C18_SHIPPING_COUNTRY": "Pourquoi le matériel doit-il être livré dans un autre pays que celui où vous résidez ?",
+    "C17_PROFILE_NAME": "Le profil LinkedIn indiqué est-il le vôtre ? Pouvez-vous l'ouvrir pendant l'entretien ?",
     "S1_PERSONA_NETWORK": "Connaissez-vous les autres candidats qui partagent vos coordonnées ou votre CV ?",
     "I1_VIRTUAL_DEVICE": "Pouvez-vous refaire l'appel avec la webcam intégrée de votre ordinateur, sans logiciel ?",
     "I2_TIMEZONE": "Dans quel pays et quelle ville vous trouvez-vous en ce moment ?",
@@ -44,7 +51,7 @@ def _template(result: dict) -> dict:
     else:
         summary = (f"Risque {result['level']} ({result['score']}/100) : "
                    + " ".join(s["evidence"] for s in sig[:3]))
-    return {"summary": summary, "questions": [QUESTIONS[s["code"]] for s in sig if s["code"] in QUESTIONS][:4],
+    return {"summary": summary, "questions": list(dict.fromkeys(QUESTIONS[s["code"]] for s in sig if s["code"] in QUESTIONS))[:4],
             "disclaimer": DISCLAIMER, "engine": "template"}
 
 

@@ -23,6 +23,8 @@ from collections import Counter
 from itertools import combinations
 from pathlib import Path
 
+from . import contact
+
 TEXT_THRESHOLD = 0.80        # texte seul suffisant pour lier deux dossiers
 TEXT_WITH_ADDRESS = 0.50     # seuil abaissé si l'adresse de livraison est aussi partagée
 
@@ -77,15 +79,36 @@ def _cosine(a: dict, b: dict) -> float:
 
 
 def _identifiers(c: dict) -> dict[str, set[str]]:
+    # Formes canoniques : « +44 7448 059918 » = « 0044 7448059918 », « j.doe+x@gmail.com » = « jdoe@gmail.com ».
     norm = lambda s: re.sub(r"[\s\-.]", "", s.lower())
     ids = {
-        "téléphone": {norm(c["phone"])},
+        "téléphone": {contact.normalize_phone(c["phone"])},
         "compte de paiement": {norm(c["payment"].get("account", ""))},
-        "email": {c["email"].lower()},
-        "profil": {p["url"].lower() for p in c["profiles"]},
+        "email": {contact.normalize_email(c["email"])},
+        "profil": {contact.normalize_url(p["url"]) for p in c["profiles"]},
     }
+    # Salaire versé à un tiers (pas au candidat) : deux dossiers qui paient le même tiers sont liés.
+    holder = c["payment"].get("holder", "")
+    if holder and not contact.name_tokens(holder) & contact.name_tokens(c["full_name"]):
+        ids["bénéficiaire du salaire"] = {contact.normalize_address(holder)}
     # Un champ vide (paiement pas encore renseigné, par exemple) ne doit jamais relier deux dossiers.
     return {k: {v for v in vals if v} for k, vals in ids.items()}
+
+
+def _career(c: dict) -> set[tuple]:
+    """Empreinte du parcours : (employeur, mois de début, mois de fin) de chaque poste."""
+    return {(contact.normalize_address(e["company"]), e["start"], e["end"]) for e in c["cv"]["experiences"]
+            if e.get("company") and e.get("start")}
+
+
+# Liens « forts » : un identifiant partagé ou un parcours identique désignent très probablement le
+# même opérateur. Un texte de CV proche est plus faible (modèles de bootcamp, CV écrits par IA).
+STRONG = ("même téléphone", "même compte de paiement", "même email", "même profil", "même bénéficiaire du salaire",
+          "même parcours")
+
+
+def is_strong(reason: str) -> bool:
+    return reason.startswith(STRONG)
 
 
 def find_links(candidates: list[dict]) -> list[dict]:
@@ -94,11 +117,16 @@ def find_links(candidates: list[dict]) -> list[dict]:
     texts = [cv_text(c) for c in candidates]
     vecs = _bedrock_vectors(texts) if use_bedrock else _tfidf_vectors(texts)
     ids = [_identifiers(c) for c in candidates]
-    addrs = [{s["address"].lower() for s in c["shipping_addresses"]} for c in candidates]
+    careers = [_career(c) for c in candidates]
+    addrs = [{contact.normalize_address(s["address"]) for s in c["shipping_addresses"]} for c in candidates]
 
     links = []
     for i, j in combinations(range(len(candidates)), 2):
-        reasons = [f"même {k}" for k in ids[i] if ids[i][k] & ids[j][k]]
+        reasons = [f"même {k}" for k in ids[i] if k in ids[j] and ids[i][k] & ids[j][k]]
+        same_jobs = careers[i] & careers[j]
+        # Deux postes identiques au mois près chez les mêmes employeurs : quasi impossible par hasard.
+        if len(same_jobs) >= 2:
+            reasons.append(f"même parcours ({len(same_jobs)} postes identiques, mêmes employeurs et mêmes dates)")
         sim = _cosine(vecs[i], vecs[j])
         shared_addr = bool(addrs[i] & addrs[j])
         if sim >= TEXT_THRESHOLD:

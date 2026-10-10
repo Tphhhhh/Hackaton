@@ -6,8 +6,10 @@ part en vérification, il n'est pas rejeté automatiquement (AI Act, supervision
 from __future__ import annotations
 
 from .checks import Signal
+from .similarity import is_strong
 
-NETWORK_WEIGHT = 30
+NETWORK_WEIGHT = 30          # identifiant partagé ou parcours identique
+TEXT_ONLY_WEIGHT = 15        # seulement un CV très proche (modèle de bootcamp, CV rédigé par IA…)
 HIGH, MEDIUM = 50, 25
 
 
@@ -16,9 +18,10 @@ def score(signals: list[Signal], network: list[str] | None, link_reasons: list[s
     all_signals = [s.to_dict() for s in signals]
     if network:
         others = [i for i in network if i != self_id] or network
-        total += NETWORK_WEIGHT
+        weight = NETWORK_WEIGHT if any(is_strong(r) for r in link_reasons) else TEXT_ONLY_WEIGHT
+        total += weight
         all_signals.append(Signal(
-            "S1_PERSONA_NETWORK", NETWORK_WEIGHT,
+            "S1_PERSONA_NETWORK", weight,
             f"Lié à {len(others)} autre{'s' if len(others) > 1 else ''} dossier{'s' if len(others) > 1 else ''} "
             f"({', '.join(others)}) : " + ", ".join(sorted(set(link_reasons))) + ".",
             "T1585",

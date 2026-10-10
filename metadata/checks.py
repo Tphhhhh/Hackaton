@@ -13,8 +13,11 @@ from dataclasses import asdict, dataclass
 from datetime import date, datetime
 from pathlib import Path
 
+from . import contact
+
 REF = Path(__file__).resolve().parent / "reference"
-FORWARDERS = {a.lower() for a in json.loads((REF / "freight_forwarders.json").read_text(encoding="utf-8"))["addresses"]}
+FORWARDERS = {contact.address_key(a)
+              for a in json.loads((REF / "freight_forwarders.json").read_text(encoding="utf-8"))["addresses"]}
 DISPOSABLE = set(json.loads((REF / "disposable_domains.json").read_text(encoding="utf-8"))["domains"])
 
 
@@ -110,8 +113,27 @@ def check_camera_refused(c: dict) -> Signal | None:
 
 def check_forwarder(c: dict) -> Signal | None:
     for s in c["shipping_addresses"]:
-        if s["address"].lower() in FORWARDERS:
+        addr = contact.address_key(s["address"])
+        if any(f == addr or f in addr for f in FORWARDERS):
             return Signal("C5_FORWARDER", 25, f"Matériel envoyé chez un transitaire connu : {s['address']}.")
+    for s in c["shipping_addresses"]:
+        words = contact.logistics_words(s["address"])
+        if words:
+            return Signal("C5_FORWARDER", 20,
+                          f"Matériel à livrer à une adresse d'entrepôt ou de réexpédition "
+                          f"(« {', '.join(words)} ») : {s['address']}.")
+    return None
+
+
+def check_shipping_country(c: dict) -> Signal | None:
+    """Ordinateur à livrer dans un autre pays que la résidence déclarée (schéma des « fermes d'ordinateurs »)."""
+    home = c["declared_location"].get("country", "")
+    for s in c["shipping_addresses"]:
+        country = contact.address_country(s["address"])
+        if country and home and country != home and not ({country, home} <= {"UK", "GB"}):
+            return Signal("C18_SHIPPING_COUNTRY", 20,
+                          f"Matériel à livrer en {country} alors que le candidat déclare résider en {home} : "
+                          f"{s['address']}.")
     return None
 
 
@@ -168,12 +190,6 @@ def check_payment(c: dict) -> Signal | None:
     return None
 
 
-def _name_tokens(name: str) -> set[str]:
-    import unicodedata
-    flat = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode().lower()
-    return {t for t in re.split(r"[^a-z]+", flat) if len(t) > 1}
-
-
 def check_payee(c: dict) -> Signal | None:
     """Compte de paie au nom d'une autre personne (salaire reversé à un intermédiaire).
 
@@ -183,15 +199,94 @@ def check_payee(c: dict) -> Signal | None:
     holder = c["payment"].get("holder", "").strip()
     if not holder or c["payment"]["method"] == "crypto":
         return None
-    if not _name_tokens(holder) & _name_tokens(c["full_name"]):
+    if not contact.name_tokens(holder) & contact.name_tokens(c["full_name"]):
         return Signal("C11_PAYEE", 20, f"Le compte de paie est au nom de « {holder} », pas du candidat.")
     return None
 
 
 def check_email(c: dict) -> Signal | None:
-    domain = c["email"].rsplit("@", 1)[-1].lower()
-    if domain in DISPOSABLE:
+    domain = c["email"].rsplit("@", 1)[-1].lower().strip()
+    if any(domain == d or domain.endswith("." + d) for d in DISPOSABLE):
         return Signal("C10_DISPOSABLE_EMAIL", 10, f"Adresse email sur un domaine jetable ({domain}).")
+    return None
+
+
+# --- Coordonnées : forme du téléphone, de l'email et du profil ------------------------
+# Signaux faibles, pensés pour s'additionner : une coordonnée bizarre isolée s'explique
+# presque toujours (numéro gardé après un déménagement, pseudo d'étudiant…).
+
+def check_phone_format(c: dict) -> Signal | None:
+    """Numéro mal formé pour son indicatif, motif fabriqué ou plage réservée à la fiction."""
+    p = contact.parse_phone(c["phone"], c["declared_location"].get("country", ""))
+    if p is None:
+        return None
+    problems = contact.phone_problems(p)
+    if problems:
+        return Signal("C12_PHONE_INVALID", 10,
+                      f"Numéro de téléphone {c['phone'].strip()} invalide : {' ; '.join(problems)}.", "T1585")
+    return None
+
+
+def check_phone_virtual(c: dict) -> Signal | None:
+    """Numéro virtuel (VoIP nomade, numéro personnel de renvoi), joignable de n'importe où."""
+    p = contact.parse_phone(c["phone"], c["declared_location"].get("country", ""))
+    if p and contact.phone_is_virtual(p):
+        return Signal("C13_PHONE_VOIP", 10,
+                      f"Le numéro {c['phone'].strip()} appartient à une tranche de numéros virtuels (VoIP), "
+                      "utilisables depuis n'importe quel pays.", "T1585")
+    return None
+
+
+def check_phone_country(c: dict) -> Signal | None:
+    """Indicatif du téléphone différent de celui du pays de RÉSIDENCE déclaré.
+
+    Comparé au lieu de vie que le candidat déclare, jamais à une origine supposée. Un
+    expatrié garde souvent son ancien numéro : poids minimal, utile seulement en
+    combinaison. Aucun pays n'est plus suspect qu'un autre.
+    """
+    home = c["declared_location"].get("country", "")
+    p = contact.parse_phone(c["phone"], home)
+    plan = contact.PLANS.get(home)
+    if not p or not plan or not p["international"] or not p["digits"]:
+        return None
+    if not p["digits"].startswith(plan["cc"]):
+        shown = p["cc"] or p["digits"][:3]
+        return Signal("C14_PHONE_COUNTRY", 5,
+                      f"Téléphone en +{shown} pour une résidence déclarée en {home} (+{plan['cc']}).")
+    return None
+
+
+def check_email_pattern(c: dict) -> Signal | None:
+    """Partie avant @ qui semble générée : suite de chiffres, lettres imprononçables."""
+    reasons = contact.random_looking(contact.email_local(c["email"]), c["full_name"])
+    if reasons:
+        return Signal("C15_EMAIL_RANDOM", 10,
+                      f"Adresse email d'apparence générée ({c['email'].strip()}) : {' ; '.join(reasons)}.")
+    return None
+
+
+def check_email_name(c: dict) -> Signal | None:
+    """Adresse email qui ne reprend ni le prénom ni le nom déclaré."""
+    local = contact.email_local(c["email"])
+    domain = c["email"].rsplit("@", 1)[-1].split(".")[0] if "@" in c["email"] else ""
+    own_domain = len(domain) >= 4 and contact.mentions_name(domain, c["full_name"])   # contact@janedoe.dev
+    if local and not own_domain and not contact.mentions_name(local, c["full_name"]):
+        word = contact.persona_word(local)
+        extra = f", mais un mot générique (« {word} »)" if word else ""
+        return Signal("C16_EMAIL_NAME", 10 if word else 5,
+                      f"L'adresse {c['email'].strip()} ne contient ni le prénom ni le nom du candidat{extra}.")
+    return None
+
+
+def check_profile_name(c: dict) -> Signal | None:
+    """URL LinkedIn sans rapport avec le nom (les pseudos GitHub, eux, sont libres et courants)."""
+    for p in c["profiles"]:
+        handle = contact.profile_handle(p.get("url", ""))
+        if p.get("platform") == "linkedin" and handle and not contact.mentions_name(handle, c["full_name"]):
+            word = contact.persona_word(handle)
+            extra = f", mais un mot générique (« {word} »)" if word else ""
+            return Signal("C17_PROFILE_NAME", 10 if word else 5,
+                          f"Le profil LinkedIn « {handle} » ne reprend pas le nom du candidat{extra}.", "T1585.001")
     return None
 
 
@@ -284,8 +379,9 @@ def check_video_settings(c: dict) -> Signal | None:
 
 
 CHECKS = [check_timeline_overlap, check_claimed_years, check_young_profile, check_camera_refused,
-          check_forwarder, check_address_change, check_login_countries, check_working_hours,
-          check_payment, check_payee, check_email, check_virtual_camera, check_browser_timezone, check_vm_gpu,
+          check_forwarder, check_shipping_country, check_address_change, check_login_countries, check_working_hours,
+          check_payment, check_payee, check_email, check_phone_format, check_phone_virtual, check_phone_country,
+          check_email_pattern, check_email_name, check_profile_name, check_virtual_camera, check_browser_timezone, check_vm_gpu,
           check_interview_ip, check_latency, check_video_settings]
 
 
@@ -304,8 +400,25 @@ def combination_bonus(signals: list[Signal]) -> Signal | None:
     return None
 
 
+# Coordonnées : on compte les CHAMPS touchés (email, téléphone, profil), pas les codes, pour ne
+# pas compter deux fois une même adresse email bizarre.
+CONTACT_FIELDS = {"C10_DISPOSABLE_EMAIL": "email", "C15_EMAIL_RANDOM": "email", "C16_EMAIL_NAME": "email",
+                  "C12_PHONE_INVALID": "téléphone", "C13_PHONE_VOIP": "téléphone", "C14_PHONE_COUNTRY": "téléphone",
+                  "C17_PROFILE_NAME": "profil"}
+
+
+def contact_bonus(signals: list[Signal]) -> Signal | None:
+    fields = sorted({CONTACT_FIELDS[s.code] for s in signals if s.code in CONTACT_FIELDS})
+    if len(fields) >= 2:
+        return Signal("X2_CONTACT_COMBINATION", 10 if len(fields) == 2 else 15,
+                      f"Anomalies sur plusieurs coordonnées à la fois ({', '.join(fields)}) : chacune s'explique, "
+                      "leur accumulation beaucoup moins.", "T1585")
+    return None
+
+
 def run_checks(c: dict) -> list[Signal]:
     signals = [s for check in CHECKS if (s := check(c)) is not None]
-    if (bonus := combination_bonus(signals)) is not None:
-        signals.append(bonus)
+    for combo in (combination_bonus, contact_bonus):
+        if (bonus := combo(signals)) is not None:
+            signals.append(bonus)
     return signals

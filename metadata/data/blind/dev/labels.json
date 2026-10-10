@@ -1,0 +1,962 @@
+{
+ "B-D001": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "bootcamp_template",
+  "notes": "CV écrit sur le modèle du bootcamp (texte commun à d'autres anciens)"
+ },
+ "B-D002": {
+  "is_fraud": true,
+  "network": "NET-3",
+  "archetype": "persona_network",
+  "notes": "réseau NET-3 (text) ; signaux : crypto, forwarder"
+ },
+ "B-D003": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "laptop_farm",
+  "notes": "signaux : forwarder, foreign_phone, young_profile"
+ },
+ "B-D004": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "moved_house",
+  "notes": "déménage juste après l'embauche"
+ },
+ "B-D005": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "laptop_farm",
+  "notes": "signaux : forwarder, inflated"
+ },
+ "B-D006": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D007": {
+  "is_fraud": true,
+  "network": "NET-3",
+  "archetype": "persona_network",
+  "notes": "réseau NET-3 (text) ; signaux : forwarder, inflated"
+ },
+ "B-D008": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D009": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "traveller",
+  "notes": "quelques jours de voyage après l'embauche"
+ },
+ "B-D010": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "umlaut_name",
+  "notes": "nom avec accents ou composé, email translittéré"
+ },
+ "B-D011": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "payroll_mule",
+  "notes": "signaux : third_party, crypto, odd_email, overlap"
+ },
+ "B-D012": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "compound_surname",
+  "notes": "nom avec accents ou composé, email translittéré"
+ },
+ "B-D013": {
+  "is_fraud": true,
+  "network": "NET-1",
+  "archetype": "persona_network",
+  "notes": "réseau NET-1 (phone) ; signaux : crypto, third_party, foreign_phone"
+ },
+ "B-D014": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "career_changer",
+  "notes": ""
+ },
+ "B-D015": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "night_owl",
+  "notes": "travaille parfois tard le soir"
+ },
+ "B-D016": {
+  "is_fraud": true,
+  "network": "NET-1",
+  "archetype": "persona_network",
+  "notes": "réseau NET-1 (phone) ; signaux : forwarder, inflated, third_party"
+ },
+ "B-D017": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "night_owl",
+  "notes": "travaille parfois tard le soir"
+ },
+ "B-D018": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "privacy_email",
+  "notes": "email pseudonyme ou à initiales, par souci de vie privée"
+ },
+ "B-D019": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "sepa_iban_abroad",
+  "notes": "banque en ligne avec un IBAN DE, à son nom"
+ },
+ "B-D020": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "career_changer",
+  "notes": ""
+ },
+ "B-D021": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "night_owl",
+  "notes": "travaille parfois tard le soir"
+ },
+ "B-D022": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D023": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "expat_phone",
+  "notes": "garde son numéro de CH après son installation"
+ },
+ "B-D024": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "privacy_email",
+  "notes": "email pseudonyme ou à initiales, par souci de vie privée"
+ },
+ "B-D025": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D026": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "night_owl",
+  "notes": "travaille parfois tard le soir"
+ },
+ "B-D027": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D028": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "bootcamp_template",
+  "notes": "CV écrit sur le modèle du bootcamp (texte commun à d'autres anciens)"
+ },
+ "B-D029": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "freelancer_overlap",
+  "notes": "missions freelance qui se chevauchent de quelques mois"
+ },
+ "B-D030": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "night_owl",
+  "notes": ""
+ },
+ "B-D031": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D032": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "payroll_mule",
+  "notes": "signaux : crypto, third_party, remote_session"
+ },
+ "B-D033": {
+  "is_fraud": true,
+  "network": "NET-3",
+  "archetype": "persona_network",
+  "notes": "réseau NET-3 (text) ; signaux : third_party, overlap"
+ },
+ "B-D034": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "holder_variant",
+  "notes": "titulaire du compte écrit avec une initiale ou un second prénom"
+ },
+ "B-D035": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "remote_proxy",
+  "notes": "signaux : remote_activity, young_profile"
+ },
+ "B-D036": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "contact_identity",
+  "notes": "signaux : disposable, voip, young_profile"
+ },
+ "B-D037": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "expat_phone",
+  "notes": "garde son numéro de IT après son installation"
+ },
+ "B-D038": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "moved_house",
+  "notes": "déménage juste après l'embauche"
+ },
+ "B-D039": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D040": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "payroll_mule",
+  "notes": "signaux : crypto, overlap, remote_session"
+ },
+ "B-D041": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D042": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "contact_identity",
+  "notes": "signaux : odd_email, inflated, remote_session"
+ },
+ "B-D043": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "virtual_background",
+  "notes": "flou d'arrière-plan (logiciel de la carte graphique ou de la webcam)"
+ },
+ "B-D044": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "traveller",
+  "notes": "quelques jours de voyage après l'embauche"
+ },
+ "B-D045": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "laptop_farm",
+  "notes": "signaux : forwarder, voip, inflated"
+ },
+ "B-D046": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "privacy_email",
+  "notes": "email pseudonyme ou à initiales, par souci de vie privée"
+ },
+ "B-D047": {
+  "is_fraud": true,
+  "network": "NET-2",
+  "archetype": "persona_network",
+  "notes": "réseau NET-2 (money) ; signaux : third_party, young_profile, remote_session"
+ },
+ "B-D048": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "payroll_mule",
+  "notes": "signaux : third_party, crypto, remote_session"
+ },
+ "B-D049": {
+  "is_fraud": true,
+  "network": "NET-1",
+  "archetype": "persona_network",
+  "notes": "réseau NET-1 (phone) ; signaux : foreign_phone"
+ },
+ "B-D050": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "laptop_farm",
+  "notes": "signaux : forwarder, third_party, camera_refused"
+ },
+ "B-D051": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "holder_variant",
+  "notes": "titulaire du compte écrit avec une initiale ou un second prénom"
+ },
+ "B-D052": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D053": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "bootcamp_template",
+  "notes": "CV écrit sur le modèle du bootcamp (texte commun à d'autres anciens)"
+ },
+ "B-D054": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D055": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D056": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "holder_variant",
+  "notes": ""
+ },
+ "B-D057": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "camera_refused_once",
+  "notes": "caméra coupée pour cause de connexion faible"
+ },
+ "B-D058": {
+  "is_fraud": true,
+  "network": "NET-2",
+  "archetype": "persona_network",
+  "notes": "réseau NET-2 (money) ; signaux : third_party, overlap"
+ },
+ "B-D059": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "traveller",
+  "notes": "quelques jours de voyage après l'embauche"
+ },
+ "B-D060": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "bootcamp_template",
+  "notes": "CV écrit sur le modèle du bootcamp (texte commun à d'autres anciens)"
+ },
+ "B-D061": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "laptop_farm",
+  "notes": "signaux : forwarder, foreign_phone, voip"
+ },
+ "B-D062": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "contact_identity",
+  "notes": "signaux : odd_email, disposable, inflated"
+ },
+ "B-D063": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "subtle",
+  "notes": "signaux : young_profile"
+ },
+ "B-D064": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D065": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "expat_phone",
+  "notes": "garde son numéro de ES après son installation"
+ },
+ "B-D066": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "freelancer_overlap",
+  "notes": "missions freelance qui se chevauchent de quelques mois"
+ },
+ "B-D067": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "laptop_farm",
+  "notes": "signaux : forwarder, camera_refused"
+ },
+ "B-D068": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "holder_variant",
+  "notes": "titulaire du compte écrit avec une initiale ou un second prénom"
+ },
+ "B-D069": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "career_changer",
+  "notes": ""
+ },
+ "B-D070": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D071": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "laptop_farm",
+  "notes": "signaux : aucun observable (pas encore embauché)"
+ },
+ "B-D072": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "traveller",
+  "notes": ""
+ },
+ "B-D073": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "remote_proxy",
+  "notes": "signaux : remote_session, odd_email, foreign_phone"
+ },
+ "B-D074": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "payroll_mule",
+  "notes": "signaux : crypto, third_party, remote_session, young_profile"
+ },
+ "B-D075": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "compound_surname",
+  "notes": "nom avec accents ou composé, email translittéré"
+ },
+ "B-D076": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "compound_surname",
+  "notes": "nom avec accents ou composé, email translittéré"
+ },
+ "B-D077": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "corporate_vpn",
+  "notes": "entretien passé depuis le VPN de son employeur actuel"
+ },
+ "B-D078": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "new_linkedin",
+  "notes": "a créé son LinkedIn récemment malgré une longue carrière"
+ },
+ "B-D079": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "sepa_iban_abroad",
+  "notes": "banque en ligne avec un IBAN DE, à son nom"
+ },
+ "B-D080": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "traveller",
+  "notes": ""
+ },
+ "B-D081": {
+  "is_fraud": true,
+  "network": "NET-2",
+  "archetype": "persona_network",
+  "notes": "réseau NET-2 (money) ; signaux : young_profile, odd_email"
+ },
+ "B-D082": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D083": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "subtle",
+  "notes": "signaux : inflated"
+ },
+ "B-D084": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "subtle",
+  "notes": "signaux : inflated"
+ },
+ "B-D085": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "camera_refused_once",
+  "notes": "caméra coupée pour cause de connexion faible"
+ },
+ "B-D086": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D087": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "night_owl",
+  "notes": "travaille parfois tard le soir"
+ },
+ "B-D088": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "freelancer_overlap",
+  "notes": "missions freelance qui se chevauchent de quelques mois"
+ },
+ "B-D089": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "new_linkedin",
+  "notes": "a créé son LinkedIn récemment malgré une longue carrière"
+ },
+ "B-D090": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "traveller",
+  "notes": ""
+ },
+ "B-D091": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D092": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "remote_proxy",
+  "notes": "signaux : remote_session, camera_refused"
+ },
+ "B-D093": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "moved_house",
+  "notes": "déménage juste après l'embauche"
+ },
+ "B-D094": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "moved_house",
+  "notes": ""
+ },
+ "B-D095": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "privacy_email",
+  "notes": "email pseudonyme ou à initiales, par souci de vie privée"
+ },
+ "B-D096": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "virtual_background",
+  "notes": "flou d'arrière-plan (logiciel de la carte graphique ou de la webcam)"
+ },
+ "B-D097": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "moved_house",
+  "notes": "déménage juste après l'embauche"
+ },
+ "B-D098": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "umlaut_name",
+  "notes": "nom avec accents ou composé, email translittéré"
+ },
+ "B-D099": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "privacy_email",
+  "notes": "email pseudonyme ou à initiales, par souci de vie privée"
+ },
+ "B-D100": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "new_linkedin",
+  "notes": "a créé son LinkedIn récemment malgré une longue carrière"
+ },
+ "B-D101": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D102": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D103": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "camera_refused_once",
+  "notes": "caméra coupée pour cause de connexion faible"
+ },
+ "B-D104": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "umlaut_name",
+  "notes": "nom avec accents ou composé, email translittéré"
+ },
+ "B-D105": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D106": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D107": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "contact_identity",
+  "notes": "signaux : young_profile, unrelated_slug"
+ },
+ "B-D108": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "freelancer_overlap",
+  "notes": "missions freelance qui se chevauchent de quelques mois"
+ },
+ "B-D109": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D110": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "umlaut_name",
+  "notes": "nom avec accents ou composé, email translittéré"
+ },
+ "B-D111": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "corporate_vpn",
+  "notes": "entretien passé depuis le VPN de son employeur actuel"
+ },
+ "B-D112": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "freelancer_overlap",
+  "notes": "missions freelance qui se chevauchent de quelques mois"
+ },
+ "B-D113": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D114": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "expat_phone",
+  "notes": "garde son numéro de BE après son installation"
+ },
+ "B-D115": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "moved_house",
+  "notes": ""
+ },
+ "B-D116": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "compound_surname",
+  "notes": "nom avec accents ou composé, email translittéré"
+ },
+ "B-D117": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "corporate_vpn",
+  "notes": "entretien passé depuis le VPN de son employeur actuel"
+ },
+ "B-D118": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "privacy_email",
+  "notes": "email pseudonyme ou à initiales, par souci de vie privée"
+ },
+ "B-D119": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "privacy_email",
+  "notes": "email pseudonyme ou à initiales, par souci de vie privée"
+ },
+ "B-D120": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "corporate_vpn",
+  "notes": "entretien passé depuis le VPN de son employeur actuel"
+ },
+ "B-D121": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "camera_refused_once",
+  "notes": "caméra coupée pour cause de connexion faible"
+ },
+ "B-D122": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "subtle",
+  "notes": "signaux : odd_email"
+ },
+ "B-D123": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "new_linkedin",
+  "notes": "a créé son LinkedIn récemment malgré une longue carrière"
+ },
+ "B-D124": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "virtual_background",
+  "notes": "flou d'arrière-plan (logiciel de la carte graphique ou de la webcam)"
+ },
+ "B-D125": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "corporate_vpn",
+  "notes": "entretien passé depuis le VPN de son employeur actuel"
+ },
+ "B-D126": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "contact_identity",
+  "notes": "signaux : odd_email, forwarder"
+ },
+ "B-D127": {
+  "is_fraud": true,
+  "network": "NET-1",
+  "archetype": "persona_network",
+  "notes": "réseau NET-1 (phone) ; signaux : third_party, crypto, overlap"
+ },
+ "B-D128": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "new_linkedin",
+  "notes": "a créé son LinkedIn récemment malgré une longue carrière"
+ },
+ "B-D129": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "sepa_iban_abroad",
+  "notes": "banque en ligne avec un IBAN DE, à son nom"
+ },
+ "B-D130": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "payroll_mule",
+  "notes": "signaux : crypto, foreign_phone"
+ },
+ "B-D131": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "subtle",
+  "notes": "signaux : odd_email"
+ },
+ "B-D132": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "contact_identity",
+  "notes": "signaux : odd_email, broken_phone, forwarder, remote_session"
+ },
+ "B-D133": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "expat_phone",
+  "notes": "garde son numéro de PL après son installation"
+ },
+ "B-D134": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "laptop_farm",
+  "notes": "signaux : forwarder, camera_refused, foreign_phone"
+ },
+ "B-D135": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "compound_surname",
+  "notes": "nom avec accents ou composé, email translittéré"
+ },
+ "B-D136": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D137": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "traveller",
+  "notes": "quelques jours de voyage après l'embauche"
+ },
+ "B-D138": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "holder_variant",
+  "notes": "titulaire du compte écrit avec une initiale ou un second prénom"
+ },
+ "B-D139": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "sepa_iban_abroad",
+  "notes": "banque en ligne avec un IBAN DE, à son nom"
+ },
+ "B-D140": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D141": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "contact_identity",
+  "notes": "signaux : voip, odd_email, young_profile"
+ },
+ "B-D142": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "remote_proxy",
+  "notes": "signaux : remote_session, remote_activity, young_profile"
+ },
+ "B-D143": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "bootcamp_template",
+  "notes": "CV écrit sur le modèle du bootcamp (texte commun à d'autres anciens)"
+ },
+ "B-D144": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "freelancer_overlap",
+  "notes": "missions freelance qui se chevauchent de quelques mois"
+ },
+ "B-D145": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "expat_phone",
+  "notes": "garde son numéro de ES après son installation"
+ },
+ "B-D146": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "career_changer",
+  "notes": ""
+ },
+ "B-D147": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "virtual_background",
+  "notes": "flou d'arrière-plan (logiciel de la carte graphique ou de la webcam)"
+ },
+ "B-D148": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "remote_proxy",
+  "notes": "signaux : remote_activity, camera_refused, young_profile"
+ },
+ "B-D149": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "compound_surname",
+  "notes": "nom avec accents ou composé, email translittéré"
+ },
+ "B-D150": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D151": {
+  "is_fraud": true,
+  "network": "NET-2",
+  "archetype": "persona_network",
+  "notes": "réseau NET-2 (money) ; signaux : foreign_phone"
+ },
+ "B-D152": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "expat_phone",
+  "notes": "garde son numéro de PL après son installation"
+ },
+ "B-D153": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D154": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "standard",
+  "notes": ""
+ },
+ "B-D155": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "remote_proxy",
+  "notes": "signaux : remote_session, odd_email, camera_refused"
+ },
+ "B-D156": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "expat_phone",
+  "notes": "garde son numéro de SE après son installation"
+ },
+ "B-D157": {
+  "is_fraud": true,
+  "network": null,
+  "archetype": "payroll_mule",
+  "notes": "signaux : third_party, crypto, remote_session, foreign_phone"
+ },
+ "B-D158": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "career_changer",
+  "notes": ""
+ },
+ "B-D159": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "sepa_iban_abroad",
+  "notes": "banque en ligne avec un IBAN LT, à son nom"
+ },
+ "B-D160": {
+  "is_fraud": false,
+  "network": null,
+  "archetype": "bootcamp_template",
+  "notes": "CV écrit sur le modèle du bootcamp (texte commun à d'autres anciens)"
+ }
+}
