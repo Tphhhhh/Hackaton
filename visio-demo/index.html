@@ -12,12 +12,13 @@
   <div class="meeting-app">
     <header class="topbar">
       <a class="brand" href="./" aria-label="Visio, accueil"><span class="brand-mark" data-icon="video"></span>visio</a>
-      <span class="workspace-name">La salle de visionnage</span>
+      <h1 class="workspace-name">Comparaison vidéo</h1>
       <div class="header-right"><span class="local-badge"><span data-icon="lock"></span>Un espace privé</span><button id="open-sources" class="button secondary" aria-haspopup="dialog"><span data-icon="folder"></span><span>Sources & simulations</span></button></div>
     </header>
+    <nav class="workspace-jumps" aria-label="Accès aux zones de travail"><a href="#comparison-video">Vidéos</a><a href="#session-panel">Analyse</a><a href="#video-signal-layers">Indicateurs</a></nav>
     <main class="meeting-layout">
       <div class="comparison-workspace">
-      <section class="conference" aria-label="Vidéo de la conférence">
+      <section id="comparison-video" class="conference" aria-label="Vidéo de la conférence" tabindex="-1">
         <div class="room-heading"><span>01 · Vous, en direct</span><span id="source-label" class="recording-label">Webcam · en direct</span></div>
         <div class="media-card">
         <div id="stage-shell" class="stage-shell">

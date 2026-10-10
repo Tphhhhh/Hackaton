@@ -3,6 +3,7 @@ import { SIGNAL_LABELS, unavailableSignals } from './video-signals.js';
 export function createSignalPanel({ onMicrophone }) {
   const panel = document.createElement('div');
   panel.id = 'video-signal-layers';
+  panel.tabIndex = -1;
   panel.innerHTML = `<div class="signal-layers-heading"><h4>Indicateurs complémentaires</h4><span>Expérimental</span></div>
     <p class="signals-help">Flux <span class="signal-source-original">original</span><span class="signal-source-filtered">transformé</span> · 10 dernières secondes. Ces observations ne modifient pas le score.</p>
     <div id="signal-layer-rows"></div>

@@ -273,3 +273,63 @@ select:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
 .page-footer { margin-top: 24px; font-size: 12px; color: var(--muted); padding: 20px 0; }
 dialog { border: 1px solid var(--line); border-radius: 16px; }
 .example-button { min-height: 44px; border-radius: 8px; }
+
+/* Tablet retains the comparison; narrow screens offer direct access to results. */
+.workspace-jumps { display: none; }
+#comparison-video, #session-panel, #video-signal-layers { scroll-margin-top: 80px; }
+@media (max-width: 1200px) {
+ .meeting-app { padding: 0 24px; max-width: 1040px; }
+ .topbar { margin-bottom: 0; }
+ .compare-mode .workspace-jumps { display: flex; position: sticky; top: 0; z-index: 5; gap: 8px; padding: 8px 0; margin-bottom: 16px; background: var(--canvas); border-bottom: 1px solid var(--line); }
+ .workspace-jumps a { display: flex; align-items: center; min-height: 44px; padding: 8px 16px; font-size: 14px; font-weight: 500; color: var(--blue); text-decoration: none; border-radius: 8px; }
+ .workspace-jumps a:hover { background: #e3ebf2; }
+ .compare-mode .meeting-layout { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+ .compare-mode .comparison-workspace { display: contents; }
+ .compare-mode .conference { grid-row: 1; }
+ .compare-mode #session-panel { grid-column: 1 / -1; grid-row: 2; }
+ .compare-mode #video-signal-layers { grid-column: 1 / -1; grid-row: 3; }
+ .compare-mode #live-summary { grid-column: 1 / -1; grid-row: 4; }
+ #signals-rows { display: block; }
+ .console-overall strong { font-size: 56px; }
+ .compare-mode .stage-shell { min-height: 320px; }
+ .compare-mode .stage-top { flex-wrap: wrap; gap: 6px; }
+ .compare-mode .session-info { display: block; }
+}
+@media (min-width: 601px) and (max-width: 1200px) {
+ #session-panel { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
+ .compare-mode #session-panel { display: grid; }
+ .signals-heading, .console-source-label, .console-source, .console-scale-help, .console-method, .console-footnote { grid-column: 1 / -1; }
+ .console-overall { grid-column: 1; grid-row: 4 / 6; }
+ .console-legend { grid-column: 2; align-self: end; }
+ .console-scale-help { grid-column: 2; margin: 8px 0 20px; }
+ .console-group { grid-row: 6; min-width: 0; }
+}
+@media (max-width: 600px) {
+ .meeting-app { padding: 0 16px; }
+ .topbar { height: 76px; gap: 12px; }
+ .brand { font-size: 28px; }
+ #open-sources { font-size: 12px; padding: 10px 12px; min-height: 44px; }
+ .header-right .button span:last-child { font-size: 12px; }
+ .compare-mode .meeting-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+ .compare-mode #comparison-video { grid-row: 1; }
+ .compare-mode #filtered-panel { grid-row: 2; }
+ .compare-mode #session-panel { grid-row: 3; padding: 20px; }
+ .compare-mode #video-signal-layers { grid-row: 4; }
+ .compare-mode #live-summary { grid-row: 5; }
+ .compare-mode .room-heading { min-height: 0; font-size: 14px; }
+ .compare-mode.is-live .stage-shell { min-height: 0; aspect-ratio: 16 / 10; }
+ .compare-mode .stage-empty h2 { font-size: 23px; }
+ .compare-mode .stage-chip { font-size: 11px; }
+ .compare-mode .meeting-controls { justify-content: space-between; }
+ .compare-mode .stage-name { font-size: 12px; }
+ .compare-mode #live-summary { display: grid; grid-template-columns: minmax(0, 1fr); }
+ .compare-mode #live-summary .summary-metrics { grid-column: 1; grid-row: auto; }
+ .compare-mode #live-summary h3 { margin: 0; }
+ .compare-mode #live-summary .small-note { margin: 0; }
+ .console-legend { font-size: 12px; }
+ .page-footer { gap: 8px; }
+ .source-options { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: no-preference) {
+ .console-source button { transition: background .15s ease-out, color .15s ease-out; }
+}

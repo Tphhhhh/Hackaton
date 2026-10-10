@@ -6,7 +6,7 @@ const mean = a => a.reduce((s,x)=>s+x,0)/a.length;
 const spread = a => a.length ? Math.sqrt(mean(a.map(x=>(x-mean(a))**2))) : 0;
 
 export function createSessionSignals({ onMetadata = () => {}, onAudio = () => {}, onMicrophone = () => {} } = {}) {
-  const panel=document.createElement('aside'); panel.id='session-panel'; panel.setAttribute('aria-label','Signaux techniques de cet appareil');
+  const panel=document.createElement('aside'); panel.id='session-panel'; panel.setAttribute('aria-label','Signaux techniques de cet appareil'); panel.tabIndex=-1;
   panel.innerHTML=`
     <div class="signals-heading"><div><p class="signals-kicker">CONSOLE</p><h2>Analyse de session</h2></div><span id="signals-dot" class="signals-dot"></span></div>
     <p class="console-source-label" id="console-source-label">Flux analysé</p>
