@@ -1,0 +1,13 @@
+# Liste fermée : aucun média, archive, consentement ou fichier inconnu dans Git.
+*
+!.gitignore
+!README.md
+!SOURCES.md
+!CAPTURE.md
+!FORMAT.md
+!STATUS.json
+!manifest.json
+!intake.json
+!clip.template.json
+!corpus.py
+!test_corpus.py

@@ -1,0 +1,49 @@
+{
+  "id": null,
+  "path": null,
+  "split": null,
+  "label": null,
+  "attack_kind": null,
+  "authorized": false,
+  "permission": null,
+  "source_id": null,
+  "person_id": null,
+  "source_ids": [],
+  "person_ids": [],
+  "sha256": null,
+  "provenance": {
+    "provider": null,
+    "source_url": null,
+    "original_id": null,
+    "acquired_on": null,
+    "transformations": null,
+    "domain": null,
+    "presentation_medium": null
+  },
+  "review": {
+    "label_verified": false,
+    "permission_verified": false,
+    "lineage_verified": false,
+    "media_verified": false,
+    "reviewer": null,
+    "reviewed_on": null
+  },
+  "evidence": {
+    "label": {
+      "path": null,
+      "sha256": null
+    },
+    "permission": {
+      "path": null,
+      "sha256": null
+    },
+    "lineage": {
+      "path": null,
+      "sha256": null
+    },
+    "media": {
+      "path": null,
+      "sha256": null
+    }
+  }
+}

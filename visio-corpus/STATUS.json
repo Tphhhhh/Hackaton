@@ -1,0 +1,29 @@
+{
+  "checked_on": "2026-10-10",
+  "status": "awaiting_authorized_media",
+  "clips_acquired": 0,
+  "clips_label_verified": 0,
+  "benchmark_ready": false,
+  "download_decision": "No reviewed source provided both clear permission for this use and unrestricted small-sample access.",
+  "source_reviews": "SOURCES.md",
+  "snapshot": "Preparation snapshot; rerun corpus.py audit/build/verify after adding media.",
+  "initial_contract_sha256": {
+    "benchmark.py": "fe9f23bbb97535803dd2a5b6805792a8b4f159b90cd8311f0f4e9652a7614288",
+    "dataset.example.json": "11b43663c7f4f56815dcb3f82a7a5403cb033c8c4603bda1dd4166841516b2d3",
+    "core.py": "2f363cf3a6fec62978ea9b00f324e74edf695f0a475f88b1f3f10d90b1e241a0"
+  },
+  "verified_contract_sha256": {
+    "benchmark.py": "214e693f48aab493c81d410ed0232c052152ecb336a9264bce66e5a2993287cd",
+    "dataset.example.json": "11b43663c7f4f56815dcb3f82a7a5403cb033c8c4603bda1dd4166841516b2d3",
+    "core.py": "777deba0e1a4ed599cf943520b438d7e3fe232d0736337c2984ebe4481fc6968"
+  },
+  "contract_note": "benchmark.py and core.py changed externally during preparation; dataset contract re-read and compatible. No engine files written by this task.",
+  "validation": {
+    "unit_tests_passed": 11,
+    "actual_benchmark_reader_with_artificial_fixtures": "passed",
+    "empty_manifest_rejected_by_benchmark": true,
+    "empty_build_and_verify_exit_code": 2,
+    "git_ignore_media_archives_private_proofs": "passed",
+    "performance_evaluation_run": false
+  }
+}
