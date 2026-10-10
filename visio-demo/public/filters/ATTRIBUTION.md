@@ -24,3 +24,18 @@ https://creativecommons.org/licenses/by/2.0/
 
 The demonstration uses this portrait as a reference identity for a local
 neural face swap. No endorsement by the depicted person or photographer is implied.
+
+# Emmanuel Macron portrait
+
+Local file: emmanuel-macron.jpg, unchanged copy of the Wikimedia Commons crop.
+Source file: Emmanuel Macron.jpg (845 × 1056 pixels).
+Author: Office of Vice President Kamala Harris, 30 November 2022.
+Source: https://commons.wikimedia.org/wiki/File:Emmanuel_Macron.jpg
+Cropped from: Vice President Harris and President Macron of France during
+ their visit to NASA HQ - 2022.jpg.
+Rights: public domain in the United States as an official work of the
+Executive Office of the President of the United States (PD-USGov-POTUS).
+Rights statement: https://commons.wikimedia.org/wiki/File:Emmanuel_Macron.jpg#Licensing
+
+The demonstration uses this portrait as a reference identity for a local
+neural face swap. No endorsement by the depicted person or source is implied.

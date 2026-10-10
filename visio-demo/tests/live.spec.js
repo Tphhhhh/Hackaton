@@ -252,6 +252,11 @@ test('portrait can be selected before the camera and changed without reopening i
   await expect(page.locator('#filter-status')).toContainText('Face swap Brad Pitt actif');
   await expect(page.locator('#portrait-author')).toContainText('Glenn Francis');
   expect(requested).toContain('brad-pitt');
+  await page.getByLabel('Visage du filtre').selectOption('emmanuel-macron');
+  await expect(page.locator('#filter-status')).toContainText('Face swap Emmanuel Macron actif');
+  await expect(page.locator('#filtered-name')).toHaveText('02 · Emmanuel Macron');
+  await expect(page.locator('#portrait-license')).toHaveText('Domaine public (États-Unis)');
+  expect(requested).toContain('emmanuel-macron');
   expect(await page.evaluate(() => window.testStreams.length)).toBe(1);
   await page.locator('#stop-camera').click();
 });

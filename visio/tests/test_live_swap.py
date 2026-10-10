@@ -95,9 +95,9 @@ def test_engine_unavailable_does_not_generate_a_result(live_server):
 
 def test_portrait_is_bound_to_each_request_and_unknown_ids_are_rejected(live_server):
     headers = {'Content-Type': 'image/jpeg', 'X-Visio-Request': '1'}
-    for portrait in ('sam-altman', 'brad-pitt', 'sam-altman'):
+    for portrait in ('sam-altman', 'brad-pitt', 'emmanuel-macron'):
         status, returned, _ = request(live_server, body=jpeg(), headers={**headers, 'X-Visio-Portrait': portrait})
         assert status == 200 and returned['X-Visio-Portrait'] == portrait
-    assert [identity for identity, _ in live_server.swapper.calls] == ['sam-altman', 'brad-pitt', 'sam-altman']
+    assert [identity for identity, _ in live_server.swapper.calls] == ['sam-altman', 'brad-pitt', 'emmanuel-macron']
     assert request(live_server, body=jpeg(), headers={**headers, 'X-Visio-Portrait': '../other'})[0] == 400
     assert len(live_server.swapper.calls) == 3

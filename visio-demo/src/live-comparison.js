@@ -14,6 +14,9 @@ export function createLiveComparison() {
     'sam-altman': { label: 'Sam Altman', author: '© Steve Jennings / Getty Images pour TechCrunch · recadrage James Tamim',
       source: 'https://commons.wikimedia.org/wiki/File:Sam_Altman_CropEdit_James_Tamim.jpg',
       license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0/' },
+    'emmanuel-macron': { label: 'Emmanuel Macron', author: 'Office of Vice President Kamala Harris · Wikimedia Commons',
+      source: 'https://commons.wikimedia.org/wiki/File:Emmanuel_Macron.jpg',
+      license: 'Domaine public (États-Unis)', licenseUrl: 'https://commons.wikimedia.org/wiki/File:Emmanuel_Macron.jpg#Licensing' },
   };
   const portrait = () => portraits[$('filter-portrait').value];
   const updatePortrait = () => {

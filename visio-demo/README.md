@@ -28,8 +28,8 @@ runtime restent dans `visio/.cache/`, ignoré par Git. Environ 469 Mo de poids,
 plus les bibliothèques CUDA. Les trois poids ont une révision et des SHA-256
 figés dans `visio/live_swap.py` ; `setup_live` vérifie leur intégrité.
 
-- **Visage** : Brad Pitt ou Sam Altman, sélectionnable avant ou pendant la caméra.
-  Les deux portraits sont préparés au démarrage ; changer de visage ne recharge
+- **Visage** : Brad Pitt, Sam Altman ou Emmanuel Macron, sélectionnable avant ou pendant la caméra.
+  Les trois portraits sont préparés au démarrage ; changer de visage ne recharge
   pas le modèle et invalide les images encore en cours pour le visage précédent.
   Le nom et les crédits suivent la sélection.
 - **Points** : sélecteurs indépendants Aucun / Léger / Complet. Par défaut,
@@ -74,7 +74,8 @@ Modèles : [dépôt Deep-Live-Cam](https://github.com/hacksider/Deep-Live-Cam),
 La bibliothèque InsightFace est sous MIT ; ses modèles préentraînés ont des
 conditions distinctes, destinées à la recherche non commerciale.
 Portraits : `public/filters/ATTRIBUTION.md` (Brad Pitt : CC BY-SA 4.0 ;
-Sam Altman : Steve Jennings pour TechCrunch, recadrage James Tamim, CC BY 2.0).
+Sam Altman : Steve Jennings pour TechCrunch, recadrage James Tamim, CC BY 2.0 ;
+Emmanuel Macron : Office of Vice President Kamala Harris, domaine public aux États-Unis).
 
 Les tests navigateur utilisent le vrai modèle MediaPipe et un transport de
 swap simulé pour tester les erreurs, la concurrence et les arrêts. Ils ne

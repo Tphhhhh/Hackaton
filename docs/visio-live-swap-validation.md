@@ -62,3 +62,17 @@ ainsi que le build. Sur le vrai serveur CUDA, passage Brad → Sam → Brad → 
 bascule du filtre et arrêt vérifiés avec la caméra de test publique. Rendu Sam
 inspecté visuellement dans l’interface ; aucun appel externe ni erreur JavaScript.
 Source et licence du nouveau portrait : `public/filters/ATTRIBUTION.md`.
+
+## Ajout du portrait Emmanuel Macron
+
+Troisième identité dans le même sélecteur, avec crédit du portrait publié
+sur Wikimedia Commons par l’Office of Vice President Kamala Harris.
+Les 10 tests Python du transport et le test navigateur de sélection des trois
+portraits passent. Build réussi. Sur le service CUDA réel, changement
+Brad → Macron → Brad → Macron, désactivation/réactivation et arrêt validés ;
+rendu inspecté, aucune erreur JavaScript ni requête distante observée.
+
+La démo est désormais lancée par le service utilisateur systemd
+`visio-live-8770.service`, indépendant des sessions de commandes de l’agent.
+Après ajout d’un portrait, utiliser `systemctl --user restart visio-live-8770.service`
+pour le précharger, puis vérifier `/api/live/status`.
