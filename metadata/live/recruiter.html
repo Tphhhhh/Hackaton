@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panneau recruteur</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --text:#1c2024; --muted:#60646c; --line:#e0e1e6;
+          --high:#ce2c31; --mid:#ad5700; --low:#18794e; --accent:#0d74ce; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; background:var(--bg); color:var(--text); }
+  header { padding:16px; border-bottom:1px solid var(--line); background:var(--card); }
+  header h1 { margin:0; font-size:20px; } header p { margin:2px 0 0; color:var(--muted); font-size:13px; }
+  main { max-width:1200px; margin:16px auto; padding:0 16px; }
+  .session { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px; margin-bottom:16px;
+             display:grid; grid-template-columns:200px 1fr 1fr; gap:24px; }
+  @media (max-width: 900px) { .session { grid-template-columns:1fr; } }
+  .score { font-size:56px; font-weight:700; line-height:1; }
+  .lvl-élevé { color:var(--high); } .lvl-moyen { color:var(--mid); } .lvl-faible { color:var(--low); }
+  .pill { display:inline-block; font-size:12px; padding:2px 8px; border-radius:999px; border:1px solid var(--line); color:var(--muted); }
+  .pill.sim { border-color:var(--mid); color:var(--mid); }
+  .pill.off { border-color:var(--high); color:var(--high); }
+  h3 { font-size:14px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); margin:0 0 8px; }
+  .signal { padding:8px 0; border-bottom:1px solid var(--line); }
+  .signal b { font-variant-numeric:tabular-nums; }
+  .events { font-size:13px; max-height:180px; overflow:auto; }
+  .events div { padding:4px 0; border-bottom:1px dashed var(--line); }
+  .events time { color:var(--muted); margin-right:6px; font-variant-numeric:tabular-nums; }
+  table { width:100%; border-collapse:collapse; font-size:13px; } td { padding:3px 0; vertical-align:top; } td:first-child { color:var(--muted); width:42%; }
+  .decision { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+  input { padding:6px 8px; border:1px solid var(--line); border-radius:6px; font:inherit; width:100%; margin-top:8px; }
+  button { border:1px solid var(--line); background:#fff; border-radius:6px; padding:6px 10px; font:inherit; cursor:pointer; }
+  button:hover { border-color:var(--accent); }
+  .empty { color:var(--muted); text-align:center; padding:48px; }
+  .flash { animation:flash 1.2s; } @keyframes flash { from { background:#fff3c4; } to { background:var(--card); } }
+  .note { font-size:12px; color:var(--muted); margin-top:8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🛡️ Know Your Freelancer · entretiens en direct</h1>
+  <p>Mesures toutes les 5 secondes. Aide à la décision : l'outil n'élimine jamais personne automatiquement.</p>
+</header>
+<main id="root"><p class="empty">En attente d'un candidat… Ouvrez la page candidat dans un autre onglet.</p></main>
+<script>
+const DECISIONS = { clear: "Valider", verify: "Demander une vérification", escalate: "Escalader", reject: "Refuser" };
+const lastScore = {};
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+async function refresh() {
+  let sessions;
+  try { sessions = await (await fetch("/api/sessions", { cache: "no-store" })).json(); } catch { return; }
+  if (!sessions.length) return;
+  // On ne redessine pas une carte pendant que le recruteur tape son nom.
+  if (document.activeElement?.tagName === "INPUT") return;
+  document.getElementById("root").innerHTML = sessions.map(card).join("");
+  sessions.forEach((s) => {
+    if (lastScore[s.id] !== undefined && s.result.score > lastScore[s.id]) document.getElementById("s-" + s.id)?.classList.add("flash");
+    lastScore[s.id] = s.result.score;
+  });
+}
+
+function card(s) {
+  const r = s.result, snap = s.snapshot, ip = snap.ip || {};
+  const rtt = [...(snap.rtt_ms || [])].sort((a, b) => a - b);
+  const signals = r.signals.length
+    ? r.signals.sort((a, b) => b.weight - a.weight).map((x) =>
+        `<div class="signal"><b>+${x.weight}</b> ${esc(x.code)} ${x.mitre ? `<span class="pill">${esc(x.mitre)}</span>` : ""}<br>${esc(x.evidence)}</div>`).join("")
+    : `<p class="lvl-faible">Aucune incohérence détectée.</p>`;
+  const events = s.events.length
+    ? s.events.slice().reverse().map((e) => `<div><time>${esc(e.at)}</time>${esc(e.text)}</div>`).join("")
+    : `<div class="note">Aucun changement depuis le début de l'appel.</div>`;
+  const questions = r.explanation.questions.map((q) => `<li>${esc(q)}</li>`).join("");
+  return `
+  <section class="session" id="s-${s.id}">
+    <div>
+      <div class="score lvl-${r.level}">${r.score}</div>
+      <div class="lvl-${r.level}">risque ${r.level}</div>
+      <p>Session <b>${esc(s.id)}</b><br>${esc(s.declared.city)} (${esc(s.declared.country)})<br>
+         <span class="pill ${s.online ? "" : "off"}">${s.online ? "en ligne" : "déconnecté"}</span>
+         ${snap.simulated ? `<span class="pill sim">simulation</span>` : ""}</p>
+      <h3>Décision</h3>
+      ${s.decision ? `<p><b>${DECISIONS[s.decision]}</b> (journalisée)</p>` : ""}
+      <input id="an-${s.id}" placeholder="Nom de l'analyste">
+      <div class="decision">${Object.entries(DECISIONS).map(([k, v]) =>
+        `<button onclick="decide('${s.id}','${k}')">${v}</button>`).join("")}</div>
+    </div>
+    <div>
+      <h3>Signaux</h3>${signals}
+      <h3 style="margin-top:16px">Questions à poser</h3><ul>${questions || "<li>Aucune</li>"}</ul>
+      <p class="note">${esc(r.explanation.disclaimer)}</p>
+    </div>
+    <div>
+      <h3>Dernière mesure · ${esc(snap.at)}</h3>
+      <table>
+        <tr><td>Caméra</td><td>${esc((snap.devices?.video || []).join(", "))}</td></tr>
+        <tr><td>Micro</td><td>${esc((snap.devices?.audio || []).join(", "))}</td></tr>
+        <tr><td>Fuseau de l'ordinateur</td><td>${esc(snap.browser_timezone)} (UTC${snap.browser_utc_offset >= 0 ? "+" : ""}${esc(snap.browser_utc_offset)})</td></tr>
+        <tr><td>Moteur graphique</td><td>${esc(snap.gpu_renderer)}</td></tr>
+        <tr><td>IP</td><td>${esc(ip.address || "?")} · ${esc(ip.country || "pays inconnu")} · ${esc(ip.org || "")}</td></tr>
+        <tr><td>Temps de réponse</td><td>${rtt.length ? rtt[Math.floor(rtt.length / 2)] + " ms" : "?"}</td></tr>
+        <tr><td>Vidéo</td><td>${esc(snap.video_settings?.width)}×${esc(snap.video_settings?.height)} · ${esc(snap.video_settings?.frameRate)} i/s</td></tr>
+      </table>
+      <h3 style="margin-top:16px">Changements en cours d'appel</h3>
+      <div class="events">${events}</div>
+    </div>
+  </section>`;
+}
+
+async function decide(id, decision) {
+  const analyst = document.getElementById("an-" + id).value.trim();
+  if (!analyst) { alert("Indiquez le nom de l'analyste : chaque décision doit être attribuée."); return; }
+  const res = await fetch("/api/decision", { method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ session_id: id, decision, analyst }) });
+  const data = await res.json();
+  document.activeElement?.blur();
+  alert(data.ok ? `Décision journalisée (hash ${data.hash.slice(0, 12)}…)` : data.error);
+  refresh();
+}
+
+refresh();
+setInterval(refresh, 2000);
+</script>
+</body>
+</html>

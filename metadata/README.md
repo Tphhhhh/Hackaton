@@ -59,6 +59,48 @@ Bedrock (optionnel) : `pip install -r requirements.txt`, copier `.env.example` e
 renseigner les clés et mettre `USE_BEDROCK=1`. Les embeddings Titan remplacent alors la
 similarité locale et un LLM rédige l'explication. Le `.env` n'est jamais commité.
 
+## Signaux de l'entretien et module vidéo
+
+Pendant l'entretien, six contrôles s'ajoutent (champ `interview_session` du dossier) :
+
+| Code | Contrôle | Poids | Cas légitime à ne pas punir |
+| --- | --- | --- | --- |
+| I1_VIRTUAL_DEVICE | Caméra ou micro virtuel (OBS, ManyCam, XSplit, VB-Audio, Voicemod…), ou caméra changée en cours d'appel | 10 | Flou d'arrière-plan (NVIDIA Broadcast, logiciel Logitech) : non signalé |
+| I2_TIMEZONE | Fuseau de l'ordinateur à 2 h ou plus du fuseau déclaré | 10 | Expatrié, ordinateur mal réglé (écart d'une heure toléré) |
+| I3_VIRTUAL_MACHINE | Moteur graphique logiciel ou de machine virtuelle (SwiftShader, llvmpipe, VMware…) | 15 | PC d'entreprise virtualisé |
+| I4_INTERVIEW_IP | IP hors du pays déclaré, IP d'hébergeur, IP changée pendant l'appel | 10 à 25 | VPN d'entreprise |
+| I5_LATENCY | Temps de réponse médian > 150 ms pour un candidat en Europe | 15 | 4G faible, Wi-Fi saturé |
+| I6_VIDEO_SETTINGS | Résolution ou cadence modifiée 3 fois ou plus | 5 | Changement de réseau |
+| X1_COMBINATION | Bonus quand 2 signaux d'entretien concordent (+15), ou 3 et plus (+25) | 15-25 | |
+
+Un signal isolé pèse peu ; c'est la combinaison qui fait monter le score. **La langue du
+système n'est volontairement pas utilisée** : c'est un indicateur indirect d'origine.
+
+**Scores vidéo** (module de Théophile) : `video_scores.json` à côté des dossiers, un objet par
+candidat avec des scores de 0 à 1 (`challenges`, `lipsync`, `temporal`, `lighting`,
+`classifier`). Voir `video.py`. Les défis pèsent le plus (jusqu'à 35), le classifieur générique
+reste un signal faible (5). Le générateur écrit des scores **simulés** en attendant les vrais.
+
+## Mode en direct
+
+```bash
+python -m metadata.live.server
+```
+
+- `http://localhost:8000/` : page candidat. Écran de consentement (ce qui est mesuré, ce qui ne
+  l'est jamais), puis une mesure toutes les 5 secondes.
+- `http://localhost:8000/recruiter` : panneau recruteur. Score, signaux, changements en cours
+  d'appel, questions à poser, décision journalisée.
+
+Démo : lancer l'entretien, puis activer un VPN ou choisir une caméra virtuelle (OBS) dans la
+liste : l'alerte apparaît en quelques secondes. Si le réseau du lieu bloque le VPN, le menu
+« Mode démo » de la page candidat simule ces changements (marqués « simulation »).
+
+Limites du prototype : la page doit tourner en `localhost` (le navigateur n'autorise la caméra
+qu'en local ou en HTTPS). L'IP publique, son pays et le temps de réponse sont obtenus depuis le
+navigateur via des services publics (ipify, ipapi.co, Cloudflare) ; en production, ce serait
+fait côté serveur avec une base GeoLite2, sans tiers.
+
 ## Conformité et éthique
 
 - **Données** : uniquement synthétiques (RGPD).

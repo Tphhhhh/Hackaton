@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entretien vidéo</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --text:#1c2024; --muted:#60646c; --accent:#0d74ce; --line:#e0e1e6; --warn:#ad5700; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; background:var(--bg); color:var(--text); }
+  main { max-width: 760px; margin: 32px auto; padding: 0 16px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:24px; margin-bottom:16px; }
+  h1 { font-size:24px; margin:0 0 8px; } h2 { font-size:18px; margin:0 0 12px; }
+  .muted { color:var(--muted); font-size:14px; }
+  ul { padding-left:20px; margin:8px 0; }
+  .cols { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width: 640px) { .cols { grid-template-columns:1fr; } }
+  label { display:block; font-size:14px; margin:12px 0 4px; }
+  input, select { width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:8px; font:inherit; }
+  input[type=checkbox] { width:auto; margin-right:8px; }
+  button { background:var(--accent); color:#fff; border:0; border-radius:8px; padding:10px 16px; font:inherit; cursor:pointer; }
+  button.secondary { background:#fff; color:var(--text); border:1px solid var(--line); }
+  button:disabled { opacity:.5; cursor:not-allowed; }
+  video { width:100%; border-radius:10px; background:#111; aspect-ratio:16/9; object-fit:cover; }
+  .status { display:flex; gap:8px; align-items:center; font-size:14px; color:var(--muted); }
+  .dot { width:10px; height:10px; border-radius:50%; background:#30a46c; animation:pulse 2s infinite; }
+  @keyframes pulse { 50% { opacity:.3; } }
+  details { margin-top:12px; } summary { cursor:pointer; color:var(--muted); font-size:14px; }
+  .demo { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+  .hidden { display:none; }
+  .warn { color:var(--warn); font-size:14px; }
+</style>
+</head>
+<body>
+<main>
+  <section id="consent" class="card">
+    <h1>Avant votre entretien vidéo</h1>
+    <p>Pour protéger les candidats contre l'usurpation d'identité, cet entretien vérifie la cohérence
+       technique de la connexion. Un outil d'aide à la décision est utilisé ; <strong>aucune décision n'est
+       prise automatiquement</strong>, un recruteur examine toujours le résultat (AI Act, article 50).</p>
+    <div class="cols">
+      <div>
+        <h2>Ce qui est mesuré toutes les 5 secondes</h2>
+        <ul>
+          <li>Le nom de la caméra et du micro utilisés</li>
+          <li>Le fuseau horaire de votre ordinateur</li>
+          <li>Le nom du moteur graphique (pour repérer une machine virtuelle)</li>
+          <li>Votre adresse IP, son pays et son opérateur</li>
+          <li>Le temps de réponse de votre connexion</li>
+          <li>La résolution et la cadence de la vidéo</li>
+        </ul>
+      </div>
+      <div>
+        <h2>Ce qui n'est jamais utilisé</h2>
+        <ul>
+          <li>Votre langue, votre accent, votre nationalité ou votre origine</li>
+          <li>Le contenu de votre écran ou de vos fichiers</li>
+          <li>Votre position GPS</li>
+        </ul>
+        <p class="muted">Les mesures restent en mémoire pendant l'appel et ne sont pas conservées ensuite.
+           Seule la décision du recruteur est journalisée.</p>
+      </div>
+    </div>
+    <div class="cols">
+      <div><label for="city">Ville où vous vous trouvez</label><input id="city" value="Paris"></div>
+      <div><label for="country">Pays</label>
+        <select id="country">
+          <option value="FR">France</option><option value="DE">Allemagne</option><option value="CH">Suisse</option>
+          <option value="BE">Belgique</option><option value="NL">Pays-Bas</option><option value="ES">Espagne</option>
+          <option value="IT">Italie</option><option value="PT">Portugal</option><option value="UK">Royaume-Uni</option>
+          <option value="IE">Irlande</option>
+        </select></div>
+    </div>
+    <label><input type="checkbox" id="agree">J'ai compris ce qui est mesuré et j'accepte de rejoindre l'entretien.</label>
+    <p><button id="join" disabled>Rejoindre l'entretien</button></p>
+  </section>
+
+  <section id="call" class="card hidden">
+    <h1>Entretien en cours</h1>
+    <video id="preview" autoplay muted playsinline></video>
+    <label for="camera">Caméra</label>
+    <select id="camera"></select>
+    <p class="status"><span class="dot"></span><span id="status">Connexion…</span></p>
+    <p id="error" class="warn"></p>
+    <details>
+      <summary>Mode démo (secours si le Wi-Fi bloque le VPN ou la caméra virtuelle)</summary>
+      <p class="muted">Ces boutons simulent un fraudeur. Les mesures envoyées sont marquées « simulation »
+         dans le panneau recruteur.</p>
+      <div class="demo">
+        <button class="secondary" id="simVpn">Simuler un VPN lointain</button>
+        <button class="secondary" id="simCam">Simuler une caméra virtuelle</button>
+        <button class="secondary" id="simVm">Simuler une machine virtuelle</button>
+        <button class="secondary" id="simReset">Arrêter la simulation</button>
+      </div>
+    </details>
+  </section>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const sessionId = Math.random().toString(36).slice(2, 8).toUpperCase();
+const sim = { vpn: false, cam: false, vm: false };
+let stream = null, declared = null, lastIp = null, geo = {};
+const HOSTING = /amazon|aws|google|microsoft|azure|digitalocean|ovh|hetzner|linode|akamai|vultr|choopa|m247|datacamp|leaseweb|contabo|scaleway|oracle|alibaba|tencent|hosting|server|cloud|vpn/i;
+
+$("agree").onchange = () => { $("join").disabled = !$("agree").checked; };
+$("join").onclick = async () => {
+  declared = { city: $("city").value.trim(), country: $("country").value };
+  $("consent").classList.add("hidden");
+  $("call").classList.remove("hidden");
+  await startCamera();
+  await listCameras();
+  snapshot();
+  setInterval(snapshot, 5000);
+};
+$("camera").onchange = () => startCamera($("camera").value);
+$("simVpn").onclick = () => { sim.vpn = true; snapshot(); };
+$("simCam").onclick = () => { sim.cam = true; snapshot(); };
+$("simVm").onclick = () => { sim.vm = true; snapshot(); };
+$("simReset").onclick = () => { sim.vpn = sim.cam = sim.vm = false; snapshot(); };
+
+async function startCamera(deviceId) {
+  try {
+    if (stream) stream.getTracks().forEach((t) => t.stop());
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: deviceId ? { deviceId: { exact: deviceId } } : true, audio: true });
+    $("preview").srcObject = stream;
+    $("error").textContent = "";
+  } catch (e) {
+    $("error").textContent = "Caméra ou micro inaccessible : " + e.message;
+  }
+}
+
+async function listCameras() {
+  const devices = await navigator.mediaDevices.enumerateDevices();
+  const current = stream?.getVideoTracks()[0]?.getSettings().deviceId;
+  $("camera").innerHTML = devices.filter((d) => d.kind === "videoinput")
+    .map((d) => `<option value="${d.deviceId}" ${d.deviceId === current ? "selected" : ""}>${d.label || "Caméra"}</option>`).join("");
+}
+
+function gpuRenderer() {
+  try {
+    const gl = document.createElement("canvas").getContext("webgl");
+    const ext = gl.getExtension("WEBGL_debug_renderer_info");
+    return ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+  } catch { return "inconnu"; }
+}
+
+async function measureRtt() {
+  // Temps aller-retour vers un point de présence public : il grimpe quand la connexion passe par un pays lointain.
+  const out = [];
+  for (let i = 0; i < 3; i++) {
+    const t0 = performance.now();
+    try { await fetch(`https://www.cloudflare.com/cdn-cgi/trace?t=${Date.now()}${i}`, { mode: "no-cors", cache: "no-store" }); }
+    catch { continue; }
+    out.push(Math.round(performance.now() - t0));
+  }
+  return out;
+}
+
+async function publicIp() {
+  try {
+    const { ip } = await (await fetch("https://api.ipify.org?format=json", { cache: "no-store" })).json();
+    if (ip !== lastIp) {  // géolocalisation seulement quand l'IP change
+      lastIp = ip;
+      try {
+        const g = await (await fetch(`https://ipapi.co/${ip}/json/`)).json();
+        geo = { country: g.country_code === "GB" ? "UK" : g.country_code, org: g.org || "",
+                type: HOSTING.test(g.org || "") ? "datacenter" : "residential" };
+      } catch { geo = {}; }
+    }
+    return { address: ip, ...geo };
+  } catch { return {}; }
+}
+
+async function snapshot() {
+  const v = stream?.getVideoTracks()[0], a = stream?.getAudioTracks()[0];
+  const s = v?.getSettings() || {};
+  let ip = await publicIp(), rtt = await measureRtt();
+  let video = v ? [v.label] : [], gpu = gpuRenderer();
+  // Simulations du mode démo
+  if (sim.vpn) { ip = { address: "203.0.113.7", country: "SG", org: "M247 Ltd (simulation)", type: "datacenter" };
+                 rtt = (rtt.length ? rtt : [20, 22, 25]).map((r) => r + 240); }
+  if (sim.cam) video = ["OBS Virtual Camera"];
+  if (sim.vm) gpu = "Google SwiftShader";
+  const payload = {
+    session_id: sessionId, declared,
+    devices: { video, audio: a ? [a.label] : [] },
+    browser_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    browser_utc_offset: -new Date().getTimezoneOffset() / 60,
+    gpu_renderer: gpu,
+    video_settings: { width: s.width, height: s.height, frameRate: Math.round(s.frameRate || 0) },
+    rtt_ms: rtt, ip, simulated: sim.vpn || sim.cam || sim.vm,
+  };
+  try {
+    await fetch("/api/snapshot", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+    $("status").textContent = `Session ${sessionId} · dernière mesure ${new Date().toLocaleTimeString()}`;
+  } catch {
+    $("status").textContent = "Serveur injoignable, nouvelle tentative dans 5 s.";
+  }
+}
+</script>
+</body>
+</html>
