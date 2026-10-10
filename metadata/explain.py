@@ -21,6 +21,16 @@ QUESTIONS = {
     "C9_CRYPTO": "Pouvez-vous fournir un RIB à votre nom dans une banque de votre pays de résidence ?",
     "C10_DISPOSABLE_EMAIL": "Pouvez-vous confirmer une adresse email personnelle durable ?",
     "S1_PERSONA_NETWORK": "Connaissez-vous les autres candidats qui partagent vos coordonnées ou votre CV ?",
+    "I1_VIRTUAL_DEVICE": "Pouvez-vous refaire l'appel avec la webcam intégrée de votre ordinateur, sans logiciel ?",
+    "I2_TIMEZONE": "Dans quel pays et quelle ville vous trouvez-vous en ce moment ?",
+    "I3_VIRTUAL_MACHINE": "Utilisez-vous une machine virtuelle ou un bureau à distance pour cet entretien ?",
+    "I4_INTERVIEW_IP": "Passez-vous par un VPN ou un serveur distant ? Pouvez-vous le couper pour l'entretien ?",
+    "I5_LATENCY": "Pouvez-vous refaire un court appel depuis une connexion locale, sans VPN ?",
+    "I6_VIDEO_SETTINGS": "Votre connexion est-elle instable ? Pouvez-vous fixer la qualité vidéo ?",
+    "V1_CHALLENGE_ARTEFACTS": "Pouvez-vous refaire les gestes (main devant le visage, tête de profil) avec un second interlocuteur ?",
+    "V2_LIPSYNC": "Pouvez-vous lire à voix haute une phrase choisie au hasard, caméra proche ?",
+    "V3_TEMPORAL": "Accepteriez-vous un second entretien vidéo, à un horaire imposé ?",
+    "V4_LIGHTING": "Pouvez-vous allumer une lampe face à vous et bouger lentement la tête ?",
 }
 DISCLAIMER = ("Aide à la décision uniquement : la décision finale revient à un humain. "
               "Aucun signal ne porte sur l'origine, la nationalité ou l'accent.")

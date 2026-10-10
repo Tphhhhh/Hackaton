@@ -2,8 +2,9 @@
 
     python -m metadata.data.generate --out metadata/data/synthetic --seed 42
 
-Écrit candidates.json (ce que voit le pipeline) et labels.json (vérité terrain,
-lue uniquement par evaluate.py).
+Écrit candidates.json (ce que voit le pipeline), video_scores.json (scores SIMULÉS du
+module vidéo, à remplacer par ceux de Théophile) et labels.json (vérité terrain, lue
+uniquement par evaluate.py).
 
 Les fraudes s'inspirent des signaux publiés par le FBI sur les faux informaticiens
 à distance : refus de caméra, matériel envoyé chez un transitaire ou adresse qui
@@ -188,10 +189,24 @@ SYNONYMS = {"scalable": "highly scalable", "Expert": "Specialist", "Strong": "Sk
 
 FRAUD_SIGNALS = ["timeline_overlap", "young_profile", "camera_refused", "forwarder",
                  "address_change_after_hire", "multi_country_logins", "night_activity",
-                 "crypto_payment", "disposable_email"]
-# Bruit réaliste chez les légitimes : un seul signal faible, explicable.
+                 "crypto_payment", "disposable_email",
+                 # pendant l'entretien
+                 "virtual_camera", "tz_mismatch", "vm_gpu", "ip_datacenter", "high_latency", "deepfake"]
+# Bruit réaliste chez les légitimes : des signaux faibles et explicables.
 LEGIT_NOISE = ["camera_refused", "young_profile", "moved_house", "one_trip_abroad",
-               "late_worker"]
+               "late_worker", "blur_background", "expat_tz", "corporate_vpn", "weak_4g"]
+
+REAL_CAMERAS = ["Integrated Webcam", "HD Pro Webcam C920 (046d:082d)", "FaceTime HD Camera",
+                "Logitech BRIO", "USB2.0 HD UVC WebCam"]
+REAL_MICS = ["Microphone Array (Realtek Audio)", "MacBook Pro Microphone", "Headset Microphone (Jabra Evolve2)"]
+VIRTUAL_CAMERAS = ["OBS Virtual Camera", "ManyCam Virtual Webcam", "XSplit VCam", "DeepFaceLive Camera"]
+VIRTUAL_MICS = ["CABLE Output (VB-Audio Virtual Cable)", "Voicemod Virtual Audio Device"]
+REAL_GPUS = ["ANGLE (Intel, Intel(R) Iris(R) Xe Graphics Direct3D11)", "Apple M2",
+             "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 Direct3D11)", "ANGLE (AMD, AMD Radeon(TM) Graphics Direct3D11)"]
+VM_GPUS = ["Google SwiftShader", "llvmpipe (LLVM 15.0.7, 256 bits)", "VMware SVGA 3D",
+           "Microsoft Basic Render Driver"]
+FAR_TIMEZONES = [("Asia/Shanghai", 8), ("Asia/Vladivostok", 10), ("Asia/Bangkok", 7), ("Asia/Dubai", 4),
+                 ("America/New_York", -4)]
 
 
 def _ym(d: date) -> str:
@@ -247,6 +262,55 @@ def _logins(rng, hired, utc_offset, home, mode, days=21):
         for e in events[-4:]:
             e["ip_country"] = rng.choice(["IT", "GR", "US"])
     return events
+
+
+def _interview_session(rng, signals, country, tzname, offset):
+    """Métadonnées lues pendant l'entretien vidéo (navigateur + serveur)."""
+    video = [rng.choice(VIRTUAL_CAMERAS)] if "virtual_camera" in signals else \
+        ["NVIDIA Broadcast"] if "blur_background" in signals else [rng.choice(REAL_CAMERAS)]
+    audio = [rng.choice(VIRTUAL_MICS)] if "virtual_camera" in signals and rng.random() < 0.5 else [rng.choice(REAL_MICS)]
+    if "tz_mismatch" in signals:
+        btz, boff = rng.choice(FAR_TIMEZONES)
+    elif "expat_tz" in signals:
+        btz, boff = "Europe/Helsinki", 3  # ordinateur resté à l'heure de l'ancien pays, écart d'une heure
+    else:
+        btz, boff = tzname, offset
+    ip_country, ip_type = country, "residential"
+    if "ip_datacenter" in signals:
+        ip_country, ip_type = rng.choice(["US", "NL", "DE", "SG"]), "datacenter"
+    elif "corporate_vpn" in signals:
+        ip_type = "vpn"
+    if "high_latency" in signals:
+        rtt = [rng.randint(180, 320) for _ in range(12)]
+    elif "weak_4g" in signals:
+        rtt = [rng.randint(70, 190) for _ in range(12)]
+    else:
+        rtt = [rng.randint(8, 45) for _ in range(12)]
+    return {
+        "devices": {"video": video, "audio": audio},
+        "device_changed_during_call": "virtual_camera" in signals and rng.random() < 0.4,
+        "browser_timezone": btz,
+        "browser_utc_offset": boff,
+        "gpu_renderer": rng.choice(VM_GPUS) if "vm_gpu" in signals else rng.choice(REAL_GPUS),
+        "ip": {"country": ip_country, "type": ip_type},
+        "ip_changed_during_call": "ip_datacenter" in signals and rng.random() < 0.4,
+        "rtt_ms": rtt,
+        "video_settings_changes": rng.randint(3, 6) if "weak_4g" in signals or "deepfake" in signals else rng.randint(0, 1),
+    }
+
+
+def _video_scores(rng, signals):
+    """Scores SIMULÉS du module vidéo, en attendant les vrais scores de Théophile."""
+    if "camera_refused" in signals:
+        return None
+    if "deepfake" in signals:
+        return {"challenges": round(rng.uniform(0.6, 0.95), 2), "lipsync": round(rng.uniform(0.35, 0.9), 2),
+                "temporal": round(rng.uniform(0.3, 0.8), 2), "lighting": round(rng.uniform(0.2, 0.7), 2),
+                "classifier": round(rng.uniform(0.3, 0.85), 2)}
+    # Le classifieur générique se trompe parfois sur de la vraie webcam : faux positif réaliste.
+    return {"challenges": round(rng.uniform(0.02, 0.35), 2), "lipsync": round(rng.uniform(0.05, 0.4), 2),
+            "temporal": round(rng.uniform(0.05, 0.4), 2), "lighting": round(rng.uniform(0.05, 0.45), 2),
+            "classifier": round(rng.uniform(0.5, 0.75) if rng.random() < 0.15 else rng.uniform(0.05, 0.45), 2)}
 
 
 def make_candidate(rng, cid, signals, network=None):
@@ -331,6 +395,7 @@ def make_candidate(rng, cid, signals, network=None):
         "payment": payment,
         "shipping_addresses": shipping,
         "activity": _logins(rng, hired, offset, country, mode),
+        "interview_session": _interview_session(rng, signals, country, tzname, offset),
     }
 
 
@@ -359,7 +424,8 @@ def generate(seed=42, n_legit=30, n_solo_fraud=10, network_sizes=(3, 3, 2, 2)):
             "address": rng.choice(FORWARDERS) if "address" in shared else None,
         }
         for m in range(size):
-            sig = rng.sample(["camera_refused", "multi_country_logins", "night_activity", "young_profile"], rng.randint(0, 2))
+            sig = rng.sample(["camera_refused", "multi_country_logins", "night_activity", "young_profile",
+                              "virtual_camera", "ip_datacenter", "deepfake", "high_latency"], rng.randint(0, 2))
             if net["wallet"]:
                 sig.append("crypto_payment")
             if net["address"]:
@@ -367,12 +433,14 @@ def generate(seed=42, n_legit=30, n_solo_fraud=10, network_sizes=(3, 3, 2, 2)):
             specs.append((sig, {**net, "member": m}, {"is_fraud": True, "network": net["id"]}))
 
     rng.shuffle(specs)
-    candidates, labels = [], {}
+    candidates, labels, video = [], {}, {}
     for idx, (sig, net, label) in enumerate(specs, start=1):
         cid = f"C{idx:03d}"
         candidates.append(make_candidate(rng, cid, sig, net))
         labels[cid] = {**label, "injected_signals": sorted(sig)}
-    return candidates, labels
+        if (v := _video_scores(rng, sig)) is not None:
+            video[cid] = v
+    return candidates, labels, video
 
 
 def main():
@@ -380,11 +448,12 @@ def main():
     p.add_argument("--out", default="metadata/data/synthetic")
     p.add_argument("--seed", type=int, default=42)
     args = p.parse_args()
-    candidates, labels = generate(args.seed)
+    candidates, labels, video = generate(args.seed)
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     (out / "candidates.json").write_text(json.dumps(candidates, indent=2, ensure_ascii=False), encoding="utf-8")
     (out / "labels.json").write_text(json.dumps(labels, indent=2, ensure_ascii=False), encoding="utf-8")
+    (out / "video_scores.json").write_text(json.dumps(video, indent=2), encoding="utf-8")
     n_fraud = sum(l["is_fraud"] for l in labels.values())
     print(f"{len(candidates)} dossiers écrits dans {out} ({n_fraud} frauduleux).")
 

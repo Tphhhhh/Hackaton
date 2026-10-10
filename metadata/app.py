@@ -23,6 +23,7 @@ from metadata.decide import DECISIONS  # noqa: E402
 from metadata.evaluate import evaluate  # noqa: E402
 from metadata.run import analyse, load_dotenv  # noqa: E402
 from metadata.schema import load_candidates  # noqa: E402
+from metadata.video import load_video_scores  # noqa: E402
 
 DATA_DIR = ROOT / "metadata" / "data" / "synthetic"
 LOG = ROOT / "out" / "audit.jsonl"
@@ -35,9 +36,9 @@ load_dotenv(str(ROOT / ".env"))
 
 
 @st.cache_data(show_spinner="Analyse des dossiers…")
-def run(data_path: str) -> tuple[list[dict], dict]:
+def run(data_path: str, video_path: str) -> tuple[list[dict], dict]:
     candidates = load_candidates(data_path)
-    return candidates, analyse(candidates)
+    return candidates, analyse(candidates, load_video_scores(video_path))
 
 
 def decisions_for(cid: str) -> list[dict]:
@@ -51,6 +52,7 @@ def decisions_for(cid: str) -> list[dict]:
 st.sidebar.title("🛡️ Know Your Freelancer")
 data_path = st.sidebar.text_input("Fichier de dossiers", str(DATA_DIR / "candidates.json"))
 labels_path = Path(data_path).with_name("labels.json")
+video_path = st.sidebar.text_input("Scores du module vidéo", str(Path(data_path).with_name("video_scores.json")))
 show_truth = st.sidebar.toggle("Mode démo : afficher la vérité terrain", value=False,
                                disabled=not labels_path.exists())
 if st.sidebar.button("Relancer l'analyse"):
@@ -58,7 +60,7 @@ if st.sidebar.button("Relancer l'analyse"):
 st.sidebar.caption("Aide à la décision uniquement. Aucun signal ne porte sur l'origine, "
                    "la nationalité ou l'accent. La décision finale revient à un humain.")
 
-candidates, report = run(data_path)
+candidates, report = run(data_path, video_path)
 by_id = {c["id"]: c for c in candidates}
 results = report["results"]
 labels = json.loads(labels_path.read_text(encoding="utf-8")) if show_truth else {}

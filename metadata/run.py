@@ -1,6 +1,6 @@
 """Pipeline complet : contrôles de cohérence, réseaux de personas, score, explication.
 
-    python -m metadata.run --data metadata/data/synthetic/candidates.json --out out
+    python -m metadata.run --data metadata/data/synthetic/candidates.json --out out [--video scores.json]
 
 Écrit out/report.json (lu par evaluate.py) et out/report.md (lisible par l'analyste),
 et journalise chaque score dans out/audit.jsonl.
@@ -19,6 +19,7 @@ from .explain import explain
 from .schema import load_candidates
 from .scoring import score
 from .similarity import find_links, find_networks
+from .video import load_video_scores, video_signals
 
 
 def load_dotenv(path: str = ".env") -> None:
@@ -31,7 +32,8 @@ def load_dotenv(path: str = ".env") -> None:
                 os.environ.setdefault(k.strip(), v.strip())
 
 
-def analyse(candidates: list[dict]) -> dict:
+def analyse(candidates: list[dict], video_scores: dict | None = None) -> dict:
+    video_scores = video_scores or {}
     t0 = time.perf_counter()
     links = find_links(candidates)
     networks = find_networks(candidates, links)
@@ -42,7 +44,7 @@ def analyse(candidates: list[dict]) -> dict:
     for c in candidates:
         t = time.perf_counter()
         reasons = [r for l in links if c["id"] in (l["a"], l["b"]) for r in l["reasons"]]
-        res = score(run_checks(c), net_of.get(c["id"]), reasons)
+        res = score(run_checks(c) + video_signals(video_scores.get(c["id"])), net_of.get(c["id"]), reasons)
         res["explanation"] = explain(res)
         res["id"] = c["id"]
         res["detect_ms"] = round((time.perf_counter() - t) * 1000 + t_links * 1000 / len(candidates), 2)
@@ -76,10 +78,13 @@ def main():
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     p.add_argument("--data", default="metadata/data/synthetic/candidates.json")
     p.add_argument("--out", default="out")
+    p.add_argument("--video", default=None,
+                   help="scores du module vidéo (par défaut : video_scores.json à côté des dossiers, s'il existe)")
     args = p.parse_args()
     load_dotenv()
 
-    report = analyse(load_candidates(args.data))
+    video_path = args.video or Path(args.data).with_name("video_scores.json")
+    report = analyse(load_candidates(args.data), load_video_scores(video_path))
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     (out / "report.json").write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")

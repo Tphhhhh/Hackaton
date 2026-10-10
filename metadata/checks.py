@@ -148,10 +148,117 @@ def check_email(c: dict) -> Signal | None:
     return None
 
 
+# --- Métadonnées de la session d'entretien (lues par le navigateur et le serveur) ---------
+# Volontairement absent : la langue du système. C'est un indicateur indirect d'origine,
+# exclu par notre règle éthique (et par l'AI Act), même comme signal faible.
+
+VIRTUAL_DEVICES = ("obs", "manycam", "snap camera", "xsplit", "vb-audio", "voicemod", "virtual cam",
+                   "deepfacelive", "avatarify")
+VM_RENDERERS = ("swiftshader", "llvmpipe", "vmware", "virtualbox", "microsoft basic render")
+EUROPE_MAX_RTT_MS = 150      # vers un serveur à Paris, on attend < 50 ms ; au-delà de 150, c'est loin
+
+
+def _session(c: dict) -> dict | None:
+    return c.get("interview_session")
+
+
+def check_virtual_camera(c: dict) -> Signal | None:
+    s = _session(c)
+    if not s:
+        return None
+    names = s["devices"].get("video", []) + s["devices"].get("audio", [])
+    virtual = [n for n in names if any(v in n.lower() for v in VIRTUAL_DEVICES)]
+    if virtual:
+        return Signal("I1_VIRTUAL_DEVICE", 10, f"Périphérique virtuel pendant l'entretien : {', '.join(virtual)}.", "T1656")
+    if s.get("device_changed_during_call"):
+        return Signal("I1_VIRTUAL_DEVICE", 5, "La caméra a changé en cours d'appel.", "T1656")
+    return None
+
+
+def check_browser_timezone(c: dict) -> Signal | None:
+    s = _session(c)
+    if not s or "browser_utc_offset" not in s:
+        return None
+    gap = abs(s["browser_utc_offset"] - c["declared_location"].get("utc_offset", 0))
+    if gap >= 2:
+        return Signal("I2_TIMEZONE", 10,
+                      f"Ordinateur réglé sur {s.get('browser_timezone', '?')} (UTC{s['browser_utc_offset']:+d}), "
+                      f"à {gap} h du fuseau déclaré.")
+    return None
+
+
+def check_vm_gpu(c: dict) -> Signal | None:
+    s = _session(c)
+    if s and any(v in s.get("gpu_renderer", "").lower() for v in VM_RENDERERS):
+        return Signal("I3_VIRTUAL_MACHINE", 15,
+                      f"Rendu graphique logiciel ou machine virtuelle ({s['gpu_renderer']}).", "T1564.006")
+    return None
+
+
+def check_interview_ip(c: dict) -> Signal | None:
+    s = _session(c)
+    if not s or "ip" not in s:
+        return None
+    reasons, weight = [], 0
+    if s["ip"]["country"] != c["declared_location"]["country"]:
+        reasons.append(f"IP située en {s['ip']['country']} et non en {c['declared_location']['country']}")
+        weight += 10
+    if s["ip"].get("type") == "datacenter":
+        reasons.append("IP d'hébergeur (datacenter) et non d'opérateur grand public")
+        weight += 10
+    if s.get("ip_changed_during_call"):
+        reasons.append("IP changée pendant l'appel")
+        weight += 10
+    if reasons:
+        return Signal("I4_INTERVIEW_IP", min(weight, 25), "Pendant l'entretien : " + " ; ".join(reasons) + ".", "T1090")
+    return None
+
+
+def check_latency(c: dict) -> Signal | None:
+    s = _session(c)
+    rtt = sorted(s.get("rtt_ms", [])) if s else []
+    if not rtt:
+        return None
+    median = rtt[len(rtt) // 2]
+    if median > EUROPE_MAX_RTT_MS:
+        return Signal("I5_LATENCY", 15,
+                      f"Temps de réponse médian de {median} ms vers Paris pour un candidat en "
+                      f"{c['declared_location']['country']} (attendu < 50 ms) : connexion probablement lointaine "
+                      "ou relayée.", "T1090")
+    return None
+
+
+def check_video_settings(c: dict) -> Signal | None:
+    s = _session(c)
+    if s and s.get("video_settings_changes", 0) >= 3:
+        return Signal("I6_VIDEO_SETTINGS", 5,
+                      f"Résolution ou cadence de la vidéo modifiée {s['video_settings_changes']} fois pendant l'appel.")
+    return None
+
+
 CHECKS = [check_timeline_overlap, check_claimed_years, check_young_profile, check_camera_refused,
           check_forwarder, check_address_change, check_login_countries, check_working_hours,
-          check_payment, check_email]
+          check_payment, check_email, check_virtual_camera, check_browser_timezone, check_vm_gpu,
+          check_interview_ip, check_latency, check_video_settings]
+
+
+# Combinaisons : un signal isolé s'explique souvent (flou d'arrière-plan, VPN d'entreprise,
+# 4G faible). Plusieurs signaux d'entretien qui pointent dans le même sens pèsent plus lourd.
+INTERVIEW_CODES = {"I1_VIRTUAL_DEVICE", "I3_VIRTUAL_MACHINE", "I4_INTERVIEW_IP", "I5_LATENCY", "I2_TIMEZONE"}
+
+
+def combination_bonus(signals: list[Signal]) -> Signal | None:
+    hits = sorted({s.code for s in signals} & INTERVIEW_CODES)
+    if len(hits) >= 2:
+        weight = 15 if len(hits) == 2 else 25
+        return Signal("X1_COMBINATION", weight,
+                      f"{len(hits)} signaux d'entretien concordants ({', '.join(h.split('_', 1)[0] for h in hits)}) : "
+                      "une explication bénigne unique devient peu probable.")
+    return None
 
 
 def run_checks(c: dict) -> list[Signal]:
-    return [s for check in CHECKS if (s := check(c)) is not None]
+    signals = [s for check in CHECKS if (s := check(c)) is not None]
+    if (bonus := combination_bonus(signals)) is not None:
+        signals.append(bonus)
+    return signals
