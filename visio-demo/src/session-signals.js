@@ -66,7 +66,7 @@ export function createSessionSignals({ onMetadata = () => {}, onAudio = () => {}
     </section>
     <details class="console-detail console-method"><summary>Calcul du score global</summary><p id="console-formula" class="signals-help"></p></details>
     <p class="console-footnote">Indice exploratoire, pas une probabilité. Métadonnées communes aux deux vues ; contrôles incomplets visibles dans les détails.</p>`;
-  document.querySelector('.meeting-layout').insertBefore(panel,$('live-summary'));
+  document.querySelector('.meeting-layout').append(panel);
   let stream=null, video=null, generation=0, interval, frameId, frames=[], lastPresentation, previousCamera, previousSettings;
   let cameraChanges=0, settingsChanges=0, gpu='', deviceError='', controls=[], interactions={moves:0,keys:0,pastes:0}, keyTimes=[];
   let activeRequest=null, revision=0, debounce, networkPending=false, networkEpoch=0, networkControllers=new Set(), network={ip:'',org:'',rtt_ms:[]}, lastIP='', ipChanges=0, networkAt=0;

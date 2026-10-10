@@ -117,3 +117,41 @@
 .signal-layer[data-state=flag] summary strong {color:#aa6420;}
 .signal-layer p {font-size:11px;line-height:1.6;color:#647269;margin:10px 0 0;}
 #layers-microphone {font-size:11px;line-height:1.5;margin-top:12px;text-align:left;white-space:normal;}
+
+/* Workspace hierarchy: two previews, independent observations, one score console. */
+.comparison-workspace { display: contents; }
+#video-signal-layers { display: none; }
+.compare-mode .meeting-layout { grid-template-columns: minmax(0, 1fr) 390px; gap: 28px; }
+.compare-mode .comparison-workspace { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 20px; align-items: start; }
+.compare-mode #session-panel { grid-column: 2; grid-row: 1; }
+.compare-mode #video-signal-layers { display: block; grid-column: 1 / -1; margin: 0; padding: 20px 0 0; border-top: 1px solid var(--line); }
+.compare-mode #live-summary { grid-column: 1 / -1; grid-row: auto; }
+#signal-layer-rows { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; }
+.compare-mode .media-card { border-radius: 14px; border: 1px solid var(--line); box-shadow: none; }
+.compare-mode .stage-shell { min-height: 300px; }
+.compare-mode .room-heading { margin: 0 0 12px; flex-wrap: wrap; gap: 4px 12px; }
+.compare-mode .recording-label { font-size: 12px; }
+.compare-mode .stage-empty { padding: 20px 16px; }
+.compare-mode .stage-empty h2 { font-size: 24px; }
+.compare-mode .stage-empty>p { font-size: 14px; }
+.compare-mode .empty-video-icon { width: 40px; height: 40px; margin-bottom: 12px; }
+.compare-mode .stage-empty .primary { margin-top: 16px; }
+.compare-mode .stage-formats { font-size: 12px; }
+.compare-mode .file-info { padding: 12px 16px 0; }
+.compare-mode .meeting-controls { padding: 14px 16px; flex-wrap: wrap; gap: 8px; }
+.compare-mode .control-group { flex-wrap: wrap; }
+.compare-mode .filter-controls { padding: 12px 16px 16px; gap: 8px; }
+.compare-mode .tracking-bar { padding: 16px 0 0; gap: 8px 12px; }
+.compare-mode .filter-points { margin: 16px 0 0; }
+.compare-mode .filter-note { padding: 8px 0 0; }
+.compare-mode .filter-help { margin: 8px 0; }
+.compare-mode .filter-credit { padding: 0; }
+@media (max-width: 1200px) {
+ .compare-mode .meeting-layout { grid-template-columns: minmax(0, 1fr); }
+ .compare-mode #session-panel { grid-column: 1; grid-row: auto; }
+ .compare-mode .meeting-app { max-width: 1040px; }
+}
+@media (max-width: 600px) {
+ .compare-mode .comparison-workspace { grid-template-columns: minmax(0, 1fr); }
+ #signal-layer-rows { grid-template-columns: minmax(0, 1fr); }
+}

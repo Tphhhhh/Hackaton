@@ -8,7 +8,7 @@ export function createSignalPanel({ onMicrophone }) {
     <div id="signal-layer-rows"></div>
     <button id="layers-microphone" class="text-button" type="button" disabled>Activer la cohérence voix / bouche</button>
     <p class="signals-help">Micro local facultatif, sans enregistrement. Comparaison d’activité, sans lecture labiale.</p>`;
-  document.getElementById('console-video-title').closest('section').append(panel);
+  document.getElementById('live-summary').before(panel);
   let selected = 'original';
   const results = { original: unavailableSignals(), filtered: unavailableSignals() };
   const rows = {};
