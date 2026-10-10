@@ -15,7 +15,7 @@ QUESTIONS = {
     "C3_YOUNG_PROFILE": "Pouvez-vous nous mettre en relation avec deux anciens collègues ou managers vérifiables ?",
     "C4_CAMERA": "Accepteriez-vous un court échange vidéo avec un second interlocuteur, caméra allumée ?",
     "C5_FORWARDER": "Pourquoi le matériel doit-il être livré à cette adresse plutôt qu'à votre domicile ?",
-    "C6_ADDRESS_CHANGE": "Pouvez-vous fournir un justificatif de domicile à la nouvelle adresse ?",
+    "C6_ADDRESS_CHANGE": "Pourquoi le matériel doit-il être livré à cette adresse ? Pouvez-vous fournir un justificatif ?",
     "C7_LOGIN_COUNTRIES": "Avez-vous voyagé ou utilisé un VPN depuis votre prise de poste ?",
     "C8_NIGHT_HOURS": "Quelles sont vos heures de travail habituelles et depuis quel fuseau horaire ?",
     "C9_CRYPTO": "Pouvez-vous fournir un RIB à votre nom dans une banque de votre pays de résidence ?",

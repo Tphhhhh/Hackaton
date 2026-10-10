@@ -1,14 +1,19 @@
-"""Candidatures déposées via la page d'offre d'emploi de démo.
+"""Candidatures déposées via le site de démo (offre d'emploi, puis onboarding).
 
-Chaque dépôt est converti au format de `schema.py`, puis analysé AVEC le jeu de
-dossiers existant : une candidature qui recycle le téléphone, le compte de paiement ou
-le CV d'un dossier déjà reçu est immédiatement reliée à son réseau.
+Comme dans un vrai recrutement, les données arrivent en deux temps :
+1. **Candidature** : CV, coordonnées, parcours, taux journalier, disponibilité.
+2. **Onboarding**, une fois le candidat retenu : adresse de résidence, adresse de livraison
+   du matériel et coordonnées de versement. C'est là que le FBI observe les signaux les plus
+   forts (matériel envoyé chez un transitaire, paiement en cryptomonnaie).
+
+Chaque dépôt est converti au format de `schema.py`, puis analysé AVEC le jeu de dossiers
+existant : un candidat qui recycle le téléphone, le compte de paiement ou le CV d'un dossier
+déjà reçu est immédiatement relié à son réseau.
 """
 from __future__ import annotations
 
 import json
 import random
-import re
 import threading
 from datetime import date, timedelta
 from pathlib import Path
@@ -45,26 +50,54 @@ def _month(s: str | None) -> str | None:
     return s[:7] if s else None
 
 
+def _session_meta(meta: dict, country: str) -> dict | None:
+    """Métadonnées techniques lues par le navigateur (annoncées au candidat sur le formulaire)."""
+    if not meta:
+        return None
+    ip = {k: v for k, v in (meta.get("ip") or {}).items() if k in ("country", "type", "org", "address")}
+    session = {
+        "devices": {"video": [], "audio": []},
+        "browser_timezone": meta.get("browser_timezone"),
+        "browser_utc_offset": meta.get("browser_utc_offset", COUNTRY_OFFSET.get(country, 2)),
+        "gpu_renderer": meta.get("gpu_renderer", ""),
+        "rtt_ms": meta.get("rtt_ms", []),
+    }
+    if ip.get("country"):  # sans géolocalisation, pas de signal IP inventé
+        session["ip"] = ip
+    return session
+
+
+def _profile_lookup(url: str) -> dict | None:
+    """Enrichissement du profil professionnel (date de création, nombre de relations).
+
+    Le candidat ne déclare jamais ces valeurs : en production, elles viennent d'un fournisseur
+    de données de profil. Ici, on les simule pour les deux CV de démo ; un autre profil n'est
+    pas enrichi et le contrôle C3 ne s'applique pas.
+    """
+    norm = url.lower().rstrip("/").replace("https://", "").replace("http://", "").replace("www.", "")
+    for kind in ("honest", "fraud"):
+        ex = demo_example(kind)
+        if ex["linkedin_url"].replace("https://", "") == norm:
+            return ex
+    return None
+
+
 def to_candidate(form: dict, app_id: str) -> dict:
     """Convertit le formulaire de candidature au format de schema.py."""
     country = form["country"]
-    today = date.today().isoformat()
-    home = f"{form.get('address', '').strip()}, {form['city']}, {country}"
-    shipping = form.get("shipping_address", "").strip() or home
     profiles = []
     for platform in ("linkedin", "github"):
         url = form.get(f"{platform}_url", "").strip()
         if url:
             prof = {"platform": platform, "url": url}
-            # Simulation de l'enrichissement de profil (API LinkedIn / GitHub en production).
-            if platform == "linkedin" and form.get("profile_created"):
-                prof["created_at"] = form["profile_created"]
-                prof["connections"] = int(form.get("profile_connections") or 0)
+            if platform == "linkedin" and (info := _profile_lookup(url)):
+                prof["created_at"] = info["profile_created"]
+                prof["connections"] = info["profile_connections"]
             profiles.append(prof)
-    meta = form.get("meta", {})
-    return {
+    candidate = {
         "id": app_id,
-        "applied_at": today,
+        "stage": "candidature",
+        "applied_at": date.today().isoformat(),
         "hired_at": None,
         "full_name": f"{form['first_name'].strip()} {form['last_name'].strip()}",
         "email": form["email"].strip(),
@@ -83,31 +116,38 @@ def to_candidate(form: dict, app_id: str) -> dict:
             "file_name": form.get("cv_file_name"),
         },
         "profiles": profiles,
+        "application": {"daily_rate": form.get("daily_rate"), "available_from": form.get("available_from"),
+                        "source": form.get("source"), "message": form.get("message", "")},
         "interview": {"camera_refused": False},
-        "payment": {"method": form["payment_method"], "account": form.get("payment_account", "").strip()},
-        "shipping_addresses": [{"from": today, "address": shipping}],
+        # Renseignés à l'onboarding seulement
+        "payment": {"method": "", "account": ""},
+        "shipping_addresses": [],
         "activity": [],
-        # Métadonnées lues par le navigateur au moment du dépôt (consentement affiché sur le formulaire).
-        "interview_session": {
-            "devices": {"video": [], "audio": []},
-            "browser_timezone": meta.get("browser_timezone"),
-            "browser_utc_offset": meta.get("browser_utc_offset", COUNTRY_OFFSET.get(country, 2)),
-            "gpu_renderer": meta.get("gpu_renderer", ""),
-            "ip": {k: v for k, v in (meta.get("ip") or {}).items() if k in ("country", "type", "org", "address")},
-            "rtt_ms": meta.get("rtt_ms", []),
-        } if meta else None,
-        "source": "formulaire",
     }
+    if session := _session_meta(form.get("meta", {}), country):
+        candidate["interview_session"] = session
+    return candidate
+
+
+def apply_onboarding(c: dict, form: dict) -> None:
+    """Ajoute au dossier les données d'onboarding : adresse, livraison du matériel, versement."""
+    today = date.today().isoformat()
+    home = f"{form['address'].strip()}, {form['postcode'].strip()} {form['city'].strip()}, {c['declared_location']['country']}"
+    shipping = form.get("shipping_address", "").strip()
+    c["stage"] = "onboarding"
+    c["hired_at"] = today
+    c["home_address"] = home
+    c["shipping_addresses"] = [{"from": c["applied_at"], "address": home}]
+    if shipping and shipping.lower() != home.lower():
+        c["shipping_addresses"].append({"from": today, "address": shipping})
+    c["payment"] = {"method": form["payout_method"], "account": form.get("payout_account", "").strip()}
+    c["onboarding"] = {"status": form.get("status"), "company_id": form.get("company_id"),
+                       "start_date": form.get("start_date")}
 
 
 def _reanalyse() -> None:
     base = load_candidates(DATA_DIR / "candidates.json")
     apps = list(APPLICATIONS.values())
-    for a in apps:  # pas de géolocalisation disponible : on ne fabrique pas de signal IP
-        if a.get("interview_session") and not a["interview_session"].get("ip", {}).get("country"):
-            a["interview_session"].pop("ip", None)
-        if "interview_session" in a and a["interview_session"] is None:
-            a.pop("interview_session")
     report = analyse(base + apps, load_video_scores(DATA_DIR / "video_scores.json"))
     by_id = {c["id"]: c for c in base + apps}
     for r in report["results"]:
@@ -126,15 +166,25 @@ def submit(form: dict) -> str:
         return app_id
 
 
+def onboard(app_id: str, form: dict) -> bool:
+    with LOCK:
+        c = APPLICATIONS.get(app_id)
+        if not c:
+            return False
+        apply_onboarding(c, form)
+        _save_store()
+        _reanalyse()
+        return True
+
+
 def listing() -> list[dict]:
     with LOCK:
         out = []
         for app_id, c in APPLICATIONS.items():
-            r = RESULTS.get(app_id)
-            if r:
+            if r := RESULTS.get(app_id):
                 out.append({"id": app_id, "name": c["full_name"], "city": c["declared_location"]["city"],
                             "country": c["declared_location"]["country"], "email": c["email"],
-                            "applied_at": c["applied_at"], "result": r})
+                            "applied_at": c["applied_at"], "stage": c.get("stage", "candidature"), "result": r})
         return sorted(out, key=lambda a: -a["result"]["score"])
 
 
@@ -143,18 +193,30 @@ def public_info(app_id: str) -> dict | None:
     if not c:
         return None
     return {"id": app_id, "first_name": c["full_name"].split(" ")[0], "name": c["full_name"],
-            "city": c["declared_location"]["city"], "country": c["declared_location"]["country"]}
+            "city": c["declared_location"]["city"], "country": c["declared_location"]["country"],
+            "stage": c.get("stage", "candidature")}
+
+
+# --- Exemples pour la démo ------------------------------------------------------------
+
+def _network_source() -> dict:
+    """Un membre d'un réseau existant dans les dossiers synthétiques (de préférence payé en crypto)."""
+    base = load_candidates(DATA_DIR / "candidates.json")
+    labels = json.loads((DATA_DIR / "labels.json").read_text(encoding="utf-8"))
+    members = [c for c in base if labels[c["id"]]["network"] and c["payment"]["method"] == "crypto"] or \
+              [c for c in base if labels[c["id"]]["network"]]
+    return members[0]
 
 
 def demo_example(kind: str) -> dict:
-    """Pré-remplit le formulaire pour la démo : un candidat honnête, ou un membre d'un réseau existant."""
-    hired = date.today()
+    """Contenu des CV de démo (une candidate honnête, un fraudeur qui recycle un réseau existant)."""
+    today = date.today()
     if kind == "honest":
         return {
-            "first_name": "Camille", "last_name": "Laurent", "email": "camille.laurent@proton.me",
-            "phone": "+33 6 48 21 77 90", "city": "Lyon", "country": "FR", "address": "14 rue Sala",
-            "linkedin_url": "https://linkedin.example/in/camille-laurent", "github_url": "https://github.example/claurent",
-            "years_experience": 7, "skills": "React, Node.js, TypeScript, AWS, PostgreSQL",
+            "first_name": "Camille", "last_name": "Laurent", "headline": "Développeuse Full-Stack Senior",
+            "email": "camille.laurent@proton.me", "phone": "+33 6 48 21 77 90", "city": "Lyon", "country": "FR",
+            "linkedin_url": "https://linkedin.com/in/camille-laurent", "github_url": "https://github.com/claurent",
+            "years_experience": 7, "skills": "React, Node.js, TypeScript, AWS, PostgreSQL, Terraform",
             "summary": "Développeuse full-stack depuis 7 ans, passée par une fintech lyonnaise puis une scale-up "
                        "e-commerce. J'aime les produits bien finis, les revues de code bienveillantes et la "
                        "documentation claire.",
@@ -163,31 +225,44 @@ def demo_example(kind: str) -> dict:
                  "description": "Refonte du tunnel de paiement en React et Node.js, migration vers AWS Lambda."},
                 {"company": "Kairo Tech", "title": "Full-Stack Developer", "start": "2019-01", "end": "2022-01",
                  "description": "API de facturation en Node.js et PostgreSQL, tableau de bord React."},
+                {"company": "Orbis Data", "title": "Développeuse web", "start": "2018-09", "end": "2018-12",
+                 "description": "Stage de fin d'études : outils internes de reporting."},
             ],
             "education": [{"school": "INSA Lyon", "degree": "Diplôme d'ingénieur", "year": 2018}],
-            "payment_method": "iban", "payment_account": "FR76 3000 4012 3400 0123 4567 890",
-            "profile_created": (hired - timedelta(days=365 * 6)).isoformat(), "profile_connections": 412,
+            "profile_created": (today - timedelta(days=365 * 6)).isoformat(), "profile_connections": 412,
+            "daily_rate": 650, "available_from": (today + timedelta(days=30)).isoformat(), "source": "linkedin",
+            "message": "Le projet de refonte de la facturation me parle beaucoup : j'ai mené un chantier similaire "
+                       "chez Kairo Tech. Disponible pour un premier échange dès cette semaine.",
         }
-    # Fraudeur : reprend le compte de paiement et l'adresse de livraison d'un réseau déjà présent
-    # dans les dossiers, avec un CV reformulé. Le pipeline doit le relier au réseau.
-    base = load_candidates(DATA_DIR / "candidates.json")
-    labels = json.loads((DATA_DIR / "labels.json").read_text(encoding="utf-8"))
-    members = [c for c in base if labels[c["id"]]["network"] and c["payment"]["method"] == "crypto"] or \
-              [c for c in base if labels[c["id"]]["network"]]
-    src = members[0]
+    src = _network_source()
     return {
-        "first_name": "Daniel", "last_name": "Kovac", "email": "daniel.kovac.dev@tempmail.dev",
-        "phone": src["phone"], "city": "Amsterdam", "country": "NL", "address": "Keizersgracht 210",
-        "shipping_address": src["shipping_addresses"][0]["address"],
-        "linkedin_url": "https://linkedin.example/in/daniel-kovac-dev", "github_url": "",
+        "first_name": "Daniel", "last_name": "Kovac", "headline": "Senior Full-Stack Engineer",
+        "email": "daniel.kovac.dev@tempmail.dev", "phone": src["phone"], "city": "Amsterdam", "country": "NL",
+        "linkedin_url": "https://linkedin.com/in/daniel-kovac-dev", "github_url": "",
         "years_experience": src["cv"]["years_experience"] + 1, "skills": ", ".join(src["cv"]["skills"]),
         "summary": src["cv"]["summary"],
         "experiences": [{"company": e["company"], "title": e["title"], "start": e["start"], "end": e["end"] or "",
                          "description": e["description"]} for e in src["cv"]["experiences"][:3]],
         "education": src["cv"]["education"],
-        "payment_method": src["payment"]["method"], "payment_account": src["payment"]["account"],
-        "profile_created": (hired - timedelta(days=41)).isoformat(), "profile_connections": 17,
+        "profile_created": (today - timedelta(days=41)).isoformat(), "profile_connections": 17,
+        "daily_rate": 420, "available_from": today.isoformat(), "source": "other",
+        "message": "Available immediately, full-time, any time zone. Happy to start this week.",
     }
+
+
+def demo_onboarding(kind: str) -> dict:
+    today = date.today()
+    start = (today + timedelta(days=21)).isoformat()
+    if kind == "honest":
+        return {"status": "freelance", "company_id": "912 345 678 00021", "address": "14 rue Sala",
+                "postcode": "69002", "city": "Lyon", "shipping_address": "", "payout_method": "sepa",
+                "payout_account": "FR76 3000 4012 3400 0123 4567 890", "start_date": start}
+    src = _network_source()
+    return {"status": "freelance", "company_id": "", "address": "Keizersgracht 210", "postcode": "1016 DX",
+            "city": "Amsterdam", "shipping_address": src["shipping_addresses"][0]["address"],
+            "payout_method": "crypto" if src["payment"]["method"] == "crypto" else "sepa",
+            "payout_account": src["payment"]["account"],
+            "start_date": start}
 
 
 _load_store()

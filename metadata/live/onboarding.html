@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fjordlane · Onboarding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:#0f1b2d; --ink-2:#3b4a5e; --muted:#6b7a8f; --line:#e3e8ef; --bg:#f7f8fb; --card:#fff;
+    --brand:#1f4fd8; --brand-2:#6a8cff; --brand-soft:#eaf0ff; --accent:#ff7a59; --ok:#12805c; --err:#c4314b;
+    --radius:16px; --shadow:0 1px 2px rgba(15,27,45,.04), 0 8px 24px rgba(15,27,45,.06);
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; font:16px/1.6 Inter, system-ui, sans-serif; color:var(--ink); background:var(--bg); }
+  a { color:var(--brand); text-decoration:none; }
+  .wrap { max-width:1160px; margin:0 auto; padding:0 24px; }
+  @media (max-width:640px) { .wrap { padding:0 16px; } }
+
+  /* Navigation */
+  nav { position:sticky; top:0; z-index:20; background:rgba(255,255,255,.85); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
+  nav .wrap { display:flex; align-items:center; gap:28px; height:64px; }
+  .logo { display:flex; align-items:center; gap:10px; font-weight:700; font-size:19px; color:var(--ink); letter-spacing:-.01em; }
+  .logo-mark { width:30px; height:30px; border-radius:9px; background:linear-gradient(135deg,var(--brand),var(--brand-2)); display:grid; place-items:center; color:#fff; font-size:15px; }
+  .navlinks { display:flex; gap:22px; font-size:14px; color:var(--ink-2); }
+  .navlinks span { cursor:default; }
+  .badge-demo { margin-left:auto; font-size:12px; font-weight:600; color:#8a4b00; background:#fff4e0; border:1px solid #ffd9a0; padding:4px 10px; border-radius:999px; }
+  @media (max-width:760px) { .navlinks { display:none; } }
+
+  /* Hero */
+  .hero { background:radial-gradient(1200px 400px at 85% -10%, rgba(106,140,255,.35), transparent 60%),
+                     radial-gradient(800px 300px at -10% 0%, rgba(255,122,89,.18), transparent 60%),
+                     linear-gradient(180deg,#0f1b2d,#16264a); color:#fff; padding:56px 0 88px; }
+  .crumbs { font-size:13px; color:#b8c4dd; margin-bottom:18px; }
+  .hero h1 { font-family:Fraunces, Georgia, serif; font-size:clamp(32px,4.6vw,52px); line-height:1.08; margin:0 0 14px; letter-spacing:-.02em; }
+  .hero p.lead { font-size:18px; color:#d5ddef; max-width:640px; margin:0 0 26px; }
+  .chips { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:30px; }
+  .chip { display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:999px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.16); font-size:14px; }
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; border:0; border-radius:12px; padding:13px 22px; font:600 15px Inter, sans-serif; cursor:pointer; transition:transform .12s, box-shadow .12s, background .12s; }
+  .btn:active { transform:translateY(1px); }
+  .btn-primary { background:var(--accent); color:#fff; box-shadow:0 8px 20px rgba(255,122,89,.35); }
+  .btn-primary:hover { box-shadow:0 10px 26px rgba(255,122,89,.45); }
+  .btn-brand { background:var(--brand); color:#fff; }
+  .btn-brand:hover { background:#1a43b8; }
+  .btn-ghost { background:transparent; color:var(--ink-2); border:1px solid var(--line); }
+  .btn-ghost:hover { border-color:var(--brand-2); color:var(--brand); }
+  .btn:disabled { opacity:.55; cursor:not-allowed; }
+
+  /* Corps */
+  .layout { display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:32px; margin-top:-56px; position:relative; }
+  @media (max-width:960px) { .layout { grid-template-columns:1fr; } .side { order:-1; } }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); }
+  .content { padding:36px; }
+  @media (max-width:640px) { .content { padding:22px; } }
+  .content h2 { font-family:Fraunces, Georgia, serif; font-size:24px; margin:32px 0 10px; letter-spacing:-.01em; }
+  .content h2:first-child { margin-top:0; }
+  .content p, .content li { color:var(--ink-2); }
+  .content ul { padding-left:20px; }
+  .tags { display:flex; flex-wrap:wrap; gap:8px; }
+  .tag { padding:6px 12px; border-radius:8px; background:var(--brand-soft); color:var(--brand); font-size:13px; font-weight:600; }
+  .steps { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:14px; }
+  @media (max-width:760px) { .steps { grid-template-columns:1fr 1fr; } }
+  .step { padding:16px; border:1px solid var(--line); border-radius:12px; background:#fbfcfe; }
+  .step b { display:block; font-size:13px; color:var(--brand); margin-bottom:4px; }
+  .step span { font-size:14px; color:var(--ink-2); }
+  .trust { display:flex; gap:16px; padding:20px; border-radius:14px; background:linear-gradient(135deg,#f1f5ff,#f8faff); border:1px solid #dbe4ff; margin-top:28px; }
+  .trust .ico { font-size:26px; }
+  .trust p { margin:4px 0 0; font-size:14px; }
+
+  .side .card { position:sticky; top:84px; padding:24px; }
+  .side .row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px dashed var(--line); font-size:14px; }
+  .side .row:last-of-type { border-bottom:0; }
+  .side .row span:first-child { color:var(--muted); }
+  .side .rate { font-family:Fraunces, Georgia, serif; font-size:30px; font-weight:700; }
+  .side .btn { width:100%; margin-top:16px; }
+  .side small { display:block; text-align:center; color:var(--muted); margin-top:10px; }
+
+  /* Formulaire */
+  #postuler { scroll-margin-top:80px; margin:40px 0 80px; }
+  .form-card { padding:0; overflow:hidden; }
+  .form-head { padding:28px 36px 0; }
+  .form-head h2 { font-family:Fraunces, Georgia, serif; font-size:28px; margin:0 0 4px; }
+  .form-head p { margin:0; color:var(--muted); }
+  .stepper { display:flex; gap:8px; padding:22px 36px; border-bottom:1px solid var(--line); }
+  .stepper div { flex:1; }
+  .stepper .bar { height:6px; border-radius:6px; background:var(--line); overflow:hidden; }
+  .stepper .bar i { display:block; height:100%; width:0; background:linear-gradient(90deg,var(--brand),var(--brand-2)); transition:width .35s; }
+  .stepper .lbl { font-size:12px; color:var(--muted); margin-top:6px; font-weight:600; }
+  .stepper .on .lbl { color:var(--brand); }
+  .form-body { padding:30px 36px; }
+  @media (max-width:640px) { .form-head, .stepper, .form-body, .form-foot { padding-left:20px !important; padding-right:20px !important; } }
+  .pane { display:none; animation:fade .3s ease; }
+  .pane.active { display:block; }
+  @keyframes fade { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:16px 18px; }
+  .grid .full { grid-column:1/-1; }
+  @media (max-width:640px) { .grid { grid-template-columns:1fr; } }
+  label.f { display:block; font-size:13px; font-weight:600; color:var(--ink-2); margin-bottom:6px; }
+  label.f em { color:var(--accent); font-style:normal; }
+  input[type=text], input[type=email], input[type=tel], input[type=url], input[type=number], input[type=month], input[type=date], select, textarea {
+    width:100%; padding:11px 13px; border:1px solid var(--line); border-radius:10px; font:15px Inter, sans-serif; color:var(--ink); background:#fff; transition:border .15s, box-shadow .15s; }
+  textarea { min-height:96px; resize:vertical; }
+  input:focus, select:focus, textarea:focus { outline:none; border-color:var(--brand-2); box-shadow:0 0 0 4px rgba(106,140,255,.18); }
+  .invalid { border-color:var(--err) !important; box-shadow:0 0 0 4px rgba(196,49,75,.12) !important; }
+  .hint { font-size:12px; color:var(--muted); margin-top:5px; }
+  .section-t { font-weight:700; font-size:15px; margin:26px 0 12px; display:flex; align-items:center; justify-content:space-between; }
+  .section-t:first-child { margin-top:0; }
+  .drop { border:2px dashed #c9d5f5; border-radius:14px; padding:26px; text-align:center; background:#f8faff; cursor:pointer; transition:background .15s, border-color .15s; }
+  .drop:hover, .drop.drag { background:var(--brand-soft); border-color:var(--brand-2); }
+  .drop b { color:var(--brand); }
+  .drop .file { margin-top:8px; font-weight:600; color:var(--ok); }
+  .exp { border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:12px; position:relative; background:#fcfdff; }
+  .exp .rm { position:absolute; top:10px; right:12px; border:0; background:none; color:var(--muted); cursor:pointer; font-size:18px; }
+  .exp .rm:hover { color:var(--err); }
+  .check { display:flex; gap:10px; align-items:flex-start; font-size:14px; color:var(--ink-2); }
+  .check input { margin-top:4px; accent-color:var(--brand); width:16px; height:16px; }
+  .notice { display:grid; grid-template-columns:1fr 1fr; gap:16px; padding:18px; border-radius:12px; background:#f6f8fc; border:1px solid var(--line); margin:22px 0 16px; font-size:13px; }
+  @media (max-width:640px) { .notice { grid-template-columns:1fr; } }
+  .notice h4 { margin:0 0 6px; font-size:13px; } .notice ul { margin:0; padding-left:18px; color:var(--ink-2); }
+  .form-foot { display:flex; justify-content:space-between; gap:12px; padding:20px 36px; border-top:1px solid var(--line); background:#fbfcfe; }
+  .err { color:var(--err); font-size:13px; margin-top:12px; min-height:18px; }
+
+  .success { text-align:center; padding:56px 36px; }
+  .success .tick { width:76px; height:76px; border-radius:50%; margin:0 auto 18px; display:grid; place-items:center; font-size:38px; color:#fff; background:linear-gradient(135deg,#19a974,#12805c); box-shadow:0 12px 30px rgba(18,128,92,.35); animation:pop .45s cubic-bezier(.2,1.6,.4,1); }
+  @keyframes pop { from { transform:scale(.3); opacity:0; } to { transform:none; opacity:1; } }
+  .success h2 { font-family:Fraunces, Georgia, serif; font-size:30px; margin:0 0 8px; }
+  .success p { color:var(--ink-2); max-width:520px; margin:0 auto 22px; }
+  .ref { display:inline-block; font-family:ui-monospace, monospace; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:4px 10px; margin-bottom:22px; }
+
+  /* Démo */
+  .demo-fab { position:fixed; left:18px; bottom:18px; z-index:30; }
+  .demo-fab > button { border:1px solid var(--line); background:#fff; border-radius:999px; padding:9px 14px; font:600 13px Inter, sans-serif; color:var(--ink-2); box-shadow:var(--shadow); cursor:pointer; }
+  .demo-menu { display:none; position:absolute; bottom:46px; left:0; width:260px; background:#fff; border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow); padding:8px; }
+  .demo-menu.open { display:block; }
+  .demo-menu button { display:block; width:100%; text-align:left; border:0; background:none; padding:10px 12px; border-radius:10px; font:14px Inter, sans-serif; cursor:pointer; color:var(--ink); }
+  .demo-menu button:hover { background:var(--bg); }
+  .demo-menu small { display:block; color:var(--muted); font-size:12px; }
+  footer { border-top:1px solid var(--line); padding:28px 0; color:var(--muted); font-size:13px; background:#fff; }
+  /* Dépôt du CV et pré-remplissage */
+  .drop.big { padding:44px 26px; }
+  .drop-ico { font-size:40px; line-height:1; margin-bottom:10px; }
+  .drop-t { font-size:18px; font-weight:700; color:var(--ink); }
+  .parse { border:1px solid var(--line); border-radius:14px; padding:20px 22px; background:#fcfdff; animation:fade .3s ease; }
+  .parse-file { display:flex; align-items:center; gap:14px; padding-bottom:16px; border-bottom:1px solid var(--line); }
+  .parse-file .pdf { width:42px; height:50px; border-radius:8px; background:#ffe9e4; color:#d4472a; font:700 12px Inter, sans-serif; display:grid; place-items:center; flex:none; }
+  .parse-file div { flex:1; min-width:0; } .parse-file b { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .parse-file small { color:var(--muted); }
+  .parse-steps { list-style:none; margin:16px 0 0; padding:0; }
+  .parse-steps li { display:flex; align-items:center; gap:12px; padding:7px 0; color:var(--muted); transition:color .2s; }
+  .parse-steps li i { width:20px; height:20px; border-radius:50%; border:2px solid var(--line); flex:none; display:grid; place-items:center; font-style:normal; font-size:12px; }
+  .parse-steps li.run { color:var(--ink); } .parse-steps li.run i { border-color:var(--brand-2); border-top-color:transparent; animation:spin .8s linear infinite; }
+  .parse-steps li.done { color:var(--ink); } .parse-steps li.done i { border-color:var(--ok); background:var(--ok); color:#fff; }
+  .parse-steps li.done i::after { content:"✓"; }
+  .parse-steps li.fail i { border-color:var(--err); background:var(--err); }
+  .parse-steps small { color:var(--muted); font-size:12px; margin-left:4px; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .link { border:0; background:none; color:var(--brand); font:600 14px Inter, sans-serif; cursor:pointer; padding:0; }
+  .privacy { font-size:13px; color:var(--muted); text-align:center; margin:18px auto 0; max-width:560px; }
+  .ai-banner { display:flex; gap:12px; align-items:center; padding:12px 16px; border-radius:12px; margin-bottom:22px; font-size:14px;
+               background:linear-gradient(135deg,#eef3ff,#f6f0ff); border:1px solid #d6e0ff; color:var(--ink-2); }
+  .ai-banner .spark { font-size:18px; color:var(--brand); }
+  input.filled, textarea.filled, select.filled { background:#f3f7ff; border-color:#bcd0ff; animation:glow 1.6s ease; }
+  @keyframes glow { 0% { box-shadow:0 0 0 0 rgba(106,140,255,.0); } 30% { box-shadow:0 0 0 5px rgba(106,140,255,.28); } 100% { box-shadow:0 0 0 0 rgba(106,140,255,0); } }
+  .euro { position:relative; } .euro input { padding-right:70px; }
+  .euro span { position:absolute; right:13px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:14px; }
+  .demo-menu hr { border:0; border-top:1px solid var(--line); margin:6px 4px; }
+  .demo-menu a { display:block; padding:6px 12px; font-size:12px; }
+  .pay { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  @media (max-width:640px) { .pay { grid-template-columns:1fr; } }
+  .pay label { border:1.5px solid var(--line); border-radius:12px; padding:14px; cursor:pointer; display:flex; gap:10px; align-items:flex-start; transition:border .15s, background .15s; }
+  .pay label:hover { border-color:var(--brand-2); }
+  .pay input { margin-top:4px; accent-color:var(--brand); }
+  .pay label.sel { border-color:var(--brand); background:var(--brand-soft); }
+  .pay b { display:block; font-size:14px; } .pay span { font-size:12px; color:var(--muted); }
+  .hero.small { padding:44px 0 84px; }
+  .todo { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:22px; max-width:760px; }
+  @media (max-width:760px) { .todo { grid-template-columns:1fr 1fr; } }
+  .todo div { padding:12px 14px; border-radius:12px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.16); font-size:13px; color:#d5ddef; }
+  .todo b { display:block; color:#fff; font-size:14px; }
+  .one { max-width:820px; margin:-56px auto 80px; position:relative; }
+  .block { padding:28px 36px; border-bottom:1px solid var(--line); }
+  .block:last-of-type { border-bottom:0; }
+  @media (max-width:640px) { .block { padding:22px 20px; } }
+  .block h3 { font-family:Fraunces, Georgia, serif; font-size:21px; margin:0 0 4px; }
+  .block > p.sub { margin:0 0 18px; color:var(--muted); font-size:14px; }
+  .device { display:flex; gap:16px; align-items:center; padding:14px 16px; border-radius:12px; background:#f6f8fc; border:1px solid var(--line); margin-bottom:16px; }
+  .device .ico { font-size:30px; }
+  .device small { display:block; color:var(--muted); }
+  .ro { background:#f6f8fc !important; color:var(--muted) !important; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="wrap">
+    <a class="logo" href="/apply"><span class="logo-mark">✦</span>Fjordlane</a>
+    <div class="navlinks"><span>Mon espace</span><span>Missions</span><span>Factures</span><span>Aide</span></div>
+    <span class="badge-demo">Démo · entreprise fictive</span>
+  </div>
+</nav>
+
+<header class="hero small">
+  <div class="wrap">
+    <div class="crumbs">Mon espace › Onboarding</div>
+    <h1 id="hello">Bienvenue chez Fjordlane 🎉</h1>
+    <p class="lead">Votre candidature a été retenue pour la mission <b>Développeur·se Full-Stack Senior</b>. Il ne reste que quelques informations pour préparer votre contrat, vos factures et l'envoi de votre ordinateur.</p>
+    <div class="todo">
+      <div><b>✓ Candidature</b>Retenue</div>
+      <div><b>✓ Entretien</b>Validé par l'équipe</div>
+      <div><b>● Onboarding</b>5 minutes</div>
+      <div><b>○ Démarrage</b><span id="startLbl">À planifier</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="card one">
+    <div id="formWrap">
+      <form id="form" novalidate>
+        <div class="block">
+          <h3>Votre statut</h3>
+          <p class="sub">Pour établir le contrat de prestation.</p>
+          <div class="pay" id="status">
+            <label class="sel"><input type="radio" name="status" value="freelance" checked><div><b>Indépendant</b><span>Micro-entreprise, EI, freelance</span></div></label>
+            <label><input type="radio" name="status" value="company"><div><b>Société</b><span>SASU, EURL, BV, GmbH…</span></div></label>
+            <label><input type="radio" name="status" value="umbrella"><div><b>Portage salarial</b><span>Via une société de portage</span></div></label>
+          </div>
+          <div style="margin-top:14px"><label class="f">Numéro d'immatriculation <span style="color:var(--muted);font-weight:400">(SIRET, KvK, numéro TVA…)</span></label><input type="text" name="company_id" placeholder="912 345 678 00021"></div>
+        </div>
+
+        <div class="block">
+          <h3>Adresse de résidence</h3>
+          <p class="sub">Elle figure sur le contrat et vos factures.</p>
+          <div class="grid">
+            <div class="full"><label class="f">Adresse <em>*</em></label><input type="text" name="address" autocomplete="street-address" required placeholder="Numéro et rue"></div>
+            <div><label class="f">Code postal <em>*</em></label><input type="text" name="postcode" autocomplete="postal-code" required></div>
+            <div><label class="f">Ville <em>*</em></label><input type="text" name="city" required></div>
+            <div class="full"><label class="f">Pays</label><input type="text" id="countryRo" class="ro" readonly><div class="hint">Celui déclaré dans votre candidature. Pour le modifier, contactez votre chargé de compte.</div></div>
+          </div>
+        </div>
+
+        <div class="block">
+          <h3>Votre matériel</h3>
+          <p class="sub">Le client fournit un poste préconfiguré et sécurisé, expédié sous 48 h.</p>
+          <div class="device"><span class="ico">💻</span><div><b>MacBook Pro 14" · M3 Pro, 18 Go</b><small>Chiffrement et gestion à distance activés · livraison contre signature</small></div></div>
+          <label class="check"><input type="checkbox" id="sameAddr" checked> Livrer à mon adresse de résidence</label>
+          <div id="shipWrap" style="display:none;margin-top:12px">
+            <label class="f">Adresse de livraison <em>*</em></label><input type="text" name="shipping_address" placeholder="Adresse complète, code postal, ville, pays">
+            <div class="hint">Par exemple votre espace de coworking.</div>
+          </div>
+        </div>
+
+        <div class="block">
+          <h3>Versement de vos factures</h3>
+          <p class="sub">Fjordlane vous paie le 5 de chaque mois pour les jours du mois précédent.</p>
+          <div class="pay" id="pay">
+            <label class="sel"><input type="radio" name="payout_method" value="sepa" checked><div><b>Virement SEPA</b><span>Sur votre compte bancaire</span></div></label>
+            <label><input type="radio" name="payout_method" value="wise"><div><b>Wise</b><span>Compte multidevise</span></div></label>
+            <label><input type="radio" name="payout_method" value="crypto"><div><b>Stablecoin (USDC)</b><span>Via notre partenaire de paiement</span></div></label>
+          </div>
+          <div style="margin-top:14px"><label class="f" id="accLabel">IBAN <em>*</em></label><input type="text" name="payout_account" required placeholder="FR76 …"></div>
+        </div>
+
+        <div class="block">
+          <h3>Démarrage</h3>
+          <div class="grid">
+            <div><label class="f">Date de démarrage souhaitée <em>*</em></label><input type="date" name="start_date" required></div>
+          </div>
+          <label class="check" style="margin-top:18px"><input type="checkbox" id="certify"> Je certifie l'exactitude de ces informations. Elles sont vérifiées comme ma candidature, et une personne de l'équipe examine toujours le résultat. <em style="color:var(--accent);font-style:normal">*</em></label>
+          <div class="err" id="err"></div>
+        </div>
+        <div class="form-foot">
+          <a class="btn btn-ghost" href="/apply">Plus tard</a>
+          <button type="button" class="btn btn-brand" id="send">Finaliser mon onboarding</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="success" id="success" style="display:none">
+      <div class="tick">✓</div>
+      <h2>Tout est prêt, <span id="okName"></span> !</h2>
+      <p>Votre contrat arrive par email. Votre ordinateur sera expédié dès la validation de votre dossier par notre équipe.</p>
+      <a class="btn btn-ghost" href="/apply">Retour aux missions</a>
+    </div>
+  </div>
+</main>
+
+<footer><div class="wrap">Fjordlane est une entreprise fictive créée pour la démonstration du hackathon Secure Horizons.</div></footer>
+
+<div class="demo-fab">
+  <div class="demo-menu" id="demoMenu">
+    <button data-kind="honest">✅ Remplir : candidate honnête<small>Adresse à Lyon, virement SEPA</small></button>
+    <button data-kind="fraud">🚩 Remplir : fraudeur<small>Livraison chez un transitaire, paiement en crypto</small></button>
+  </div>
+  <button id="demoBtn">Démo ▾</button>
+</div>
+
+<script>
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const COUNTRIES = { FR: "France", DE: "Allemagne", BE: "Belgique", CH: "Suisse", NL: "Pays-Bas", ES: "Espagne", IT: "Italie", PT: "Portugal", UK: "Royaume-Uni", IE: "Irlande" };
+const appId = new URLSearchParams(location.search).get("app");
+let app = null;
+
+async function load() {
+  if (!appId) { $("#err").textContent = "Lien d'onboarding incomplet : ouvrez-le depuis le panneau recruteur."; return; }
+  const a = await (await fetch("/api/applications/" + appId)).json();
+  if (a.error) { $("#err").textContent = "Ce lien d'onboarding n'est plus valide."; return; }
+  app = a;
+  $("#hello").textContent = `Bienvenue chez Fjordlane, ${a.first_name} 🎉`;
+  $("#countryRo").value = COUNTRIES[a.country] || a.country;
+  $("[name=city]").value = a.city;
+}
+load();
+
+/* Choix exclusifs (statut, versement) */
+function radios(group, onPick) {
+  $$(`#${group} input`).forEach((r) => r.onchange = () => {
+    $$(`#${group} label`).forEach((l) => l.classList.toggle("sel", $("input", l).checked));
+    onPick?.(r.value);
+  });
+}
+const ACC = { sepa: ["IBAN", "FR76 …"], wise: ["Email du compte Wise", "vous@exemple.com"], crypto: ["Adresse du portefeuille USDC (réseau Ethereum)", "0x…"] };
+radios("status");
+radios("pay", (v) => { $("#accLabel").innerHTML = ACC[v][0] + " <em>*</em>"; $("[name=payout_account]").placeholder = ACC[v][1]; });
+$("#sameAddr").onchange = () => { $("#shipWrap").style.display = $("#sameAddr").checked ? "none" : "block"; };
+$("[name=start_date]").onchange = (e) => { $("#startLbl").textContent = e.target.value ? new Date(e.target.value).toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) : "À planifier"; };
+
+$("#send").onclick = async () => {
+  let ok = true;
+  $$("[required]").forEach((el) => { const bad = !el.value.trim(); el.classList.toggle("invalid", bad); if (bad) ok = false; });
+  const ship = $("[name=shipping_address]");
+  if (!$("#sameAddr").checked && !ship.value.trim()) { ship.classList.add("invalid"); ok = false; }
+  if (!ok) { $("#err").textContent = "Quelques champs obligatoires sont manquants."; return; }
+  if (!$("#certify").checked) { $("#err").textContent = "Merci de certifier l'exactitude des informations."; return; }
+  if (!app) return;
+  const data = Object.fromEntries(new FormData($("#form")).entries());
+  data.app_id = appId;
+  if ($("#sameAddr").checked) data.shipping_address = "";
+  $("#send").disabled = true; $("#send").textContent = "Envoi…";
+  try {
+    const res = await fetch("/api/onboarding", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+    const out = await res.json();
+    if (!res.ok) throw new Error(out.error);
+    $("#formWrap").style.display = "none"; $("#success").style.display = "block";
+    $("#okName").textContent = app.first_name;
+  } catch (e) {
+    $("#err").textContent = "L'envoi a échoué : " + e.message;
+    $("#send").disabled = false; $("#send").textContent = "Finaliser mon onboarding";
+  }
+};
+
+/* Mode démo */
+$("#demoBtn").onclick = () => $("#demoMenu").classList.toggle("open");
+$$("#demoMenu button").forEach((b) => b.onclick = async () => {
+  const ex = await (await fetch("/api/demo-onboarding?kind=" + b.dataset.kind)).json();
+  for (const k of ["company_id", "address", "postcode", "city", "payout_account", "start_date", "shipping_address"]) $(`[name=${k}]`).value = ex[k] || "";
+  for (const [g, k] of [["status", "status"], ["pay", "payout_method"]]) {
+    const r = $(`#${g} input[value=${ex[k]}]`); r.checked = true; r.onchange();
+  }
+  $("[name=payout_account]").value = ex.payout_account;
+  $("#sameAddr").checked = !ex.shipping_address; $("#sameAddr").onchange();
+  $("[name=start_date]").onchange({ target: $("[name=start_date]") });
+  $("#certify").checked = true;
+  $$(".invalid").forEach((el) => el.classList.remove("invalid"));
+  $("#demoMenu").classList.remove("open");
+});
+</script>
+</body>
+</html>

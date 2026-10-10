@@ -2,7 +2,8 @@
 
     python -m metadata.live.server            # puis ouvrir http://localhost:8000
 
-- http://localhost:8000/apply       offre d'emploi fictive : le formulaire collecte les données analysées
+- http://localhost:8000/apply       offre d'emploi fictive : CV (pré-remplissage automatique), parcours, mission
+- http://localhost:8000/onboarding  après sélection : adresse, livraison du matériel, versement
 - http://localhost:8000/            page candidat : consentement, puis une mesure toutes les 5 s
 - http://localhost:8000/recruiter   panneau recruteur : score, alertes, chronologie, décision
 
@@ -21,7 +22,7 @@ from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from .. import audit
+from .. import audit, cv_parser
 from . import applications
 from ..checks import (Signal, check_browser_timezone, check_interview_ip, check_latency,
                       check_video_settings, check_virtual_camera, check_vm_gpu, combination_bonus)
@@ -157,6 +158,17 @@ class Handler(BaseHTTPRequestHandler):
         path = self.path.split("?")[0]
         if path in ("/apply", "/offre"):
             self._send(200, (HERE / "apply.html").read_bytes(), "text/html; charset=utf-8")
+        elif path == "/onboarding":
+            self._send(200, (HERE / "onboarding.html").read_bytes(), "text/html; charset=utf-8")
+        elif path.startswith(("/vendor/", "/demo-cvs/")):
+            # Fichiers statiques : uniquement le nom de fichier, jamais de chemin relatif.
+            folder, name = path.strip("/").split("/", 1)
+            f = HERE / folder.replace("-", "_") / Path(name).name
+            ctype = "application/pdf" if f.suffix == ".pdf" else "text/javascript; charset=utf-8"
+            if f.is_file():
+                self._send(200, f.read_bytes(), ctype)
+            else:
+                self._send(404, b"Not found", "text/plain")
         elif path == "/api/applications":
             self._json(applications.listing())
         elif path.startswith("/api/applications/"):
@@ -165,6 +177,9 @@ class Handler(BaseHTTPRequestHandler):
         elif path == "/api/demo-example":
             kind = "fraud" if "fraud" in self.path else "honest"
             self._json(applications.demo_example(kind))
+        elif path == "/api/demo-onboarding":
+            kind = "fraud" if "fraud" in self.path else "honest"
+            self._json(applications.demo_onboarding(kind))
         elif path in ("/", "/candidate"):
             self._send(200, (HERE / "candidate.html").read_bytes(), "text/html; charset=utf-8")
         elif path == "/recruiter":
@@ -189,6 +204,14 @@ class Handler(BaseHTTPRequestHandler):
             except (KeyError, ValueError) as exc:
                 return self._json({"error": f"champ manquant ou invalide : {exc}"}, 400)
             return self._json({"id": app_id})
+        if self.path == "/api/parse-cv":
+            return self._json(cv_parser.parse_cv(str(payload.get("text", ""))[:50000]))
+        if self.path == "/api/onboarding":
+            try:
+                ok = applications.onboard(str(payload.get("app_id", "")), payload)
+            except (KeyError, ValueError) as exc:
+                return self._json({"error": f"champ manquant ou invalide : {exc}"}, 400)
+            return self._json({"ok": True} if ok else {"error": "candidature inconnue"}, 200 if ok else 404)
         if self.path == "/api/snapshot":
             return self._json(ingest(payload, self._client_ip()))
         if self.path == "/api/decision":

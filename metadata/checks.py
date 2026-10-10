@@ -100,8 +100,9 @@ def check_address_change(c: dict) -> Signal | None:
     for s in c["shipping_addresses"][1:]:
         delta = (date.fromisoformat(s["from"]) - hired).days
         if 0 <= delta <= 30:
+            when = "dès l'embauche" if delta == 0 else f"{delta} jour(s) après l'embauche"
             return Signal("C6_ADDRESS_CHANGE", 10,
-                          f"Adresse de livraison changée {delta} jour(s) après l'embauche.")
+                          f"Matériel à livrer ailleurs qu'à l'adresse de résidence, {when}.")
     return None
 
 

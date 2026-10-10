@@ -115,13 +115,6 @@
   .exp { border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:12px; position:relative; background:#fcfdff; }
   .exp .rm { position:absolute; top:10px; right:12px; border:0; background:none; color:var(--muted); cursor:pointer; font-size:18px; }
   .exp .rm:hover { color:var(--err); }
-  .pay { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
-  @media (max-width:640px) { .pay { grid-template-columns:1fr; } }
-  .pay label { border:1.5px solid var(--line); border-radius:12px; padding:14px; cursor:pointer; display:flex; gap:10px; align-items:flex-start; transition:border .15s, background .15s; }
-  .pay label:hover { border-color:var(--brand-2); }
-  .pay input { margin-top:4px; accent-color:var(--brand); }
-  .pay label.sel { border-color:var(--brand); background:var(--brand-soft); }
-  .pay b { display:block; font-size:14px; } .pay span { font-size:12px; color:var(--muted); }
   .check { display:flex; gap:10px; align-items:flex-start; font-size:14px; color:var(--ink-2); }
   .check input { margin-top:4px; accent-color:var(--brand); width:16px; height:16px; }
   .notice { display:grid; grid-template-columns:1fr 1fr; gap:16px; padding:18px; border-radius:12px; background:#f6f8fc; border:1px solid var(--line); margin:22px 0 16px; font-size:13px; }
@@ -146,6 +139,35 @@
   .demo-menu button:hover { background:var(--bg); }
   .demo-menu small { display:block; color:var(--muted); font-size:12px; }
   footer { border-top:1px solid var(--line); padding:28px 0; color:var(--muted); font-size:13px; background:#fff; }
+  /* Dépôt du CV et pré-remplissage */
+  .drop.big { padding:44px 26px; }
+  .drop-ico { font-size:40px; line-height:1; margin-bottom:10px; }
+  .drop-t { font-size:18px; font-weight:700; color:var(--ink); }
+  .parse { border:1px solid var(--line); border-radius:14px; padding:20px 22px; background:#fcfdff; animation:fade .3s ease; }
+  .parse-file { display:flex; align-items:center; gap:14px; padding-bottom:16px; border-bottom:1px solid var(--line); }
+  .parse-file .pdf { width:42px; height:50px; border-radius:8px; background:#ffe9e4; color:#d4472a; font:700 12px Inter, sans-serif; display:grid; place-items:center; flex:none; }
+  .parse-file div { flex:1; min-width:0; } .parse-file b { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .parse-file small { color:var(--muted); }
+  .parse-steps { list-style:none; margin:16px 0 0; padding:0; }
+  .parse-steps li { display:flex; align-items:center; gap:12px; padding:7px 0; color:var(--muted); transition:color .2s; }
+  .parse-steps li i { width:20px; height:20px; border-radius:50%; border:2px solid var(--line); flex:none; display:grid; place-items:center; font-style:normal; font-size:12px; }
+  .parse-steps li.run { color:var(--ink); } .parse-steps li.run i { border-color:var(--brand-2); border-top-color:transparent; animation:spin .8s linear infinite; }
+  .parse-steps li.done { color:var(--ink); } .parse-steps li.done i { border-color:var(--ok); background:var(--ok); color:#fff; }
+  .parse-steps li.done i::after { content:"✓"; }
+  .parse-steps li.fail i { border-color:var(--err); background:var(--err); }
+  .parse-steps small { color:var(--muted); font-size:12px; margin-left:4px; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .link { border:0; background:none; color:var(--brand); font:600 14px Inter, sans-serif; cursor:pointer; padding:0; }
+  .privacy { font-size:13px; color:var(--muted); text-align:center; margin:18px auto 0; max-width:560px; }
+  .ai-banner { display:flex; gap:12px; align-items:center; padding:12px 16px; border-radius:12px; margin-bottom:22px; font-size:14px;
+               background:linear-gradient(135deg,#eef3ff,#f6f0ff); border:1px solid #d6e0ff; color:var(--ink-2); }
+  .ai-banner .spark { font-size:18px; color:var(--brand); }
+  input.filled, textarea.filled, select.filled { background:#f3f7ff; border-color:#bcd0ff; animation:glow 1.6s ease; }
+  @keyframes glow { 0% { box-shadow:0 0 0 0 rgba(106,140,255,.0); } 30% { box-shadow:0 0 0 5px rgba(106,140,255,.28); } 100% { box-shadow:0 0 0 0 rgba(106,140,255,0); } }
+  .euro { position:relative; } .euro input { padding-right:70px; }
+  .euro span { position:absolute; right:13px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:14px; }
+  .demo-menu hr { border:0; border-top:1px solid var(--line); margin:6px 4px; }
+  .demo-menu a { display:block; padding:6px 12px; font-size:12px; }
 </style>
 </head>
 <body>
@@ -168,7 +190,7 @@
       <span class="chip">📅 12 mois renouvelables</span>
       <span class="chip">🚀 Démarrage en novembre</span>
     </div>
-    <a class="btn btn-primary" href="#postuler">Postuler en 5 minutes →</a>
+    <a class="btn btn-primary" href="#postuler">Postuler en 3 minutes →</a>
   </div>
 </header>
 
@@ -195,10 +217,10 @@
 
       <h2>Le processus</h2>
       <div class="steps">
-        <div class="step"><b>1 · Candidature</b><span>5 minutes, sans lettre de motivation</span></div>
+        <div class="step"><b>1 · Candidature</b><span>CV pré-rempli, sans lettre de motivation</span></div>
         <div class="step"><b>2 · Vérification</b><span>Cohérence du dossier, sous 24 h</span></div>
         <div class="step"><b>3 · Entretien vidéo</b><span>45 min avec l'équipe technique</span></div>
-        <div class="step"><b>4 · Proposition</b><span>Réponse sous une semaine</span></div>
+        <div class="step"><b>4 · Proposition</b><span>Puis onboarding et envoi du matériel</span></div>
       </div>
 
       <div class="trust">
@@ -228,23 +250,49 @@
       <div id="formWrap">
         <div class="form-head">
           <h2>Votre candidature</h2>
-          <p>Trois étapes, environ cinq minutes. Les champs marqués <span style="color:var(--accent)">*</span> sont obligatoires.</p>
+          <p>Déposez votre CV : nous pré-remplissons le formulaire, vous n'avez plus qu'à vérifier.</p>
         </div>
         <div class="stepper" id="stepper">
-          <div class="on"><div class="bar"><i></i></div><div class="lbl">1 · Vous</div></div>
-          <div><div class="bar"><i></i></div><div class="lbl">2 · Parcours</div></div>
-          <div><div class="bar"><i></i></div><div class="lbl">3 · Logistique</div></div>
+          <div class="on"><div class="bar"><i></i></div><div class="lbl">1 · CV</div></div>
+          <div><div class="bar"><i></i></div><div class="lbl">2 · Vous</div></div>
+          <div><div class="bar"><i></i></div><div class="lbl">3 · Parcours</div></div>
+          <div><div class="bar"><i></i></div><div class="lbl">4 · Mission</div></div>
         </div>
 
         <form id="form" novalidate>
           <div class="form-body">
-            <!-- Étape 1 -->
+            <!-- Étape 1 : CV -->
             <div class="pane active" data-step="0">
+              <div class="drop big" id="drop">
+                <div class="drop-ico">📄</div>
+                <div class="drop-t">Glissez votre CV ici</div>
+                <div>ou <b>parcourez vos fichiers</b></div>
+                <div class="hint">PDF, 5 Mo maximum. Pas de photo, merci.</div>
+                <input type="file" id="cvFile" accept="application/pdf,.pdf" hidden>
+              </div>
+              <div class="parse" id="parse" hidden>
+                <div class="parse-file">
+                  <span class="pdf">PDF</span>
+                  <div><b id="pfName"></b><small id="pfSize"></small></div>
+                  <button type="button" class="link" id="changeCv">Changer</button>
+                </div>
+                <ol class="parse-steps">
+                  <li data-s="read"><i></i>Lecture du document</li>
+                  <li data-s="extract"><i></i>Extraction des informations<small id="engine"></small></li>
+                  <li data-s="fill"><i></i><span id="fillTxt">Pré-remplissage du formulaire</span></li>
+                </ol>
+              </div>
+              <p class="privacy">Votre CV sert à pré-remplir ce formulaire. Vous vérifiez et corrigez chaque information avant l'envoi.</p>
+            </div>
+
+            <!-- Étape 2 : identité et contact -->
+            <div class="pane" data-step="1">
+              <div class="ai-banner" hidden><span class="spark">✦</span><span>Pré-rempli à partir de <b class="cvn"></b>. Vérifiez et corrigez si besoin.</span></div>
               <div class="grid">
-                <div><label class="f">Prénom <em>*</em></label><input type="text" name="first_name" required></div>
-                <div><label class="f">Nom <em>*</em></label><input type="text" name="last_name" required></div>
-                <div><label class="f">Email <em>*</em></label><input type="email" name="email" required></div>
-                <div><label class="f">Téléphone <em>*</em></label><input type="tel" name="phone" placeholder="+33 6 12 34 56 78" required></div>
+                <div><label class="f">Prénom <em>*</em></label><input type="text" name="first_name" autocomplete="given-name" required></div>
+                <div><label class="f">Nom <em>*</em></label><input type="text" name="last_name" autocomplete="family-name" required></div>
+                <div><label class="f">Email <em>*</em></label><input type="email" name="email" autocomplete="email" required></div>
+                <div><label class="f">Téléphone <em>*</em></label><input type="tel" name="phone" autocomplete="tel" placeholder="+33 6 12 34 56 78" required></div>
                 <div><label class="f">Ville de résidence <em>*</em></label><input type="text" name="city" required></div>
                 <div><label class="f">Pays de résidence <em>*</em></label>
                   <select name="country" required>
@@ -253,24 +301,16 @@
                     <option value="CH">Suisse</option><option value="NL">Pays-Bas</option><option value="ES">Espagne</option>
                     <option value="IT">Italie</option><option value="PT">Portugal</option><option value="UK">Royaume-Uni</option><option value="IE">Irlande</option>
                   </select></div>
-                <div class="full"><label class="f">Adresse</label><input type="text" name="address" placeholder="Numéro et rue"></div>
                 <div><label class="f">Profil LinkedIn</label><input type="url" name="linkedin_url" placeholder="https://linkedin.com/in/…"></div>
-                <div><label class="f">GitHub</label><input type="url" name="github_url" placeholder="https://github.com/…"></div>
-                <div class="full">
-                  <label class="f">CV (PDF)</label>
-                  <div class="drop" id="drop">
-                    <div>📄 Glissez votre CV ici ou <b>parcourez vos fichiers</b></div>
-                    <div class="hint">PDF, 5 Mo maximum. Nous ne demandons pas de photo.</div>
-                    <div class="file" id="fileName"></div>
-                    <input type="file" id="cvFile" accept="application/pdf" hidden>
-                  </div>
-                </div>
+                <div><label class="f">GitHub ou portfolio</label><input type="url" name="github_url" placeholder="https://github.com/…"></div>
               </div>
             </div>
 
-            <!-- Étape 2 -->
-            <div class="pane" data-step="1">
+            <!-- Étape 3 : parcours -->
+            <div class="pane" data-step="2">
+              <div class="ai-banner" hidden><span class="spark">✦</span><span>Pré-rempli à partir de <b class="cvn"></b>. Vérifiez et corrigez si besoin.</span></div>
               <div class="grid">
+                <div class="full"><label class="f">Titre</label><input type="text" name="headline" placeholder="Développeuse Full-Stack Senior"></div>
                 <div><label class="f">Années d'expérience <em>*</em></label><input type="number" name="years_experience" min="0" max="50" required></div>
                 <div><label class="f">Compétences clés</label><input type="text" name="skills" placeholder="React, Node.js, AWS…"></div>
                 <div class="full"><label class="f">En quelques lignes <em>*</em></label><textarea name="summary" required placeholder="Votre parcours, ce que vous aimez construire, ce que vous cherchez."></textarea></div>
@@ -285,21 +325,20 @@
               </div>
             </div>
 
-            <!-- Étape 3 -->
-            <div class="pane" data-step="2">
-              <div class="section-t">Livraison du matériel</div>
-              <label class="check"><input type="checkbox" id="sameAddr" checked> Livrer l'ordinateur à mon adresse de résidence</label>
-              <div id="shipWrap" style="display:none;margin-top:12px">
-                <label class="f">Adresse de livraison <em>*</em></label><input type="text" name="shipping_address" placeholder="Adresse complète, ville, pays">
+            <!-- Étape 4 : la mission -->
+            <div class="pane" data-step="3">
+              <div class="grid">
+                <div><label class="f">Taux journalier souhaité <em>*</em></label>
+                  <div class="euro"><input type="number" name="daily_rate" min="100" max="3000" step="10" placeholder="650" required><span>€ / jour</span></div></div>
+                <div><label class="f">Disponible à partir du <em>*</em></label><input type="date" name="available_from" required></div>
+                <div class="full"><label class="f">Comment avez-vous connu cette mission ?</label>
+                  <select name="source">
+                    <option value="">Choisir…</option><option value="linkedin">LinkedIn</option><option value="fjordlane">Newsletter Fjordlane</option>
+                    <option value="referral">Recommandation</option><option value="other">Autre</option>
+                  </select></div>
+                <div class="full"><label class="f">Un mot pour l'équipe <span style="color:var(--muted);font-weight:400">(facultatif)</span></label>
+                  <textarea name="message" placeholder="Ce qui vous attire dans ce projet, vos questions…"></textarea></div>
               </div>
-
-              <div class="section-t">Rémunération</div>
-              <div class="pay" id="pay">
-                <label class="sel"><input type="radio" name="payment_method" value="iban" checked><div><b>Virement SEPA</b><span>Sur un compte bancaire (IBAN)</span></div></label>
-                <label><input type="radio" name="payment_method" value="wise"><div><b>Wise / PayPal</b><span>Compte de paiement en ligne</span></div></label>
-                <label><input type="radio" name="payment_method" value="crypto"><div><b>Cryptomonnaie</b><span>Stablecoin USDT ou USDC</span></div></label>
-              </div>
-              <div style="margin-top:14px"><label class="f" id="accLabel">IBAN <em>*</em></label><input type="text" name="payment_account" required placeholder="FR76 …"></div>
 
               <div class="notice">
                 <div>
@@ -325,7 +364,7 @@
           </div>
           <div class="form-foot">
             <button type="button" class="btn btn-ghost" id="prev" style="visibility:hidden">← Retour</button>
-            <button type="button" class="btn btn-brand" id="next">Continuer →</button>
+            <button type="button" class="btn btn-brand" id="next">Continuer sans CV →</button>
           </div>
         </form>
       </div>
@@ -334,7 +373,7 @@
         <div class="tick">✓</div>
         <h2>Merci <span id="okName"></span>, c'est envoyé !</h2>
         <div class="ref">Référence <span id="okRef"></span></div>
-        <p>Votre dossier est en cours de vérification par notre équipe. Pour gagner du temps, vous pouvez passer dès maintenant votre entretien vidéo avec l'équipe technique.</p>
+        <p>Votre dossier est en cours de vérification par notre équipe. Prochaine étape : un entretien vidéo de 45 minutes avec l'équipe technique. Vous pouvez le passer dès maintenant.</p>
         <a class="btn btn-primary" id="goInterview" href="/">Passer mon entretien vidéo →</a>
       </div>
     </div>
@@ -345,54 +384,132 @@
 
 <div class="demo-fab">
   <div class="demo-menu" id="demoMenu">
-    <button data-kind="honest">✅ Remplir : candidate honnête<small>Parcours cohérent, virement SEPA</small></button>
-    <button data-kind="fraud">🚩 Remplir : fraudeur<small>Recycle le paiement et l'adresse d'un réseau déjà vu</small></button>
+    <button data-kind="honest" data-cv="CV_Camille_Laurent.pdf">✅ Déposer le CV de Camille Laurent<small>Candidate honnête, parcours cohérent</small></button>
+    <button data-kind="fraud" data-cv="CV_Daniel_Kovac.pdf">🚩 Déposer le CV de Daniel Kovac<small>Fraudeur : recycle le téléphone d'un réseau déjà vu</small></button>
+    <hr>
+    <a href="/demo-cvs/CV_Camille_Laurent.pdf" download>Télécharger le PDF de Camille</a>
+    <a href="/demo-cvs/CV_Daniel_Kovac.pdf" download>Télécharger le PDF de Daniel</a>
   </div>
   <button id="demoBtn">Démo ▾</button>
 </div>
 
+<script src="/vendor/pdf.min.js"></script>
 <script>
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
-let step = 0, cvName = "", profile = {};
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+let step = 0, cvName = "";
 const panes = $$(".pane"), bars = $$("#stepper > div");
+if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = "/vendor/pdf.worker.min.js";
 
 /* ---------- Expériences ---------- */
-function addExp(e = {}) {
+function addExp(e = {}, filled = false) {
   const div = document.createElement("div");
   div.className = "exp";
+  const f = (k) => `data-k="${k}" value="${esc(e[k])}" ${filled && e[k] ? 'class="filled"' : ""}`;
   div.innerHTML = `
     <button type="button" class="rm" title="Retirer">×</button>
     <div class="grid">
-      <div><label class="f">Entreprise</label><input type="text" data-k="company" value="${e.company || ""}"></div>
-      <div><label class="f">Poste</label><input type="text" data-k="title" value="${e.title || ""}"></div>
-      <div><label class="f">Début</label><input type="month" data-k="start" value="${e.start || ""}"></div>
-      <div><label class="f">Fin</label><input type="month" data-k="end" value="${e.end || ""}"><div class="hint">Laisser vide si en cours</div></div>
-      <div class="full"><label class="f">Réalisations</label><input type="text" data-k="description" value="${(e.description || "").replace(/"/g, "&quot;")}"></div>
+      <div><label class="f">Entreprise</label><input type="text" ${f("company")}></div>
+      <div><label class="f">Poste</label><input type="text" ${f("title")}></div>
+      <div><label class="f">Début</label><input type="month" ${f("start")}></div>
+      <div><label class="f">Fin</label><input type="month" ${f("end")}><div class="hint">Laisser vide si en cours</div></div>
+      <div class="full"><label class="f">Réalisations</label><input type="text" ${f("description")}></div>
     </div>`;
   $(".rm", div).onclick = () => div.remove();
   $("#exps").appendChild(div);
 }
 $("#addExp").onclick = () => addExp();
 addExp();
+// Un champ pré-rempli que le candidat modifie n'est plus marqué comme venant du CV.
+$("#form").addEventListener("input", (e) => e.target.classList.remove("filled"));
 
-/* ---------- CV ---------- */
+/* ---------- CV : lecture dans le navigateur (pdf.js), extraction côté serveur ---------- */
 const drop = $("#drop"), file = $("#cvFile");
 drop.onclick = () => file.click();
 drop.ondragover = (e) => { e.preventDefault(); drop.classList.add("drag"); };
 drop.ondragleave = () => drop.classList.remove("drag");
-drop.ondrop = (e) => { e.preventDefault(); drop.classList.remove("drag"); if (e.dataTransfer.files[0]) setCv(e.dataTransfer.files[0].name); };
-file.onchange = () => file.files[0] && setCv(file.files[0].name);
-function setCv(name) { cvName = name; $("#fileName").textContent = "✓ " + name; }
+drop.ondrop = (e) => { e.preventDefault(); drop.classList.remove("drag"); if (e.dataTransfer.files[0]) handleCv(e.dataTransfer.files[0]); };
+file.onchange = () => file.files[0] && handleCv(file.files[0]);
+$("#changeCv").onclick = () => { file.value = ""; file.click(); };
 
-/* ---------- Logistique et paiement ---------- */
-$("#sameAddr").onchange = (e) => { $("#shipWrap").style.display = e.target.checked ? "none" : "block"; };
-const ACC = { iban: ["IBAN", "FR76 …"], wise: ["Email du compte Wise ou PayPal", "vous@exemple.com"], crypto: ["Adresse du portefeuille", "0x…"] };
-$$("#pay input").forEach((r) => r.onchange = () => {
-  $$("#pay label").forEach((l) => l.classList.toggle("sel", $("input", l).checked));
-  $("#accLabel").innerHTML = ACC[r.value][0] + " <em>*</em>";
-  $("[name=payment_account]").placeholder = ACC[r.value][1];
-});
+async function pdfText(buf) {
+  const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+  const lines = [];
+  for (let p = 1; p <= Math.min(pdf.numPages, 5); p++) {
+    const { items } = await (await pdf.getPage(p)).getTextContent();
+    let line = "", y = null;
+    for (const it of items) {
+      const iy = Math.round(it.transform[5]);
+      if (y !== null && Math.abs(iy - y) > 2 && line.trim()) { lines.push(line.trim()); line = ""; }
+      line += it.str; y = iy;
+      if (it.hasEOL) { if (line.trim()) lines.push(line.trim()); line = ""; y = null; }
+    }
+    if (line.trim()) lines.push(line.trim());
+  }
+  return lines.join("\n");
+}
+
+function stage(name, state, note) {
+  const li = $(`.parse-steps [data-s=${name}]`);
+  li.className = state;
+  if (note !== undefined && name === "fill") $("#fillTxt").textContent = note;
+}
+
+async function handleCv(f) {
+  $("#err").textContent = "";
+  if (!/\.pdf$/i.test(f.name) && f.type !== "application/pdf") { $("#err").textContent = "Le pré-remplissage fonctionne avec un CV au format PDF."; return; }
+  if (f.size > 5e6) { $("#err").textContent = "Fichier trop lourd (5 Mo maximum)."; return; }
+  cvName = f.name;
+  drop.hidden = true; $("#parse").hidden = false;
+  $("#pfName").textContent = f.name; $("#pfSize").textContent = Math.max(1, Math.round(f.size / 1024)) + " Ko";
+  $("#engine").textContent = ""; ["read", "extract", "fill"].forEach((s) => stage(s, "", "Pré-remplissage du formulaire"));
+  $("#next").disabled = true;
+  try {
+    stage("read", "run");
+    const text = await pdfText(await f.arrayBuffer());
+    await sleep(350);
+    stage("read", "done");
+    stage("extract", "run");
+    const res = await fetch("/api/parse-cv", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text }) });
+    const { fields, engine } = await res.json();
+    await sleep(450);
+    stage("extract", "done"); $("#engine").textContent = ` · moteur : ${engine}`;
+    stage("fill", "run");
+    const n = await fill(fields);
+    stage("fill", "done", n ? `${n} champs pré-remplis` : "Aucune information reconnue : vous pouvez remplir à la main");
+    $$(".cvn").forEach((b) => b.textContent = f.name);
+    $$(".ai-banner").forEach((b) => b.hidden = !n);
+    $("#next").textContent = "Vérifier mes informations →";
+  } catch (e) {
+    $$(".parse-steps .run").forEach((li) => li.className = "fail");
+    $("#err").textContent = "Lecture du CV impossible (" + e.message + "). Vous pouvez remplir le formulaire à la main.";
+  }
+  $("#next").disabled = false;
+}
+
+async function fill(fields) {
+  let n = 0;
+  for (const [k, v] of Object.entries(fields)) {
+    const el = $(`[name=${k}]`);
+    if (!el || v === "" || v == null || typeof v === "object") continue;
+    if (el.tagName === "SELECT" && !$(`option[value="${v}"]`, el)) continue;
+    el.value = v; el.classList.add("filled"); el.classList.remove("invalid"); n++;
+    stage("fill", "run", `Pré-remplissage… ${n} champs`); await sleep(70);
+  }
+  if (fields.experiences?.length) {
+    $("#exps").innerHTML = "";
+    for (const e of fields.experiences) { addExp(e, true); n += Object.values(e).filter(Boolean).length; stage("fill", "run", `Pré-remplissage… ${n} champs`); await sleep(120); }
+  }
+  const edu = (fields.education || [])[0];
+  if (edu) {
+    [["#eduSchool", edu.school], ["#eduDegree", edu.degree], ["#eduYear", edu.year]].forEach(([s, v]) => {
+      if (v) { $(s).value = v; $(s).classList.add("filled"); n++; }
+    });
+  }
+  return n;
+}
 
 /* ---------- Navigation entre étapes ---------- */
 function show(i) {
@@ -400,7 +517,7 @@ function show(i) {
   panes.forEach((p, k) => p.classList.toggle("active", k === i));
   bars.forEach((b, k) => { b.classList.toggle("on", k <= i); $("i", b).style.width = k < i ? "100%" : k === i ? "50%" : "0"; });
   $("#prev").style.visibility = i ? "visible" : "hidden";
-  $("#next").textContent = i === panes.length - 1 ? "Envoyer ma candidature" : "Continuer →";
+  $("#next").textContent = i === panes.length - 1 ? "Envoyer ma candidature" : i === 0 ? (cvName ? "Vérifier mes informations →" : "Continuer sans CV →") : "Continuer →";
   $("#err").textContent = "";
 }
 function valid(i) {
@@ -410,12 +527,9 @@ function valid(i) {
     el.classList.toggle("invalid", bad);
     if (bad) ok = false;
   });
-  if (i === 2 && !$("#sameAddr").checked && !$("[name=shipping_address]").value.trim()) {
-    $("[name=shipping_address]").classList.add("invalid"); ok = false;
-  }
-  if (i === 2 && !$("#consent").checked) { $("#err").textContent = "Merci de confirmer avoir lu ce qui est vérifié."; return false; }
-  if (!ok) $("#err").textContent = "Quelques champs obligatoires sont manquants ou invalides.";
-  return ok;
+  if (!ok) { $("#err").textContent = "Quelques champs obligatoires sont manquants ou invalides."; return false; }
+  if (i === panes.length - 1 && !$("#consent").checked) { $("#err").textContent = "Merci de confirmer avoir lu ce qui est vérifié."; return false; }
+  return true;
 }
 $("#prev").onclick = () => show(step - 1);
 $("#next").onclick = async () => {
@@ -451,13 +565,10 @@ async function ipInfo() {
 /* ---------- Envoi ---------- */
 async function submit() {
   const btn = $("#next"); btn.disabled = true; btn.textContent = "Envoi…";
-  const f = new FormData($("#form"));
-  const data = Object.fromEntries(f.entries());
+  const data = Object.fromEntries(new FormData($("#form")).entries());
   data.experiences = $$(".exp").map((d) => Object.fromEntries($$("[data-k]", d).map((i) => [i.dataset.k, i.value.trim()])));
   data.education = $("#eduSchool").value ? [{ school: $("#eduSchool").value, degree: $("#eduDegree").value, year: Number($("#eduYear").value) || null }] : [];
-  if ($("#sameAddr").checked) data.shipping_address = "";
   data.cv_file_name = cvName;
-  Object.assign(data, profile);  // enrichissement de profil simulé (mode démo uniquement)
   const [ip, r] = await Promise.all([ipInfo(), rtt()]);
   data.meta = { browser_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
                 browser_utc_offset: -new Date().getTimezoneOffset() / 60, gpu_renderer: gpu(), ip, rtt_ms: r };
@@ -477,27 +588,16 @@ async function submit() {
   }
 }
 
-/* ---------- Mode démo : pré-remplissage ---------- */
+/* ---------- Mode démo : dépose un vrai PDF de démo, puis remplit l'étape « Mission » ---------- */
 $("#demoBtn").onclick = () => $("#demoMenu").classList.toggle("open");
 $$("#demoMenu button").forEach((b) => b.onclick = async () => {
-  const ex = await (await fetch("/api/demo-example?kind=" + b.dataset.kind)).json();
-  for (const [k, v] of Object.entries(ex)) {
-    const el = $(`[name=${k}]`);
-    if (el && el.type !== "radio") el.value = v ?? "";
-  }
-  const radio = $(`#pay input[value=${ex.payment_method}]`); radio.checked = true; radio.onchange();
-  $("[name=payment_account]").value = ex.payment_account;
-  $("#exps").innerHTML = ""; (ex.experiences || []).forEach(addExp);
-  const edu = (ex.education || [])[0] || {};
-  $("#eduSchool").value = edu.school || ""; $("#eduDegree").value = edu.degree || ""; $("#eduYear").value = edu.year || "";
-  $("#sameAddr").checked = !ex.shipping_address; $("#sameAddr").onchange({ target: $("#sameAddr") });
-  if (ex.shipping_address) $("[name=shipping_address]").value = ex.shipping_address;
-  setCv(`CV_${ex.first_name}_${ex.last_name}.pdf`);
-  profile = { profile_created: ex.profile_created, profile_connections: ex.profile_connections };
-  $("#consent").checked = true;
   $("#demoMenu").classList.remove("open");
-  $$(".invalid").forEach((el) => el.classList.remove("invalid"));
   show(0); $("#postuler").scrollIntoView();
+  const blob = await (await fetch("/demo-cvs/" + b.dataset.cv)).blob();
+  await handleCv(new File([blob], b.dataset.cv, { type: "application/pdf" }));
+  const ex = await (await fetch("/api/demo-example?kind=" + b.dataset.kind)).json();
+  for (const k of ["daily_rate", "available_from", "source", "message"]) $(`[name=${k}]`).value = ex[k] ?? "";
+  $("#consent").checked = true;
 });
 </script>
 </body>

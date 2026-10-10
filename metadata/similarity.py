@@ -78,12 +78,14 @@ def _cosine(a: dict, b: dict) -> float:
 
 def _identifiers(c: dict) -> dict[str, set[str]]:
     norm = lambda s: re.sub(r"[\s\-.]", "", s.lower())
-    return {
+    ids = {
         "téléphone": {norm(c["phone"])},
-        "compte de paiement": {norm(c["payment"]["account"])},
+        "compte de paiement": {norm(c["payment"].get("account", ""))},
         "email": {c["email"].lower()},
         "profil": {p["url"].lower() for p in c["profiles"]},
     }
+    # Un champ vide (paiement pas encore renseigné, par exemple) ne doit jamais relier deux dossiers.
+    return {k: {v for v in vals if v} for k, vals in ids.items()}
 
 
 def find_links(candidates: list[dict]) -> list[dict]:

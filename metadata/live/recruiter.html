@@ -64,16 +64,25 @@ function appCard(a) {
   const sig = r.signals.length ? r.signals.sort((x, y) => y.weight - x.weight).map((x) =>
       `<div class="signal"><b>+${x.weight}</b> ${esc(x.code)}<br>${esc(x.evidence)}</div>`).join("")
     : `<p class="lvl-faible" style="margin:0">Aucune incohérence détectée.</p>`;
+  const stage = a.stage === "onboarding"
+    ? `<span class="pill">Onboarding complété</span>`
+    : `<span class="pill">Candidature</span> <a href="/onboarding?app=${esc(a.id)}" target="_blank">Lien d'onboarding ↗</a>`;
   const linked = r.linked?.length ? `<div class="linked">🕸️ Relié à ${r.linked.length} dossier(s) déjà reçu(s) : ${r.linked.map((l) => esc(l.name) + " (" + esc(l.id) + ")").join(", ")}</div>` : "";
-  return `<section class="app"><div><div class="score lvl-${r.level}">${r.score}</div><div class="lvl-${r.level}">risque ${r.level}</div></div>
-    <div class="who"><b>${esc(a.name)}</b><div>${esc(a.city)} (${esc(a.country)}) · ${esc(a.email)}</div><div>Réf. ${esc(a.id)} · ${esc(a.applied_at)}</div>${linked}</div>
+  return `<section class="app" id="a-${esc(a.id)}"><div><div class="score lvl-${r.level}">${r.score}</div><div class="lvl-${r.level}">risque ${r.level}</div></div>
+    <div class="who"><b>${esc(a.name)}</b><div>${esc(a.city)} (${esc(a.country)}) · ${esc(a.email)}</div><div>Réf. ${esc(a.id)} · ${esc(a.applied_at)}</div><div style="margin-top:6px">${stage}</div>${linked}</div>
     <div>${sig}</div></section>`;
 }
 
 async function refreshApps() {
   try {
     const apps = await (await fetch("/api/applications", { cache: "no-store" })).json();
-    if (apps.length && document.activeElement?.tagName !== "INPUT") document.getElementById("apps").innerHTML = apps.map(appCard).join("");
+    if (apps.length && document.activeElement?.tagName !== "INPUT") {
+      document.getElementById("apps").innerHTML = apps.map(appCard).join("");
+      apps.forEach((a) => {  // le score monte (ex. après l'onboarding) : la carte clignote
+        if (lastScore["app:" + a.id] !== undefined && a.result.score > lastScore["app:" + a.id]) document.getElementById("a-" + a.id)?.classList.add("flash");
+        lastScore["app:" + a.id] = a.result.score;
+      });
+    }
   } catch {}
 }
 

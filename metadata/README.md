@@ -30,7 +30,7 @@ humain          ─► decide.py      décision tracée dans le journal d'audit
 | C3_YOUNG_PROFILE | Profil pro créé < 6 mois avant la candidature | 15 | T1585.001 |
 | C4_CAMERA | Caméra refusée en entretien | 15 | T1656 |
 | C5_FORWARDER | Matériel envoyé chez un transitaire connu | 25 | |
-| C6_ADDRESS_CHANGE | Adresse de livraison changée < 30 j après l'embauche | 10 | |
+| C6_ADDRESS_CHANGE | Matériel à livrer ailleurs qu'à la résidence, < 30 j après l'embauche | 10 | |
 | C7_LOGIN_COUNTRIES | Connexions hors du pays déclaré | 20 | T1078 |
 | C8_NIGHT_HOURS | Activité la nuit dans le fuseau déclaré | 15 | |
 | C9_CRYPTO | Salaire demandé en cryptomonnaie | 20 | |
@@ -87,18 +87,24 @@ reste un signal faible (5). Le générateur écrit des scores **simulés** en at
 python -m metadata.live.server
 ```
 
-- `http://localhost:8000/apply` : offre d'emploi fictive (« Fjordlane »). Le formulaire en trois
-  étapes collecte tout ce que l'analyse utilise (identité, parcours, profils, adresse de livraison
-  du matériel, mode de paiement) plus les métadonnées techniques annoncées au candidat. Chaque
-  dépôt est analysé avec les dossiers existants : une candidature qui recycle le paiement ou le
-  téléphone d'un réseau y est reliée tout de suite. Le bouton « Démo » en bas à gauche remplit
-  le formulaire avec une candidate honnête ou un fraudeur.
+- `http://localhost:8000/apply` : offre d'emploi fictive (« Fjordlane »). Comme une vraie
+  candidature, elle ne demande ni adresse ni coordonnées bancaires. Le candidat dépose son CV :
+  le PDF est lu dans le navigateur (pdf.js, embarqué dans `live/vendor/`), `cv_parser.py` en
+  extrait les champs (règles, ou Claude Haiku via Bedrock si `USE_BEDROCK=1`) et le formulaire
+  se pré-remplit ; le candidat vérifie et corrige. Puis taux journalier, disponibilité, et les
+  métadonnées techniques annoncées. Chaque dépôt est analysé avec les dossiers existants. Le
+  bouton « Démo » dépose un des deux CV de `live/demo_cvs/` (Camille, honnête ; Daniel, qui
+  recycle le téléphone d'un réseau connu). `python -m metadata.live.make_demo_cvs` les régénère.
+- `http://localhost:8000/onboarding?app=ID` : une fois le candidat retenu (lien dans le panneau
+  recruteur). Statut, adresse de résidence, livraison du matériel, versement (SEPA, Wise,
+  stablecoin). C'est là qu'apparaissent les signaux les plus forts (transitaire, crypto) : le
+  score du dossier est recalculé et monte dans le panneau recruteur.
 - `http://localhost:8000/` : page candidat. Écran de consentement (ce qui est mesuré, ce qui ne
   l'est jamais), puis une mesure toutes les 5 secondes.
 - `http://localhost:8000/recruiter` : panneau recruteur. Score, signaux, changements en cours
   d'appel, questions à poser, décision journalisée.
 
-Démo : lancer l'entretien, puis activer un VPN ou choisir une caméra virtuelle (OBS) dans la
+Démo : déposer le CV de Daniel, puis remplir son onboarding (65 puis 100). Lancer l'entretien, puis activer un VPN ou choisir une caméra virtuelle (OBS) dans la
 liste : l'alerte apparaît en quelques secondes. Si le réseau du lieu bloque le VPN, le menu
 « Mode démo » de la page candidat simule ces changements (marqués « simulation »).
 
