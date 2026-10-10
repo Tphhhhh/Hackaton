@@ -1,0 +1,14 @@
+# Local video research artifacts; never commit candidate media or model weights.
+visio/.venv/
+visio/.venv-gpu/
+visio/.cache/
+visio/local-data/
+visio/reports/
+__pycache__/
+.pytest_cache/
+*.pyc
+visio-demo/node_modules/
+visio-demo/dist/
+visio-demo/test-results/
+visio-demo/playwright-report/
+visio-demo/src/generated/

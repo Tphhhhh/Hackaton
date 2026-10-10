@@ -1,0 +1,381 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:visio:result:1",
+  "title": "Visio result v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "session_id",
+    "generation",
+    "simulation",
+    "status",
+    "conclusion",
+    "freshness",
+    "coverage",
+    "sampled_frames",
+    "duration_seconds",
+    "detectors",
+    "errors",
+    "timing",
+    "provenance",
+    "config",
+    "config_sha256",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "session_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generation": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "simulation": {
+      "type": "boolean"
+    },
+    "status": {
+      "enum": [
+        "completed",
+        "partial",
+        "failed",
+        "cancelled"
+      ]
+    },
+    "conclusion": {
+      "enum": [
+        "no_signal",
+        "verify",
+        "indeterminate",
+        null
+      ]
+    },
+    "freshness": {
+      "const": "unverified"
+    },
+    "coverage": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "sampled_frames": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 40
+    },
+    "duration_seconds": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 20.05
+    },
+    "detectors": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "status",
+          "conclusion",
+          "coverage",
+          "score",
+          "observations",
+          "longest_gap_seconds",
+          "flagged_fraction",
+          "error",
+          "threats",
+          "revision"
+        ],
+        "properties": {
+          "status": {
+            "enum": [
+              "ok",
+              "insufficient",
+              "error"
+            ]
+          },
+          "conclusion": {
+            "enum": [
+              "no_signal",
+              "verify",
+              "indeterminate"
+            ]
+          },
+          "coverage": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1
+          },
+          "score": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1
+          },
+          "longest_gap_seconds": {
+            "type": "number",
+            "minimum": 0
+          },
+          "flagged_fraction": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1
+          },
+          "observations": {
+            "type": "array",
+            "maxItems": 40,
+            "items": {
+              "type": "object",
+              "required": [
+                "time_seconds",
+                "score",
+                "reason"
+              ],
+              "properties": {
+                "time_seconds": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 20.05
+                },
+                "score": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "reason": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "error": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "action": {
+                "type": "string"
+              },
+              "retryable": {
+                "type": "boolean"
+              },
+              "docs": {
+                "type": "string"
+              },
+              "cause": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "code",
+              "message",
+              "action",
+              "retryable",
+              "docs",
+              "cause"
+            ],
+            "additionalProperties": false
+          },
+          "threats": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "revision": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "enum": [
+                    "error",
+                    "insufficient"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "conclusion": {
+                  "const": "indeterminate"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "retryable": {
+            "type": "boolean"
+          },
+          "docs": {
+            "type": "string"
+          },
+          "cause": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "action",
+          "retryable",
+          "docs",
+          "cause"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "timing": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0
+      }
+    },
+    "provenance": {
+      "type": "object"
+    },
+    "config": {
+      "type": "object"
+    },
+    "config_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "quality_reasons": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "failed",
+              "cancelled"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "conclusion": {
+            "type": "null"
+          },
+          "errors": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "completed"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "conclusion": {
+            "enum": [
+              "no_signal",
+              "verify",
+              "indeterminate"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "partial"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "conclusion": {
+            "enum": [
+              "verify",
+              "indeterminate"
+            ]
+          },
+          "errors": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ]
+}

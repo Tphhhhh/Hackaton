@@ -1,0 +1,162 @@
+{
+  "schema_version": "1.0",
+  "models": {
+    "dima": {
+      "kind": "vit",
+      "source": "https://huggingface.co/dima806/deepfake_vs_real_image_detection",
+      "revision": "29e4cf9efc543845610045f6ba7e88e5cf9d9301",
+      "license": "Apache-2.0",
+      "labels": [
+        "Real",
+        "Fake"
+      ],
+      "attack_index": 1,
+      "input": "full_frame_rgb",
+      "threats": [
+        "face_swap",
+        "reenactment"
+      ],
+      "files": [
+        {
+          "name": "config.json",
+          "url": "https://huggingface.co/dima806/deepfake_vs_real_image_detection/resolve/29e4cf9efc543845610045f6ba7e88e5cf9d9301/config.json",
+          "sha256": "11bf93504ca2fed8f285127f407b235739873a85d4ec182939a6f8faebb62d3d",
+          "size": 726
+        },
+        {
+          "name": "preprocessor_config.json",
+          "url": "https://huggingface.co/dima806/deepfake_vs_real_image_detection/resolve/29e4cf9efc543845610045f6ba7e88e5cf9d9301/preprocessor_config.json",
+          "sha256": "a34861a24e781942424ad790b82bc99348404a2e64ea882de88c40905851698d",
+          "size": 325
+        },
+        {
+          "name": "model.safetensors",
+          "url": "https://huggingface.co/dima806/deepfake_vs_real_image_detection/resolve/29e4cf9efc543845610045f6ba7e88e5cf9d9301/model.safetensors",
+          "sha256": "b38e7d3de2be44b224cb4cffe881a0c4b75f7283c5d4a2017fbadd58bd41fdef",
+          "size": 343223968
+        }
+      ]
+    },
+    "prithiv": {
+      "kind": "vit",
+      "source": "https://huggingface.co/prithivMLmods/Deep-Fake-Detector-v2-Model",
+      "revision": "3a99ae26f52c7ac7c3a53103b6cf3a8b617f7093",
+      "license": "Apache-2.0",
+      "labels": [
+        "Realism",
+        "Deepfake"
+      ],
+      "attack_index": 1,
+      "input": "full_frame_rgb",
+      "threats": [
+        "face_swap",
+        "reenactment"
+      ],
+      "files": [
+        {
+          "name": "config.json",
+          "url": "https://huggingface.co/prithivMLmods/Deep-Fake-Detector-v2-Model/resolve/3a99ae26f52c7ac7c3a53103b6cf3a8b617f7093/config.json",
+          "sha256": "b2a87a8b9c4fedab5ba35c3cd4cb3b3ba927c595c356a4897c7bd7713ea25565",
+          "size": 738
+        },
+        {
+          "name": "preprocessor_config.json",
+          "url": "https://huggingface.co/prithivMLmods/Deep-Fake-Detector-v2-Model/resolve/3a99ae26f52c7ac7c3a53103b6cf3a8b617f7093/preprocessor_config.json",
+          "sha256": "445c77049d082004aa07593344d5e1f521f1198228bf586196f70ce7ae021414",
+          "size": 351
+        },
+        {
+          "name": "model.safetensors",
+          "url": "https://huggingface.co/prithivMLmods/Deep-Fake-Detector-v2-Model/resolve/3a99ae26f52c7ac7c3a53103b6cf3a8b617f7093/model.safetensors",
+          "sha256": "88ac0939285009e3700cfc9b9a0912b14b092d200ef0df86efe4f2cf190ea4de",
+          "size": 343223968
+        }
+      ]
+    },
+    "yunet": {
+      "kind": "face_locator",
+      "source": "https://github.com/opencv/opencv_zoo/tree/47534e27c9851bb1128ccc0102f1145e27f23f98/models/face_detection_yunet",
+      "revision": "47534e27c9851bb1128ccc0102f1145e27f23f98",
+      "license": "MIT",
+      "threats": [],
+      "files": [
+        {
+          "name": "face_detection_yunet_2023mar.onnx",
+          "url": "https://media.githubusercontent.com/media/opencv/opencv_zoo/47534e27c9851bb1128ccc0102f1145e27f23f98/models/face_detection_yunet/face_detection_yunet_2023mar.onnx",
+          "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+          "size": 232589
+        }
+      ]
+    },
+    "minifasnet": {
+      "kind": "minifasnet",
+      "source": "https://github.com/yakhyo/face-anti-spoofing",
+      "revision": "aea85c1fa14e4d52a7910af75d59ef51e62a2267",
+      "license": "Apache-2.0",
+      "input": "expanded_face_bgr_0_255",
+      "crop_scale": 2.7,
+      "real_index": 1,
+      "threats": [
+        "photo",
+        "screen"
+      ],
+      "files": [
+        {
+          "name": "model.onnx",
+          "url": "https://github.com/yakhyo/face-anti-spoofing/releases/download/weights/MiniFASNetV2.onnx",
+          "sha256": "b32929adc2d9c34b9486f8c4c7bc97c1b69bc0ea9befefc380e4faae4e463907",
+          "size": 1743581
+        }
+      ]
+    },
+    "gend": {
+      "kind": "gend",
+      "revision": "891ce014a0308386c4d7d25b3dcf436a22db5504",
+      "license": "MIT (GenD); non-commercial research only (InsightFace detector weights)",
+      "source": "https://github.com/yermandy/GenD",
+      "source_revision": "387a42266dd385fbe8f7626c5d3aa03eea3bfaab",
+      "labels": [
+        "real",
+        "fake"
+      ],
+      "attack_index": 1,
+      "device": "cuda",
+      "threats": [
+        "face_swap",
+        "reenactment"
+      ],
+      "files": [
+        {
+          "name": "config.json",
+          "url": "https://huggingface.co/yermandy/GenD_CLIP_L_14/resolve/891ce014a0308386c4d7d25b3dcf436a22db5504/config.json",
+          "size": 193,
+          "sha256": "7f2761e13678191774a152121f1630d19baa33a74216dd264d54445d96b16229"
+        },
+        {
+          "name": "clip_config.json",
+          "url": "https://huggingface.co/openai/clip-vit-large-patch14/resolve/32bd64288804d66eefd0ccbe215aa642df71cc41/config.json",
+          "size": 4519,
+          "sha256": "8a09b467700c58138c29d53c605b34ebc69beaadd13274a8a2af8ad2c2f4032a"
+        },
+        {
+          "name": "preprocessor_config.json",
+          "url": "https://huggingface.co/openai/clip-vit-large-patch14/resolve/32bd64288804d66eefd0ccbe215aa642df71cc41/preprocessor_config.json",
+          "size": 316,
+          "sha256": "910e70b3956ac9879ebc90b22fb3bc8a75b6a0677814500101a4c072bd7857bd"
+        },
+        {
+          "name": "model.safetensors",
+          "url": "https://huggingface.co/yermandy/GenD_CLIP_L_14/resolve/891ce014a0308386c4d7d25b3dcf436a22db5504/model.safetensors",
+          "size": 1215928160,
+          "sha256": "d76f0bdfd74a29fe1b1c1b84a80ac92486993e426878e8c7a3944281fbb96833"
+        },
+        {
+          "name": "det_10g.onnx",
+          "url": "https://huggingface.co/datasets/theanhntp/Liblib/resolve/ae4357741af379482690fe3e0f2fa6fd32ba33b4/insightface/models/buffalo_l/det_10g.onnx",
+          "size": 16923827,
+          "sha256": "5838f7fe053675b1c7a08b633df49e7af5495cee0493c7dcf6697200b85b5b91"
+        }
+      ]
+    }
+  }
+}

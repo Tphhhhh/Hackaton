@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "session_id": "4e15f544-5129-48c1-b647-4088ddce181b",
+  "generation": 1,
+  "simulation": false,
+  "status": "failed",
+  "conclusion": null,
+  "freshness": "unverified",
+  "coverage": null,
+  "sampled_frames": 0,
+  "duration_seconds": null,
+  "detectors": {},
+  "errors": [
+    {
+      "code": "InvalidMedia",
+      "message": "Vid\u00e9o locale absente, vide, trop grosse ou format refus\u00e9.",
+      "action": "Utiliser mp4/mov/mkv/webm/avi de 2\u201320 s, au plus 50 Mio.",
+      "retryable": false,
+      "cause": null,
+      "docs": "visio/README.md#erreurs"
+    }
+  ],
+  "timing": {
+    "total_seconds": 0.14827854599570855
+  },
+  "provenance": {},
+  "config": {
+    "detectors": [
+      "dima",
+      "prithiv",
+      "minifasnet"
+    ],
+    "threads": 2,
+    "sample_fps": 2.0,
+    "threshold": 0.5,
+    "aggregation": "fraction",
+    "flag_fraction": 0.5,
+    "window_seconds": 2.0,
+    "min_coverage": 0.8,
+    "max_gap_seconds": 2.0,
+    "timeout_seconds": 60.0
+  },
+  "config_sha256": "faff143527cb036a0975f651dc8383a1b70c963a84e22fabd3d2f687ea5474bc",
+  "limitations": [
+    "Scores exploratoires non calibr\u00e9s ; aucune d\u00e9cision d'embauche.",
+    "Ne prouve ni identit\u00e9 ni pr\u00e9sence en direct.",
+    "Les intervalles non \u00e9chantillonn\u00e9s ne sont pas analys\u00e9s."
+  ]
+}

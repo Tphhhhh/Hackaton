@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-10",
+  "url": "http://127.0.0.1:4183",
+  "healthScore": 97,
+  "provisional": true,
+  "issues": [
+    {
+      "id": "ISSUE-001",
+      "title": "Erreur réelle du moteur refusée : champ cause",
+      "severity": "medium",
+      "category": "functional"
+    }
+  ],
+  "categoryScores": {
+    "console": 100,
+    "visual": 100,
+    "functional": 92,
+    "accessibility": 100
+  }
+}

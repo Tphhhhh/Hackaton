@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "claimed_categories": [
+    "photo",
+    "screen",
+    "face_swap",
+    "reenactment"
+  ],
+  "clips": []
+}
