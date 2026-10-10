@@ -6,7 +6,7 @@ async function camera(page, { denied = false, delayed = false } = {}) {
   await page.route('**/api/live/status', route => route.fulfill({ json: { ready: true, model: 'test transport' } }));
   await page.route('**/api/live/swap', route => route.fulfill({
     contentType: 'image/jpeg', path: new URL('./fixtures/grace-hopper.jpg', import.meta.url).pathname,
-    headers: { 'X-Visio-Swapped': '1', 'X-Visio-Inference-Ms': '42' },
+    headers: { 'X-Visio-Portrait': route.request().headers()['x-visio-portrait'] || 'brad-pitt', 'X-Visio-Swapped': '1', 'X-Visio-Inference-Ms': '42' },
   }));
   await page.addInitScript(({ denied, delayed }) => {
     window.testStreams = [];
@@ -206,7 +206,7 @@ test('delayed swap has no queue and cannot reappear after disabling or stopping'
   await page.route('**/api/live/swap', async route => {
     calls++; await held;
     await route.fulfill({ contentType: 'image/jpeg', path: new URL('./fixtures/grace-hopper.jpg', import.meta.url).pathname,
-      headers: { 'X-Visio-Swapped': '1', 'X-Visio-Inference-Ms': '800' } }).catch(() => {});
+      headers: { 'X-Visio-Portrait': route.request().headers()['x-visio-portrait'] || 'brad-pitt', 'X-Visio-Swapped': '1', 'X-Visio-Inference-Ms': '800' } }).catch(() => {});
   });
   await page.goto('/'); await page.locator('#start-camera').click();
   await expect.poll(() => calls).toBe(1);
@@ -227,11 +227,53 @@ test('inference failure can retry without restarting the webcam', async ({ page 
   await page.route('**/api/live/swap', route => failing
     ? route.fulfill({ status: 500, json: { error: 'Face swap interrompu.' } })
     : route.fulfill({ contentType: 'image/jpeg', path: new URL('./fixtures/grace-hopper.jpg', import.meta.url).pathname,
-      headers: { 'X-Visio-Swapped': '1', 'X-Visio-Inference-Ms': '40' } }));
+      headers: { 'X-Visio-Portrait': route.request().headers()['x-visio-portrait'] || 'brad-pitt', 'X-Visio-Swapped': '1', 'X-Visio-Inference-Ms': '40' } }));
   await page.goto('/'); await page.locator('#start-camera').click();
   await expect(page.locator('#filter-status')).toContainText('interrompu');
   await expect(page.locator('#filtered-score')).toHaveText('—');
   failing = false; await page.getByRole('button', { name: 'Réessayer le face swap' }).click();
   await expect(page.locator('#filter-status')).toContainText('Face swap Brad Pitt actif');
   expect(await page.evaluate(() => window.testStreams.length)).toBe(1);
+});
+
+test('portrait can be selected before the camera and changed without reopening it', async ({ page }) => {
+  await camera(page);
+  const requested = [];
+  page.on('request', r => { if (r.url().endsWith('/api/live/swap')) requested.push(r.headers()['x-visio-portrait']); });
+  await page.goto('/');
+  await page.getByLabel('Visage du filtre').selectOption('sam-altman');
+  await expect(page.locator('#filtered-name')).toHaveText('02 · Sam Altman');
+  await expect(page.locator('#portrait-author')).toContainText('Steve Jennings');
+  await expect(page.locator('#portrait-license')).toHaveText('CC BY 2.0');
+  await page.locator('#start-camera').click();
+  await expect(page.locator('#filter-status')).toContainText('Face swap Sam Altman actif', { timeout: 30000 });
+  expect(requested.every(id => id === 'sam-altman')).toBe(true);
+  await page.getByLabel('Visage du filtre').selectOption('brad-pitt');
+  await expect(page.locator('#filter-status')).toContainText('Face swap Brad Pitt actif');
+  await expect(page.locator('#portrait-author')).toContainText('Glenn Francis');
+  expect(requested).toContain('brad-pitt');
+  expect(await page.evaluate(() => window.testStreams.length)).toBe(1);
+  await page.locator('#stop-camera').click();
+});
+
+test('a late result from the previous portrait cannot replace the selected face', async ({ page }) => {
+  await camera(page);
+  let release, bradStarted = false;
+  const held = new Promise(resolve => { release = resolve; });
+  await page.route('**/api/live/swap', async route => {
+    const portrait = route.request().headers()['x-visio-portrait'];
+    if (portrait === 'brad-pitt') { bradStarted = true; await held; }
+    await route.fulfill({ contentType: 'image/jpeg', path: new URL('./fixtures/grace-hopper.jpg', import.meta.url).pathname,
+      headers: { 'X-Visio-Portrait': portrait, 'X-Visio-Swapped': '1', 'X-Visio-Inference-Ms': '40' } }).catch(() => {});
+  });
+  await page.goto('/'); await page.locator('#start-camera').click();
+  await expect.poll(() => bradStarted).toBe(true);
+  await page.getByLabel('Visage du filtre').selectOption('sam-altman');
+  await expect(page.locator('#filter-status')).toContainText('Face swap Sam Altman actif');
+  release();
+  await page.waitForTimeout(200);
+  await expect(page.locator('#filter-status')).toContainText('Face swap Sam Altman actif');
+  await expect(page.locator('#filtered-canvas')).toHaveAttribute('data-filter-applied', 'true');
+  expect(await page.evaluate(() => window.testStreams.length)).toBe(1);
+  await page.locator('#stop-camera').click();
 });

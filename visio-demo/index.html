@@ -36,7 +36,7 @@
         <div class="room-note"><span data-icon="lock"></span><p>Analyse sur cet ordinateur, sans envoi externe.</p></div>
       </section>
       <section id="filtered-panel" class="conference" aria-label="Visage transformé">
-        <div class="room-heading"><span>02 · Brad Pitt</span><span class="recording-label" id="filter-source-label">Face swap neuronal · GPU</span></div>
+        <div class="room-heading"><span id="filtered-name">02 · Brad Pitt</span><span class="recording-label" id="filter-source-label">Face swap neuronal · GPU</span></div>
         <div class="media-card">
           <div id="filtered-stage" class="stage-shell">
             <div id="filtered-placeholder" class="stage-empty"><div class="empty-video-icon" data-icon="scan"></div><h2>L’autre version de vous.</h2><p>Le filtre suit les mouvements<br>de votre visage.</p><span class="stage-formats">Même webcam · traitement local</span></div>
@@ -44,12 +44,12 @@
             <div class="stage-top"><span class="stage-chip">VISAGE TRANSFORMÉ</span><span class="stage-chip">DÉMONSTRATION</span></div>
           </div>
           <p id="filter-status" class="file-info" role="status">En attente de la caméra</p>
-          <p id="external-alert" class="alert" role="alert" hidden></p><div class="filter-controls"><button id="toggle-filter" class="button secondary" aria-pressed="true" disabled>Désactiver le filtre</button><button id="connect-external" class="text-button" disabled>Partager un flux externe</button><button id="disconnect-external" class="text-button" hidden>Revenir au filtre intégré</button></div>
+          <p id="external-alert" class="alert" role="alert" hidden></p><div class="filter-controls"><label id="portrait-control" class="landmark-control">Visage <select id="filter-portrait" aria-label="Visage du filtre"><option value="brad-pitt">Brad Pitt</option><option value="sam-altman">Sam Altman</option></select></label><button id="toggle-filter" class="button secondary" aria-pressed="true" disabled>Désactiver le filtre</button><button id="connect-external" class="text-button" disabled>Partager un flux externe</button><button id="disconnect-external" class="text-button" hidden>Revenir au filtre intégré</button></div>
         </div>
         <div class="demo-score transformed"><div><span>Score de suspicion</span><small>SIMULÉ · scénario de démonstration</small></div><strong id="filtered-score">—</strong><div class="demo-score-track"><i id="filtered-score-rail"></i></div></div>
         <label class="landmark-control filter-points">Points <select id="filtered-landmarks" aria-label="Points du visage transformé"><option value="none" selected>Aucun</option><option value="light">Léger</option><option value="full">Complet</option></select></label><p id="filtered-tracking" class="small-note filter-note">Suivi partagé avec le flux original</p>
         <details class="filter-help"><summary>Utiliser une fenêtre Deep-Live-Cam / OBS</summary><p>Lancez Deep-Live-Cam, choisissez votre portrait puis « Live ». Cliquez sur « Partager un flux externe » et partagez uniquement sa fenêtre d’aperçu. Le flux externe peut avoir un léger décalage. Le suivi facial est recalculé sur cette image.</p><p>Si la webcam est déjà utilisée, libérez-la dans l’autre application ou utilisez une source virtuelle OBS. Fermer le partage revient au filtre intégré.</p></details>
-        <p class="filter-credit">Portrait : © Glenn Francis / PacificProDigital.com — <a href="https://commons.wikimedia.org/wiki/File:Brad_Pitt_2019_by_Glenn_Francis.jpg" target="_blank" rel="noreferrer">source</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noreferrer">CC BY-SA 4.0</a>. Portrait de référence pour le face swap.</p>
+        <p class="filter-credit" id="filter-credit">Portrait : <span id="portrait-author">© Glenn Francis / PacificProDigital.com</span> — <a id="portrait-source" href="https://commons.wikimedia.org/wiki/File:Brad_Pitt_2019_by_Glenn_Francis.jpg" target="_blank" rel="noreferrer">source</a> · <a id="portrait-license" href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noreferrer">CC BY-SA 4.0</a>. Portrait de référence pour le face swap.</p>
       </section>
       <aside id="analysis-panel" class="analysis-panel" aria-label="Analyse et rapprochement">
         <div class="panel-header"><h2>L’analyse</h2><span class="panel-label">Lecture seule</span></div>

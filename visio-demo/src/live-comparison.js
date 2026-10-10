@@ -7,6 +7,23 @@ export function createLiveComparison() {
   const $ = id => document.getElementById(id);
   const output = $('filtered-canvas'), context = output.getContext('2d');
   const scores = createDemoScores();
+  const portraits = {
+    'brad-pitt': { label: 'Brad Pitt', author: '© Glenn Francis / PacificProDigital.com',
+      source: 'https://commons.wikimedia.org/wiki/File:Brad_Pitt_2019_by_Glenn_Francis.jpg',
+      license: 'CC BY-SA 4.0', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/' },
+    'sam-altman': { label: 'Sam Altman', author: '© Steve Jennings / Getty Images pour TechCrunch · recadrage James Tamim',
+      source: 'https://commons.wikimedia.org/wiki/File:Sam_Altman_CropEdit_James_Tamim.jpg',
+      license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0/' },
+  };
+  const portrait = () => portraits[$('filter-portrait').value];
+  const updatePortrait = () => {
+    const selected = portrait();
+    $('filtered-name').textContent = `02 · ${external ? 'Flux externe' : selected.label}`;
+    $('portrait-control').hidden = !!external; $('filter-credit').hidden = !!external;
+    $('portrait-author').textContent = selected.author;
+    $('portrait-source').href = selected.source;
+    $('portrait-license').textContent = selected.license; $('portrait-license').href = selected.licenseUrl;
+  };
   let original = null, latest = null, swapped = null, ready = false, failure = null;
   let external = null, externalFrame = null, stopExternal = () => {};
   const enabled = () => $('toggle-filter').getAttribute('aria-pressed') === 'true';
@@ -14,7 +31,7 @@ export function createLiveComparison() {
   const neural = createNeuralFilter({
     onReady() { ready = true; failure = null; $('toggle-filter').disabled = false; paint(); },
     onResult(result) {
-      if (!original || external || !enabled() || !latest?.frame.faces.length) { result.bitmap.close(); return; }
+      if (!original || external || !enabled() || !latest?.frame.faces.length || result.portraitId !== $('filter-portrait').value) { result.bitmap.close(); return; }
       swapped?.bitmap.close(); swapped = result; paint();
     },
     onError(message) {
@@ -26,7 +43,7 @@ export function createLiveComparison() {
     external = null; stopExternal(); stopExternal = () => {};
     externalFrame?.bitmap?.close(); externalFrame = null;
     $('connect-external').hidden = false; $('disconnect-external').hidden = true; $('toggle-filter').hidden = false;
-    $('filter-source-label').textContent = 'Face swap neuronal · GPU';
+    $('filter-source-label').textContent = 'Face swap neuronal · GPU'; updatePortrait();
     paint();
   };
   const setScore = (id, value) => {
@@ -69,7 +86,7 @@ export function createLiveComparison() {
     output.dataset.filterApplied = String(applied);
     $('filter-status').textContent = external ? (rightBitmap ? 'Flux externe · transformation fournie par la fenêtre partagée' : 'Connexion au flux externe…')
       : failure || (!enabled() ? 'Filtre désactivé · flux original' : !ready ? 'Connexion au face swap neuronal…' : !frame.faces.length ? 'Placez votre visage face à la caméra'
-        : !swapped ? 'Traitement de la première image…' : !applied ? 'Visage non détecté par le face swap' : `Face swap Brad Pitt actif · ${Math.round(swapped.latencyMs)} ms · GPU`);
+        : !swapped ? 'Traitement de la première image…' : !applied ? 'Visage non détecté par le face swap' : `Face swap ${portrait().label} actif · ${Math.round(swapped.latencyMs)} ms · GPU`);
     const values = scores.sample(frame.timestamp, { facePresent: !!frame.faces.length, filteredFacePresent: !!face, filterApplied: external ? true : applied });
     setScore('original-score', values.original);
     setScore('filtered-score', !external && enabled() && !applied ? null : values.filtered);
@@ -83,6 +100,11 @@ export function createLiveComparison() {
     }
     $('toggle-filter').textContent = enabled() ? 'Désactiver le filtre' : 'Activer le filtre'; paint();
   });
+  $('filter-portrait').addEventListener('change', () => {
+    neural.selectPortrait($('filter-portrait').value);
+    swapped?.bitmap.close(); swapped = null; setScore('filtered-score', null);
+    updatePortrait(); paint();
+  });
   $('filtered-landmarks').addEventListener('change', paint);
   $('disconnect-external').addEventListener('click', disconnect);
   $('connect-external').addEventListener('click', () => {
@@ -90,7 +112,7 @@ export function createLiveComparison() {
     disconnect();
     // Let an initial status check finish while the external source connects.
     if (ready) releaseSwap();
-    const token = {}; external = token;
+    const token = {}; external = token; updatePortrait();
     $('external-alert').hidden = true; $('connect-external').hidden = true; $('disconnect-external').hidden = false;
     $('toggle-filter').hidden = true; $('filter-source-label').textContent = 'Flux externe · Deep-Live-Cam / OBS';
     const video = document.createElement('video'); video.muted = true; video.playsInline = true;

@@ -33,9 +33,9 @@ def live_server(tmp_path):
         info = {'ready': True, 'model': 'stub', 'provider': 'test'}
         calls = []
 
-        def process(self, payload):
+        def process(self, payload, portrait_id="brad-pitt"):
             decode_frame(payload)
-            self.calls.append(payload)
+            self.calls.append((portrait_id, payload))
             return payload, {'applied': True, 'inference_ms': 38.2}
     server = DemoServer(0, frontend=tmp_path, swapper=Swapper())
     thread = threading.Thread(target=server.serve_forever, daemon=True)
@@ -91,3 +91,13 @@ def test_engine_unavailable_does_not_generate_a_result(live_server):
     live_server.swapper = None
     assert not json.loads(request(live_server, 'GET', '/api/live/status')[2])['ready']
     assert request(live_server, body=jpeg())[0] == 503
+
+
+def test_portrait_is_bound_to_each_request_and_unknown_ids_are_rejected(live_server):
+    headers = {'Content-Type': 'image/jpeg', 'X-Visio-Request': '1'}
+    for portrait in ('sam-altman', 'brad-pitt', 'sam-altman'):
+        status, returned, _ = request(live_server, body=jpeg(), headers={**headers, 'X-Visio-Portrait': portrait})
+        assert status == 200 and returned['X-Visio-Portrait'] == portrait
+    assert [identity for identity, _ in live_server.swapper.calls] == ['sam-altman', 'brad-pitt', 'sam-altman']
+    assert request(live_server, body=jpeg(), headers={**headers, 'X-Visio-Portrait': '../other'})[0] == 400
+    assert len(live_server.swapper.calls) == 3

@@ -15,6 +15,7 @@ MODELS = {
 MODEL_DIR = DEFAULT_CACHE / "live-models"
 MAX_FRAME_BYTES = 1024 * 1024
 MAX_PIXELS = 1280 * 720
+PORTRAITS = {"brad-pitt": "Brad Pitt", "sam-altman": "Sam Altman"}
 
 
 def decode_frame(payload):
@@ -39,7 +40,7 @@ def decode_frame(payload):
 
 
 class LiveSwapper:
-    def __init__(self, model_dir=MODEL_DIR, portrait=None):
+    def __init__(self, model_dir=MODEL_DIR):
         os.environ["NO_ALBUMENTATIONS_UPDATE"] = "1"
         import cv2
         import onnxruntime as ort
@@ -70,18 +71,23 @@ class LiveSwapper:
         self.detector.prepare(ctx_id=0, input_size=(320, 320), det_thresh=0.5)
         recognizer = load("w600k_r50.onnx", ArcFaceONNX)
         self.swapper = load("inswapper_128_fp16.onnx", INSwapper)
-        image = cv2.imread(str(portrait or ROOT.parent / "visio-demo/public/filters/brad-pitt.jpg"))
-        if image is None:
-            raise RuntimeError("Portrait de référence illisible.")
-        scale = min(1, 960 / max(image.shape[:2]))
-        image = cv2.resize(image, None, fx=scale, fy=scale)
-        self.source = self.face(image)
-        if self.source is None:
-            raise RuntimeError("Aucun visage détecté dans le portrait de référence.")
-        recognizer.get(image, self.source)
-        # Warm up CUDA before advertising readiness. No webcam image is involved.
-        self.swapper.get(image, self.source, self.source, paste_back=True)
-        self.info = {"ready": True, "model": "InSwapper 128 FP16", "provider": "CUDA", "portrait": "Brad Pitt"}
+        self.sources = {}
+        for portrait_id, label in PORTRAITS.items():
+            image = cv2.imread(str(ROOT.parent / "visio-demo/public/filters" / f"{portrait_id}.jpg"))
+            if image is None:
+                raise RuntimeError(f"Portrait de référence illisible : {label}.")
+            scale = min(1, 960 / max(image.shape[:2]))
+            image = cv2.resize(image, None, fx=scale, fy=scale)
+            source = self.face(image)
+            if source is None:
+                raise RuntimeError(f"Aucun visage détecté dans le portrait : {label}.")
+            recognizer.get(image, source)
+            self.sources[portrait_id] = source
+            # Warm up CUDA before advertising readiness. No webcam image is involved.
+            self.swapper.get(image, source, source, paste_back=True)
+        self.info = {"ready": True, "model": "InSwapper 128 FP16", "provider": "CUDA",
+                     "default_portrait": "brad-pitt",
+                     "portraits": [{"id": key, "label": label} for key, label in PORTRAITS.items()]}
 
     def face(self, image):
         from insightface.app.common import Face
@@ -90,11 +96,13 @@ class LiveSwapper:
             return None
         return Face(bbox=boxes[0, :4], kps=points[0], det_score=boxes[0, 4])
 
-    def process(self, payload):
+    def process(self, payload, portrait_id="brad-pitt"):
+        if portrait_id not in self.sources:
+            raise ValueError("Portrait inconnu.")
         start = perf_counter()
         frame = decode_frame(payload)
         face = self.face(frame)
-        swapped = self.swapper.get(frame, face, self.source, paste_back=True) if face is not None else frame
+        swapped = self.swapper.get(frame, face, self.sources[portrait_id], paste_back=True) if face is not None else frame
         ok, jpeg = self.cv2.imencode(".jpg", swapped, [self.cv2.IMWRITE_JPEG_QUALITY, 92])
         if not ok:
             raise RuntimeError("Encodage impossible.")

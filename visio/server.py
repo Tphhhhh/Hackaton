@@ -168,13 +168,16 @@ class Handler(SimpleHTTPRequestHandler):
             self.server.slot.release()
 
     def live_swap(self):
-        from .live_swap import MAX_FRAME_BYTES
+        from .live_swap import MAX_FRAME_BYTES, PORTRAITS
         try:
             length = int(self.headers.get("Content-Length", "0"))
             if not 0 < length <= MAX_FRAME_BYTES or self.headers.get("Content-Type") != "image/jpeg" or self.headers.get("Transfer-Encoding"):
                 raise ValueError()
         except ValueError:
             return self.reply(400, {"error": "Image JPEG de 1 Mio maximum requise."})
+        portrait_id = self.headers.get("X-Visio-Portrait", "brad-pitt")
+        if portrait_id not in PORTRAITS:
+            return self.reply(400, {"error": "Portrait inconnu."})
         if not self.server.swapper:
             return self.reply(503, {"error": "Face swap indisponible. Démarrez le serveur avec --live-swap."})
         if not self.server.slot.acquire(blocking=False):
@@ -183,11 +186,12 @@ class Handler(SimpleHTTPRequestHandler):
             payload = self.rfile.read(length)
             if len(payload) != length:
                 raise ValueError("Image incomplète.")
-            jpeg, result = self.server.swapper.process(payload)
+            jpeg, result = self.server.swapper.process(payload, portrait_id=portrait_id)
             self.send_response(200)
             self.send_header("Content-Type", "image/jpeg")
             self.send_header("Content-Length", str(len(jpeg)))
             self.send_header("X-Visio-Swapped", "1" if result["applied"] else "0")
+            self.send_header("X-Visio-Portrait", portrait_id)
             self.send_header("X-Visio-Inference-Ms", str(result["inference_ms"]))
             self.end_headers()
             self.wfile.write(jpeg)

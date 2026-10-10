@@ -48,3 +48,17 @@ pas la finesse d’un rendu vidéo hors ligne.
 
 Les scores de suspicion restent explicitement simulés ; aucune mesure
 GenD PE n’a été ajoutée ni validée pour le live.
+
+## Ajout du portrait Sam Altman
+
+Sélecteur Brad Pitt / Sam Altman disponible avant et pendant la capture.
+Les embeddings des deux portraits sont calculés au démarrage. Chaque requête
+porte un identifiant de portrait autorisé, repris dans la réponse ; changer
+la sélection invalide les résultats précédents. Le nom et les crédits suivent
+le portrait choisi. En partage externe, le sélecteur et ces crédits sont masqués.
+
+Validation : 14 tests Chromium live et 10 tests Python du transport réussis,
+ainsi que le build. Sur le vrai serveur CUDA, passage Brad → Sam → Brad → Sam,
+bascule du filtre et arrêt vérifiés avec la caméra de test publique. Rendu Sam
+inspecté visuellement dans l’interface ; aucun appel externe ni erreur JavaScript.
+Source et licence du nouveau portrait : `public/filters/ATTRIBUTION.md`.

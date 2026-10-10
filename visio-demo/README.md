@@ -28,6 +28,10 @@ runtime restent dans `visio/.cache/`, ignoré par Git. Environ 469 Mo de poids,
 plus les bibliothèques CUDA. Les trois poids ont une révision et des SHA-256
 figés dans `visio/live_swap.py` ; `setup_live` vérifie leur intégrité.
 
+- **Visage** : Brad Pitt ou Sam Altman, sélectionnable avant ou pendant la caméra.
+  Les deux portraits sont préparés au démarrage ; changer de visage ne recharge
+  pas le modèle et invalide les images encore en cours pour le visage précédent.
+  Le nom et les crédits suivent la sélection.
 - **Points** : sélecteurs indépendants Aucun / Léger / Complet. Par défaut,
   32 points à gauche et aucun à droite. MediaPipe calcule toujours les 478
   repères ; le réglage modifie seulement leur affichage. Les points éventuels
@@ -37,7 +41,7 @@ figés dans `visio/live_swap.py` ; `setup_live` vérifie leur intégrité.
   (grand côté ≤640 pixels) vers `/api/live/swap` sur ce même ordinateur.
   Une seule requête en cours ; les images intermédiaires sont ignorées.
   Aucun fichier webcam n’est enregistré, aucun microphone demandé, aucun
-  service distant utilisé. Le portrait est chargé une fois au démarrage.
+  service distant utilisé. Les portraits sont chargés une fois au démarrage.
 - **Arrêt** : désactivation du filtre, arrêt caméra, changement d’extrait et
   fermeture de page invalident les réponses tardives. L’arrêt caméra libère
   ses pistes et les bitmaps. Une image déjà admise sur le GPU peut terminer
@@ -69,7 +73,8 @@ Modèles : [dépôt Deep-Live-Cam](https://github.com/hacksider/Deep-Live-Cam),
 [InsightFace et conditions des modèles préentraînés](https://github.com/deepinsight/insightface#license).
 La bibliothèque InsightFace est sous MIT ; ses modèles préentraînés ont des
 conditions distinctes, destinées à la recherche non commerciale.
-Portrait : `public/filters/ATTRIBUTION.md` (CC BY-SA 4.0).
+Portraits : `public/filters/ATTRIBUTION.md` (Brad Pitt : CC BY-SA 4.0 ;
+Sam Altman : Steve Jennings pour TechCrunch, recadrage James Tamim, CC BY 2.0).
 
 Les tests navigateur utilisent le vrai modèle MediaPipe et un transport de
 swap simulé pour tester les erreurs, la concurrence et les arrêts. Ils ne
