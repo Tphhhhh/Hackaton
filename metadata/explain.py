@@ -40,8 +40,8 @@ def _template(result: dict) -> dict:
 def _bedrock(result: dict) -> dict:
     import boto3
 
-    client = boto3.client("bedrock-runtime", region_name=os.getenv("AWS_REGION", "eu-west-3"))
-    model = os.getenv("BEDROCK_LLM_MODEL", "anthropic.claude-3-5-haiku-20241022-v1:0")
+    client = boto3.client("bedrock-runtime", region_name=os.getenv("AWS_REGION", "us-east-1"))
+    model = os.getenv("BEDROCK_LLM_MODEL", "us.anthropic.claude-haiku-4-5-20251001-v1:0")
     facts = [{"code": s["code"], "evidence": s["evidence"]} for s in result["signals"]]
     prompt = (
         "Tu assistes un analyste conformité qui vérifie des candidatures à distance. Voici les signaux "

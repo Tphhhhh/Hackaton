@@ -13,12 +13,15 @@ réseaux de personas présumés.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import os
 import re
+import time
 from collections import Counter
 from itertools import combinations
+from pathlib import Path
 
 TEXT_THRESHOLD = 0.80        # texte seul suffisant pour lier deux dossiers
 TEXT_WITH_ADDRESS = 0.50     # seuil abaissé si l'adresse de livraison est aussi partagée
@@ -49,13 +52,21 @@ def _tfidf_vectors(texts: list[str]) -> list[dict]:
 def _bedrock_vectors(texts: list[str]) -> list[dict]:
     import boto3  # importé seulement si Bedrock est activé
 
-    client = boto3.client("bedrock-runtime", region_name=os.getenv("AWS_REGION", "eu-west-3"))
+    client = boto3.client("bedrock-runtime", region_name=os.getenv("AWS_REGION", "us-east-1"))
     model = os.getenv("BEDROCK_EMBED_MODEL", "amazon.titan-embed-text-v2:0")
+    # Cache disque : le hackathon limite Bedrock à ~1 requête/s, on ne recalcule jamais un CV déjà vu.
+    cache_path = Path("out/embeddings_cache.json")
+    cache = json.loads(cache_path.read_text(encoding="utf-8")) if cache_path.exists() else {}
     vecs = []
     for t in texts:
-        resp = client.invoke_model(modelId=model, body=json.dumps({"inputText": t[:8000], "normalize": True}))
-        emb = json.loads(resp["body"].read())["embedding"]
-        vecs.append(dict(enumerate(emb)))
+        key = hashlib.sha256(f"{model}:{t}".encode()).hexdigest()
+        if key not in cache:
+            resp = client.invoke_model(modelId=model, body=json.dumps({"inputText": t[:8000], "normalize": True}))
+            cache[key] = json.loads(resp["body"].read())["embedding"]
+            time.sleep(1)
+        vecs.append(dict(enumerate(cache[key])))
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.write_text(json.dumps(cache), encoding="utf-8")
     return vecs
 
 
