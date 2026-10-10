@@ -4,7 +4,7 @@ import { createLiveScores } from './live-scores.js';
 import { createScoreSmoother } from './score-smoothing.js';
 import { startLiveCamera } from './live-camera.js';
 
-export function createLiveComparison() {
+export function createLiveComparison({ onVideoScore = () => {} } = {}) {
   const $ = id => document.getElementById(id);
   const output = $('filtered-canvas'), context = output.getContext('2d');
   const smoothers = { original: createScoreSmoother(), filtered: createScoreSmoother() };
@@ -15,10 +15,12 @@ export function createLiveComparison() {
     onScores(data) {
       for (const key of ['original', 'filtered']) {
         const value = data?.[key];
-        setScore(`${key}-score`, smoothers[key].sample(value?.score ?? null));
+        const smoothed = smoothers[key].sample(value?.score ?? null);
+        setScore(`${key}-score`, smoothed);
         $(`${key}-score-note`).textContent = !value ? 'En attente d’une mesure'
           : value.score === null ? (reasons[value.reason] || 'Image non exploitable')
             : `Score lissé · brut : ${(value.score * 100).toLocaleString('fr-FR', { maximumFractionDigits: 1 })} / 100`;
+        onVideoScore(key, smoothed, $(`${key}-score-note`).textContent);
       }
     },
     onStatus(message) { $('live-score-status').textContent = message; },

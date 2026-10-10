@@ -1,0 +1,324 @@
+{
+  "C001": {
+    "challenges": 0.21,
+    "lipsync": 0.09,
+    "temporal": 0.38,
+    "lighting": 0.33,
+    "classifier": 0.51
+  },
+  "C002": {
+    "challenges": 0.24,
+    "lipsync": 0.05,
+    "temporal": 0.31,
+    "lighting": 0.36,
+    "classifier": 0.61
+  },
+  "C003": {
+    "challenges": 0.06,
+    "lipsync": 0.06,
+    "temporal": 0.16,
+    "lighting": 0.32,
+    "classifier": 0.21
+  },
+  "C004": {
+    "challenges": 0.94,
+    "lipsync": 0.49,
+    "temporal": 0.73,
+    "lighting": 0.26,
+    "classifier": 0.34
+  },
+  "C005": {
+    "challenges": 0.16,
+    "lipsync": 0.29,
+    "temporal": 0.09,
+    "lighting": 0.44,
+    "classifier": 0.15
+  },
+  "C006": {
+    "challenges": 0.32,
+    "lipsync": 0.29,
+    "temporal": 0.11,
+    "lighting": 0.23,
+    "classifier": 0.29
+  },
+  "C008": {
+    "challenges": 0.07,
+    "lipsync": 0.27,
+    "temporal": 0.06,
+    "lighting": 0.35,
+    "classifier": 0.22
+  },
+  "C009": {
+    "challenges": 0.34,
+    "lipsync": 0.08,
+    "temporal": 0.28,
+    "lighting": 0.07,
+    "classifier": 0.45
+  },
+  "C012": {
+    "challenges": 0.24,
+    "lipsync": 0.35,
+    "temporal": 0.29,
+    "lighting": 0.37,
+    "classifier": 0.24
+  },
+  "C013": {
+    "challenges": 0.25,
+    "lipsync": 0.37,
+    "temporal": 0.36,
+    "lighting": 0.36,
+    "classifier": 0.31
+  },
+  "C014": {
+    "challenges": 0.07,
+    "lipsync": 0.4,
+    "temporal": 0.13,
+    "lighting": 0.42,
+    "classifier": 0.28
+  },
+  "C015": {
+    "challenges": 0.22,
+    "lipsync": 0.28,
+    "temporal": 0.27,
+    "lighting": 0.24,
+    "classifier": 0.05
+  },
+  "C016": {
+    "challenges": 0.05,
+    "lipsync": 0.08,
+    "temporal": 0.2,
+    "lighting": 0.27,
+    "classifier": 0.09
+  },
+  "C017": {
+    "challenges": 0.13,
+    "lipsync": 0.32,
+    "temporal": 0.23,
+    "lighting": 0.19,
+    "classifier": 0.68
+  },
+  "C018": {
+    "challenges": 0.28,
+    "lipsync": 0.34,
+    "temporal": 0.18,
+    "lighting": 0.38,
+    "classifier": 0.68
+  },
+  "C019": {
+    "challenges": 0.02,
+    "lipsync": 0.17,
+    "temporal": 0.09,
+    "lighting": 0.39,
+    "classifier": 0.24
+  },
+  "C020": {
+    "challenges": 0.07,
+    "lipsync": 0.38,
+    "temporal": 0.23,
+    "lighting": 0.36,
+    "classifier": 0.12
+  },
+  "C021": {
+    "challenges": 0.05,
+    "lipsync": 0.14,
+    "temporal": 0.17,
+    "lighting": 0.26,
+    "classifier": 0.15
+  },
+  "C022": {
+    "challenges": 0.1,
+    "lipsync": 0.07,
+    "temporal": 0.25,
+    "lighting": 0.39,
+    "classifier": 0.19
+  },
+  "C023": {
+    "challenges": 0.28,
+    "lipsync": 0.16,
+    "temporal": 0.31,
+    "lighting": 0.29,
+    "classifier": 0.61
+  },
+  "C024": {
+    "challenges": 0.18,
+    "lipsync": 0.12,
+    "temporal": 0.09,
+    "lighting": 0.32,
+    "classifier": 0.22
+  },
+  "C025": {
+    "challenges": 0.2,
+    "lipsync": 0.37,
+    "temporal": 0.29,
+    "lighting": 0.24,
+    "classifier": 0.06
+  },
+  "C026": {
+    "challenges": 0.03,
+    "lipsync": 0.24,
+    "temporal": 0.34,
+    "lighting": 0.37,
+    "classifier": 0.31
+  },
+  "C027": {
+    "challenges": 0.29,
+    "lipsync": 0.09,
+    "temporal": 0.35,
+    "lighting": 0.35,
+    "classifier": 0.35
+  },
+  "C028": {
+    "challenges": 0.26,
+    "lipsync": 0.06,
+    "temporal": 0.08,
+    "lighting": 0.12,
+    "classifier": 0.08
+  },
+  "C029": {
+    "challenges": 0.32,
+    "lipsync": 0.24,
+    "temporal": 0.24,
+    "lighting": 0.45,
+    "classifier": 0.36
+  },
+  "C030": {
+    "challenges": 0.14,
+    "lipsync": 0.1,
+    "temporal": 0.06,
+    "lighting": 0.26,
+    "classifier": 0.32
+  },
+  "C031": {
+    "challenges": 0.09,
+    "lipsync": 0.39,
+    "temporal": 0.21,
+    "lighting": 0.21,
+    "classifier": 0.54
+  },
+  "C032": {
+    "challenges": 0.15,
+    "lipsync": 0.29,
+    "temporal": 0.07,
+    "lighting": 0.38,
+    "classifier": 0.3
+  },
+  "C034": {
+    "challenges": 0.03,
+    "lipsync": 0.18,
+    "temporal": 0.3,
+    "lighting": 0.15,
+    "classifier": 0.68
+  },
+  "C035": {
+    "challenges": 0.34,
+    "lipsync": 0.21,
+    "temporal": 0.19,
+    "lighting": 0.34,
+    "classifier": 0.29
+  },
+  "C036": {
+    "challenges": 0.12,
+    "lipsync": 0.21,
+    "temporal": 0.17,
+    "lighting": 0.35,
+    "classifier": 0.27
+  },
+  "C037": {
+    "challenges": 0.3,
+    "lipsync": 0.22,
+    "temporal": 0.1,
+    "lighting": 0.13,
+    "classifier": 0.69
+  },
+  "C038": {
+    "challenges": 0.08,
+    "lipsync": 0.07,
+    "temporal": 0.17,
+    "lighting": 0.11,
+    "classifier": 0.64
+  },
+  "C039": {
+    "challenges": 0.31,
+    "lipsync": 0.31,
+    "temporal": 0.3,
+    "lighting": 0.18,
+    "classifier": 0.6
+  },
+  "C040": {
+    "challenges": 0.27,
+    "lipsync": 0.26,
+    "temporal": 0.09,
+    "lighting": 0.09,
+    "classifier": 0.37
+  },
+  "C041": {
+    "challenges": 0.25,
+    "lipsync": 0.09,
+    "temporal": 0.22,
+    "lighting": 0.33,
+    "classifier": 0.68
+  },
+  "C042": {
+    "challenges": 0.19,
+    "lipsync": 0.29,
+    "temporal": 0.17,
+    "lighting": 0.34,
+    "classifier": 0.06
+  },
+  "C043": {
+    "challenges": 0.25,
+    "lipsync": 0.1,
+    "temporal": 0.11,
+    "lighting": 0.07,
+    "classifier": 0.37
+  },
+  "C044": {
+    "challenges": 0.14,
+    "lipsync": 0.11,
+    "temporal": 0.25,
+    "lighting": 0.08,
+    "classifier": 0.13
+  },
+  "C045": {
+    "challenges": 0.03,
+    "lipsync": 0.24,
+    "temporal": 0.21,
+    "lighting": 0.32,
+    "classifier": 0.63
+  },
+  "C046": {
+    "challenges": 0.17,
+    "lipsync": 0.08,
+    "temporal": 0.34,
+    "lighting": 0.42,
+    "classifier": 0.17
+  },
+  "C047": {
+    "challenges": 0.04,
+    "lipsync": 0.39,
+    "temporal": 0.17,
+    "lighting": 0.29,
+    "classifier": 0.1
+  },
+  "C048": {
+    "challenges": 0.07,
+    "lipsync": 0.15,
+    "temporal": 0.39,
+    "lighting": 0.13,
+    "classifier": 0.44
+  },
+  "C049": {
+    "challenges": 0.32,
+    "lipsync": 0.27,
+    "temporal": 0.36,
+    "lighting": 0.36,
+    "classifier": 0.06
+  },
+  "C050": {
+    "challenges": 0.09,
+    "lipsync": 0.07,
+    "temporal": 0.28,
+    "lighting": 0.18,
+    "classifier": 0.52
+  }
+}

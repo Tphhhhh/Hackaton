@@ -1,5 +1,5 @@
 // Camera frames stay in memory. One frame at a time goes to the local worker.
-export function startLiveCamera({ video, onState, onFrame, onError, onReady = () => {}, acquireMedia }) {
+export function startLiveCamera({ video, onState, onFrame, onError, onReady = () => {}, onStream = () => {}, acquireMedia }) {
   let stopped = false;
   let stream;
   let worker;
@@ -49,6 +49,7 @@ export function startLiveCamera({ video, onState, onFrame, onError, onReady = ()
         track.addEventListener('mute', () => { if (!stopped) { onFrame({ faces: [], timestamp: performance.now(), inferenceMs: 0 }); onState('Caméra momentanément interrompue…'); } });
       });
       video.srcObject = stream;
+      onStream(stream);
       armWatchdog('La caméra ne fournit pas d’image. Vérifiez sa disponibilité puis réessayez.');
       await video.play();
       if (stopped) return;

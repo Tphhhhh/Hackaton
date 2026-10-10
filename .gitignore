@@ -18,3 +18,10 @@ visio-demo/public/live-assets/
 # Editor preferences and local QA captures.
 .vscode/
 docs/visio-interface-qa/screenshots/
+
+# Metadata integration: credentials and candidate records stay local.
+.env
+*.pem
+out/
+sentinelle/test-results/
+test-results/

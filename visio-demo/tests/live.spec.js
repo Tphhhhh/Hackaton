@@ -73,7 +73,7 @@ test('live model tracks a face, clears it when absent, mirrors, and releases cam
   await page.locator('#stop-camera').click();
   await expect(page.locator('#stage-empty')).toBeVisible();
   expect(await page.evaluate(() => window.testStreams[0].getTracks().every(t => t.readyState === 'ended'))).toBe(true);
-  expect(writes.every(url => url.endsWith('/api/live/swap') || url.endsWith('/api/live/score'))).toBe(true); expect(external).toEqual([]); expect(errors).toEqual([]);
+  expect(writes.every(url => url.endsWith('/api/live/swap') || url.endsWith('/api/live/score') || url.endsWith('/api/session/analyze'))).toBe(true); expect(external).toEqual([]); expect(errors).toEqual([]);
   // Restart uses a fresh stream and a fresh model timestamp sequence.
   await page.locator('#start-camera').click();
   await expect(page.locator('#live-points')).toHaveText('478', { timeout: 30000 });
@@ -131,7 +131,7 @@ test('model failure closes camera and clears the live state', async ({ page }) =
 test('comparison changes actual pixels, scores come from the inference response, and toggling restores the original', async ({ page }) => {
   await camera(page); await page.goto('/'); await page.locator('#start-camera').click();
   await expect(page.locator('#filter-status')).toContainText('Face swap Brad Pitt actif', { timeout: 30000 });
-  await expect(page.locator('#demo-banner')).toContainText('GEND PE · ANALYSE EN DIRECT');
+  await expect(page.locator('#session-panel')).toContainText('Analyse de session');
   await expect(page.locator('#filtered-canvas')).toHaveAttribute('data-filter-applied', 'true');
   // Compare the two canvases at the same JS turn. A color tweak or static poster
   // cannot pass the round trip to byte-identical source pixels when disabled.

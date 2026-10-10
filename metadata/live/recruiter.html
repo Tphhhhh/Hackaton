@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sentinelle · Revue des candidatures</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#f4f5f7; --card:#fff; --ink:#101828; --ink-2:#344054; --muted:#667085; --line:#e4e7ec; --line-2:#f0f2f5;
+    --brand:#2f45d8; --brand-soft:#eef1ff;
+    --high:#d92d20; --high-bg:#fef3f2; --high-line:#fecdca;
+    --mid:#b54708; --mid-bg:#fffaeb; --mid-line:#fedf89;
+    --low:#067647; --low-bg:#ecfdf3; --low-line:#abefc6;
+    --radius:14px; --shadow:0 1px 2px rgba(16,24,40,.05);
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font:14px/1.5 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; background:var(--bg); color:var(--ink); }
+  a { color:var(--brand); text-decoration:none; } a:hover { text-decoration:underline; }
+
+  /* Barre du haut */
+  .top { background:#fff; border-bottom:1px solid var(--line); }
+  .top .in { max-width:1240px; margin:0 auto; padding:0 24px; height:60px; display:flex; align-items:center; gap:14px; }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:700; font-size:16px; letter-spacing:-.01em; }
+  .brand svg { width:26px; height:26px; }
+  .sep { width:1px; height:22px; background:var(--line); }
+  .top .ctx { color:var(--muted); }
+  .top .right { margin-left:auto; display:flex; align-items:center; gap:10px; }
+  .chip { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:500; padding:4px 10px; border-radius:999px; border:1px solid var(--line); color:var(--ink-2); background:#fff; white-space:nowrap; }
+  .chip.human { color:var(--low); border-color:var(--low-line); background:var(--low-bg); }
+  .avatar { width:30px; height:30px; border-radius:50%; background:var(--brand-soft); color:var(--brand); display:grid; place-items:center; font-weight:600; font-size:12px; }
+  @media (max-width:760px) { .top .ctx, .top .sep, .chip.human { display:none; } }
+
+  main { max-width:1240px; margin:0 auto; padding:28px 24px 64px; }
+  @media (max-width:640px) { main, .top .in { padding-left:16px; padding-right:16px; } }
+  .page-h { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:20px; }
+  .page-h h1 { font-size:24px; margin:0; letter-spacing:-.02em; }
+  .page-h p { margin:4px 0 0; color:var(--muted); }
+
+  /* Indicateurs */
+  .kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:28px; }
+  @media (max-width:760px) { .kpis { grid-template-columns:1fr 1fr; } }
+  .kpi { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); }
+  .kpi span { color:var(--muted); font-size:13px; font-weight:500; }
+  .kpi b { display:block; font-size:28px; letter-spacing:-.02em; margin-top:2px; font-variant-numeric:tabular-nums; }
+  .kpi.high b { color:var(--high); } .kpi.mid b { color:var(--mid); }
+
+  h2.sec { font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin:0 0 12px; display:flex; align-items:center; gap:8px; }
+  h2.sec .count { background:var(--line); color:var(--ink-2); border-radius:999px; padding:0 8px; font-size:12px; letter-spacing:0; }
+  .live-dot { width:8px; height:8px; border-radius:50%; background:var(--high); animation:pulse 1.6s infinite; }
+  @keyframes pulse { 50% { opacity:.25; } }
+  .empty { background:var(--card); border:1px dashed var(--line); border-radius:var(--radius); padding:36px; text-align:center; color:var(--muted); margin-bottom:28px; }
+
+  /* Carte dossier */
+  .case { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); margin-bottom:14px; overflow:hidden; }
+  .case.lvl-élevé { border-left:4px solid var(--high); } .case.lvl-moyen { border-left:4px solid var(--mid); } .case.lvl-faible { border-left:4px solid var(--low); }
+  .case-main { display:grid; grid-template-columns:132px 290px minmax(0,1fr); gap:24px; padding:20px 22px; }
+  @media (max-width:980px) { .case-main { grid-template-columns:110px minmax(0,1fr); } .case-main .signals { grid-column:1/-1; } }
+  @media (max-width:560px) { .case-main { grid-template-columns:1fr; } }
+  .gauge { width:92px; height:92px; border-radius:50%; display:grid; place-items:center; position:relative; }
+  .gauge::before { content:""; position:absolute; inset:9px; border-radius:50%; background:#fff; }
+  .gauge b { position:relative; font-size:28px; letter-spacing:-.03em; font-variant-numeric:tabular-nums; }
+  .gauge small { position:absolute; bottom:21px; font-size:10px; color:var(--muted); }
+  .level { display:inline-block; margin-top:10px; font-size:12px; font-weight:600; padding:3px 10px; border-radius:999px; }
+  .level.lvl-élevé { color:var(--high); background:var(--high-bg); } .level.lvl-moyen { color:var(--mid); background:var(--mid-bg); } .level.lvl-faible { color:var(--low); background:var(--low-bg); }
+  .who h3 { margin:0; font-size:17px; letter-spacing:-.01em; }
+  .who .role { color:var(--ink-2); margin:2px 0 10px; }
+  .who .meta { color:var(--muted); font-size:13px; display:grid; gap:3px; }
+  .who .meta div { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .steps { display:flex; gap:6px; margin-top:12px; flex-wrap:wrap; }
+  .steps span { font-size:11.5px; font-weight:500; padding:3px 8px; border-radius:6px; background:var(--line-2); color:var(--muted); }
+  .steps span.done { background:var(--brand-soft); color:var(--brand); }
+  .net { margin-top:12px; padding:10px 12px; border-radius:10px; background:var(--high-bg); border:1px solid var(--high-line); font-size:13px; color:#912018; }
+  .net b { display:block; color:var(--high); font-size:12px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:2px; }
+  .signals-h { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; }
+  .signals-h b { font-size:13px; } .signals-h span { font-size:12px; color:var(--muted); }
+  .sig { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:12px; padding:10px 0; border-top:1px solid var(--line-2); }
+  .sig:first-of-type { border-top:0; }
+  .sig .cat { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); }
+  .sig .t { font-weight:600; color:var(--ink); }
+  .sig .ev { color:var(--muted); font-size:13px; }
+  .sig .w { font-size:12px; font-weight:600; color:var(--ink-2); background:var(--line-2); border-radius:6px; padding:2px 8px; height:fit-content; font-variant-numeric:tabular-nums; }
+  .sig.strong .w { color:var(--high); background:var(--high-bg); }
+  .clean { display:flex; gap:12px; align-items:flex-start; padding:12px 14px; border-radius:10px; background:var(--low-bg); color:var(--low); }
+  .clean p { margin:0; color:var(--ink-2); font-size:13px; }
+
+  /* Pied de carte : questions et décision */
+  .case-foot { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:20px; align-items:center; padding:14px 22px; background:#fafbfc; border-top:1px solid var(--line); }
+  @media (max-width:860px) { .case-foot { grid-template-columns:1fr; } }
+  details summary { cursor:pointer; font-weight:600; color:var(--ink-2); font-size:13px; list-style:none; }
+  details summary::-webkit-details-marker { display:none; }
+  details summary::before { content:"▸ "; color:var(--muted); } details[open] summary::before { content:"▾ "; }
+  details ul { margin:8px 0 0; padding-left:18px; color:var(--ink-2); font-size:13px; }
+  .decide { display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
+  .decide input { padding:7px 10px; border:1px solid var(--line); border-radius:8px; font:inherit; width:150px; }
+  .btn { border:1px solid var(--line); background:#fff; border-radius:8px; padding:7px 12px; font:500 13px Inter, sans-serif; color:var(--ink-2); cursor:pointer; }
+  .btn:hover { border-color:#c3c8d2; background:#f9fafb; }
+  .btn.ok:hover { border-color:var(--low-line); color:var(--low); }
+  .btn.warn:hover { border-color:var(--mid-line); color:var(--mid); }
+  .btn.bad:hover { border-color:var(--high-line); color:var(--high); }
+  .btn.link { border-color:transparent; color:var(--brand); padding-left:0; }
+  .decided { font-size:13px; color:var(--ink-2); } .decided b { color:var(--ink); }
+  .decided small { color:var(--muted); font-family:ui-monospace, monospace; }
+
+  /* Entretien en direct */
+  .live-grid { display:grid; grid-template-columns:minmax(0,1fr) 330px; gap:24px; padding:0 22px 20px; }
+  @media (max-width:980px) { .live-grid { grid-template-columns:1fr; } }
+  .panel { border:1px solid var(--line); border-radius:10px; padding:12px 14px; }
+  .panel h4 { margin:0 0 8px; font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); }
+  table { width:100%; border-collapse:collapse; font-size:13px; } td { padding:4px 0; vertical-align:top; border-top:1px solid var(--line-2); }
+  tr:first-child td { border-top:0; } td:first-child { color:var(--muted); width:44%; padding-right:8px; }
+  .events { font-size:13px; max-height:160px; overflow:auto; margin-top:12px; }
+  .events div { padding:4px 0; border-top:1px solid var(--line-2); } .events div:first-child { border-top:0; }
+  .events time { color:var(--muted); margin-right:6px; font-variant-numeric:tabular-nums; }
+  .chip.on { color:var(--low); border-color:var(--low-line); background:var(--low-bg); }
+  .chip.off { color:var(--muted); }
+  .chip.sim { color:var(--mid); border-color:var(--mid-line); background:var(--mid-bg); }
+  .flash { animation:flash 1.4s; } @keyframes flash { from { box-shadow:0 0 0 4px rgba(217,45,32,.25); } to { box-shadow:var(--shadow); } }
+  footer { color:var(--muted); font-size:12px; text-align:center; margin-top:36px; }
+</style>
+</head>
+<body>
+<div class="top"><div class="in">
+  <div class="brand">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2.5 4 5.5v6c0 5 3.4 8.9 8 10 4.6-1.1 8-5 8-10v-6l-8-3Z" fill="#2f45d8"/><path d="m8.5 12 2.4 2.4 4.6-4.8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Sentinelle
+  </div>
+  <span class="sep"></span><span class="ctx">Intégrité des recrutements</span>
+  <div class="right">
+    <span class="chip human">✓ Aide à la décision : une personne décide toujours</span>
+    <span class="chip">Fjordlane · RH &amp; Sécurité</span>
+    <span class="avatar">RH</span>
+  </div>
+</div></div>
+
+<main>
+  <div class="page-h">
+    <div>
+      <h1>Revue des candidatures</h1>
+      <p>Ingénieur·e Backend Senior · accès aux données de production</p>
+    </div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><span>Candidatures</span><b id="kTotal">0</b></div>
+    <div class="kpi mid"><span>À vérifier</span><b id="kMid">0</b></div>
+    <div class="kpi high"><span>Risque élevé</span><b id="kHigh">0</b></div>
+    <div class="kpi"><span>Entretiens en cours</span><b id="kLive">0</b></div>
+  </div>
+
+  <h2 class="sec">Candidatures <span class="count" id="cApps">0</span></h2>
+  <div id="apps"><div class="empty">Aucune candidature pour l'instant. Ouvrez <a href="/apply" target="_blank">l'offre d'emploi</a> pour en déposer une.</div></div>
+
+  <h2 class="sec" style="margin-top:32px"><span class="live-dot"></span>Entretiens en direct <span class="count" id="cLive">0</span></h2>
+  <div id="root"><div class="empty">Aucun entretien en cours.</div></div>
+
+  <footer>Sentinelle analyse la cohérence des informations déclarées. Elle n'utilise jamais l'origine, la nationalité, la langue ou l'accent. Chaque décision est signée et journalisée.</footer>
+</main>
+
+<script>
+const DECISIONS = { clear: ["Valider", "ok"], verify: ["Vérification", "warn"], escalate: ["Escalader", "warn"], reject: ["Refuser", "bad"] };
+const DECIDED = { clear: "Validé", verify: "Vérification demandée", escalate: "Escaladé à la sécurité", reject: "Refusé" };
+const LEVEL = { "élevé": "Risque élevé", "moyen": "À vérifier", "faible": "Risque faible" };
+const COUNTRY = { FR: "France", DE: "Allemagne", BE: "Belgique", CH: "Suisse", NL: "Pays-Bas", ES: "Espagne", IT: "Italie", PT: "Portugal", UK: "Royaume-Uni", IE: "Irlande" };
+// Libellés lisibles des contrôles (le code technique reste dans le journal d'audit).
+const SIG = {
+  S1_PERSONA_NETWORK: ["Réseau", "Dossier lié à d'autres candidatures"],
+  C1_TIMELINE: ["Parcours", "Chronologie impossible"],
+  C2_SENIORITY: ["Parcours", "Ancienneté incohérente"],
+  C3_YOUNG_PROFILE: ["Identité", "Profil en ligne très récent"],
+  C4_CAMERA: ["Entretien", "Caméra refusée"],
+  C5_FORWARDER: ["Onboarding", "Ordinateur livré chez un transitaire ou un entrepôt"],
+  C6_ADDRESS_CHANGE: ["Onboarding", "Livraison hors du domicile"],
+  C7_LOGIN_COUNTRIES: ["Activité", "Connexions depuis d'autres pays"],
+  C8_NIGHT_HOURS: ["Activité", "Activité surtout la nuit"],
+  C9_CRYPTO: ["Onboarding", "Salaire demandé en cryptomonnaie"],
+  C10_DISPOSABLE_EMAIL: ["Identité", "Adresse email jetable"],
+  C11_PAYEE: ["Onboarding", "Compte de paie au nom d'un tiers"],
+  C12_PHONE_INVALID: ["Identité", "Numéro de téléphone invalide"],
+  C13_PHONE_VOIP: ["Identité", "Numéro de téléphone virtuel"],
+  C14_PHONE_COUNTRY: ["Identité", "Téléphone d'un autre pays que la résidence"],
+  C15_EMAIL_RANDOM: ["Identité", "Adresse email d'apparence générée"],
+  C16_EMAIL_NAME: ["Identité", "Email sans rapport avec le nom"],
+  C17_PROFILE_NAME: ["Identité", "Profil LinkedIn sans rapport avec le nom"],
+  C18_SHIPPING_COUNTRY: ["Onboarding", "Ordinateur livré dans un autre pays"],
+  I1_VIRTUAL_DEVICE: ["Entretien", "Caméra ou micro virtuel"],
+  I2_TIMEZONE: ["Entretien", "Fuseau horaire incohérent"],
+  I3_VIRTUAL_MACHINE: ["Entretien", "Machine virtuelle"],
+  I4_INTERVIEW_IP: ["Entretien", "Connexion depuis un autre pays"],
+  I5_LATENCY: ["Entretien", "Connexion anormalement lointaine"],
+  I6_VIDEO_SETTINGS: ["Entretien", "Vidéo instable"],
+  X1_COMBINATION: ["Synthèse", "Plusieurs signaux concordants"],
+  X2_CONTACT_COMBINATION: ["Synthèse", "Plusieurs coordonnées anormales"],
+  L1_LIVE_CHANGE: ["Entretien", "Changements en cours d'appel"],
+  V1_CHALLENGE_ARTEFACTS: ["Vidéo", "Artefacts pendant les défis"],
+  V2_LIPSYNC: ["Vidéo", "Lèvres désynchronisées"],
+  V3_TEMPORAL: ["Vidéo", "Incohérences d'une image à l'autre"],
+  V4_LIGHTING: ["Vidéo", "Éclairage incohérent"],
+  V5_CLASSIFIER: ["Vidéo", "Détecteur de deepfake"],
+};
+const lastScore = {};
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const COLOR = { "élevé": "var(--high)", "moyen": "var(--mid)", "faible": "var(--low)" };
+
+function gauge(r) {
+  const c = COLOR[r.level];
+  return `<div class="gauge" style="background:conic-gradient(${c} ${r.score * 3.6}deg, var(--line-2) 0)"><b style="color:${c}">${r.score}</b><small>/ 100</small></div>
+          <span class="level lvl-${r.level}">${r.score === 0 ? "Aucun signal" : LEVEL[r.level]}</span>`;
+}
+
+function signals(r) {
+  const list = [...r.signals].sort((a, b) => b.weight - a.weight);
+  if (!list.length) return `<div class="clean"><span>✓</span><p><b style="color:var(--low)">Dossier cohérent.</b> Aucune incohérence entre le CV, les coordonnées et les informations techniques.</p></div>`;
+  return `<div class="signals-h"><b>${list.length} ${list.length > 1 ? "signaux" : "signal"} à examiner</b><span>contribution au score</span></div>` +
+    list.map((s) => {
+      const [cat, title] = SIG[s.code] || ["Signal", s.code];
+      return `<div class="sig ${s.weight >= 20 ? "strong" : ""}" title="${esc(s.code)}${s.mitre ? " · ATT&CK " + esc(s.mitre) : ""}">
+        <div><div class="cat">${cat}</div><div class="t">${title}</div><div class="ev">${esc(s.evidence)}</div></div><span class="w">+${s.weight}</span></div>`;
+    }).join("");
+}
+
+function foot(kind, id, r, decision) {
+  const qs = r.explanation?.questions || [];
+  const q = qs.length ? `<details><summary>Questions à poser au candidat (${qs.length})</summary><ul>${qs.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></details>`
+                      : `<span style="color:var(--muted);font-size:13px">Aucune question de vérification suggérée.</span>`;
+  const done = decision ? `<span class="decided"><b>${DECIDED[decision.decision || decision]}</b>${decision.analyst ? " par " + esc(decision.analyst) : ""} · journalisé</span>` : "";
+  return `<div class="case-foot">${q}<div class="decide">${done}
+    <input id="an-${kind}-${id}" placeholder="Votre nom" aria-label="Nom de l'analyste">
+    ${Object.entries(DECISIONS).map(([k, [label, cls]]) => `<button class="btn ${cls}" onclick="decide('${kind}','${id}','${k}')">${label}</button>`).join("")}
+  </div></div>`;
+}
+
+function appCard(a) {
+  const r = a.result;
+  const onb = a.stage === "onboarding";
+  const net = r.linked?.length ? `<div class="net"><b>Réseau détecté</b>Lié à ${r.linked.length} autre${r.linked.length > 1 ? "s" : ""} dossier${r.linked.length > 1 ? "s" : ""} : ${r.linked.map((l) => esc(l.name)).join(", ")}</div>` : "";
+  return `<section class="case lvl-${r.level}" id="a-${esc(a.id)}">
+    <div class="case-main">
+      <div>${gauge(r)}</div>
+      <div class="who">
+        <h3>${esc(a.name)}</h3>
+        <div class="role">Ingénieur·e Backend Senior</div>
+        <div class="meta">
+          <div>📍 ${esc(a.city)}, ${esc(COUNTRY[a.country] || a.country)}</div>
+          <div>✉️ ${esc(a.email)}</div>
+          <div>Réf. ${esc(a.id)} · reçue le ${new Date(a.applied_at).toLocaleDateString("fr-FR")}</div>
+        </div>
+        <div class="steps"><span class="done">Candidature</span><span class="${onb ? "done" : ""}">Entretiens</span><span class="${onb ? "done" : ""}">Onboarding</span></div>
+        ${onb ? "" : `<div style="margin-top:8px"><a href="/onboarding?app=${esc(a.id)}" target="_blank">Envoyer le lien d'onboarding ↗</a></div>`}
+        ${net}
+      </div>
+      <div class="signals">${signals(r)}</div>
+    </div>
+    ${foot("app", a.id, r, a.decision)}
+  </section>`;
+}
+
+function liveCard(s) {
+  const r = s.result, snap = s.snapshot, ip = snap.ip || {};
+  const rtt = [...(snap.rtt_ms || [])].sort((a, b) => a - b);
+  const events = s.events.length ? s.events.slice().reverse().map((e) => `<div><time>${esc(e.at)}</time>${esc(e.text)}</div>`).join("")
+                                 : `<div style="color:var(--muted)">Aucun changement depuis le début de l'appel.</div>`;
+  return `<section class="case lvl-${r.level}" id="s-${esc(s.id)}">
+    <div class="case-main">
+      <div>${gauge(r)}</div>
+      <div class="who">
+        <h3>${esc(s.name || "Candidat")}</h3>
+        <div class="role">Entretien vidéo · session ${esc(s.id)}</div>
+        <div class="meta"><div>📍 Se déclare à ${esc(s.declared.city)}, ${esc(COUNTRY[s.declared.country] || s.declared.country)}</div></div>
+        <div class="steps"><span class="chip ${s.online ? "on" : "off"}">${s.online ? "● En ligne" : "Déconnecté"}</span>${snap.simulated ? `<span class="chip sim">Simulation</span>` : ""}</div>
+      </div>
+      <div class="signals">${signals(r)}</div>
+    </div>
+    <div class="live-grid">
+      <div class="panel"><h4>Changements en cours d'appel</h4><div class="events" style="margin:0">${events}</div></div>
+      <div class="panel"><h4>Dernière mesure · ${esc(snap.at)}</h4><table>
+        <tr><td>Caméra</td><td>${esc((snap.devices?.video || []).join(", ") || "?")}</td></tr>
+        <tr><td>Micro</td><td>${esc((snap.devices?.audio || []).join(", ") || "?")}</td></tr>
+        <tr><td>Fuseau de l'ordinateur</td><td>${esc(snap.browser_timezone)}</td></tr>
+        <tr><td>Carte graphique</td><td>${esc(snap.gpu_renderer)}</td></tr>
+        <tr><td>Réseau</td><td>${esc(ip.country ? (COUNTRY[ip.country] || ip.country) : "pays inconnu")}${ip.org ? " · " + esc(ip.org) : ""}</td></tr>
+        <tr><td>Temps de réponse</td><td>${rtt.length ? rtt[Math.floor(rtt.length / 2)] + " ms" : "?"}</td></tr>
+      </table></div>
+    </div>
+    ${foot("live", s.id, r, s.decision)}
+  </section>`;
+}
+
+function flash(key, el, score) {
+  if (lastScore[key] !== undefined && score > lastScore[key]) el?.classList.add("flash");
+  lastScore[key] = score;
+}
+const typing = () => document.activeElement?.tagName === "INPUT";
+
+async function refresh() {
+  let apps = [], sessions = [];
+  try { apps = await (await fetch("/api/applications", { cache: "no-store" })).json(); } catch {}
+  try { sessions = await (await fetch("/api/sessions", { cache: "no-store" })).json(); } catch {}
+  $("kTotal").textContent = apps.length;
+  $("kMid").textContent = apps.filter((a) => a.result.level === "moyen").length;
+  $("kHigh").textContent = apps.filter((a) => a.result.level === "élevé").length;
+  $("kLive").textContent = sessions.filter((s) => s.online).length;
+  $("cApps").textContent = apps.length; $("cLive").textContent = sessions.length;
+  if (typing() || document.querySelector("details[open]")) return;  // on ne redessine pas sous les doigts du recruteur
+  if (apps.length) { $("apps").innerHTML = apps.map(appCard).join(""); apps.forEach((a) => flash("a:" + a.id, $("a-" + a.id), a.result.score)); }
+  if (sessions.length) { $("root").innerHTML = sessions.map(liveCard).join(""); sessions.forEach((s) => flash("s:" + s.id, $("s-" + s.id), s.result.score)); }
+}
+function $(id) { return document.getElementById(id); }
+
+async function decide(kind, id, decision) {
+  const analyst = $(`an-${kind}-${id}`).value.trim();
+  if (!analyst) { $(`an-${kind}-${id}`).focus(); $(`an-${kind}-${id}`).placeholder = "Nom requis"; return; }
+  const body = kind === "app" ? { app_id: id, decision, analyst } : { session_id: id, decision, analyst };
+  const res = await fetch("/api/decision", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const data = await res.json();
+  document.activeElement?.blur();
+  if (!data.ok) { alert(data.error); return; }
+  refresh();
+}
+
+refresh();
+setInterval(refresh, 2000);
+</script>
+</body>
+</html>

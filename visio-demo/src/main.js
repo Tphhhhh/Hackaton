@@ -4,6 +4,8 @@ import '@fontsource/inter-tight/latin-700.css';
 import './style.css';
 import { createLiveComparison } from './live-comparison.js';
 import { startLiveCamera } from './live-camera.js';
+import { createSessionSignals } from './session-signals.js';
+import { createAnalysisConsole } from './analysis-console.js';
 import { visibleLandmarks } from './landmarks.js';
 import { connectLocalEngine } from './local-engine.js';
 import { icon, hydrateIcons } from './icons.js';
@@ -42,7 +44,10 @@ let supplementalSequence = { tracking: 0, metadata: 0 };
 let lastOverlayKey = '';
 let liveFrame = null;
 hydrateIcons();
-const comparison = createLiveComparison();
+let analysisConsole;
+const signals = createSessionSignals({ onMetadata: data => analysisConsole?.metadata(data) });
+analysisConsole = createAnalysisConsole();
+const comparison = createLiveComparison({ onVideoScore: analysisConsole.video });
 if (new URLSearchParams(location.search).get('mode') === 'clip') document.body.classList.remove('compare-mode');
 
 
@@ -352,6 +357,7 @@ $('fullscreen-video').addEventListener('click', async () => { try { if (document
 function clearVideo() {
   videoSequence++;
   liveFrame = null;
+  signals.stop();
   comparison.clear();
   setLiveMode(false);
   disposeVideo(); disposeVideo = () => {};
@@ -377,7 +383,7 @@ $('video-file').addEventListener('change', event => {
   const video = el('video'); video.preload = 'metadata'; video.playsInline = true; video.muted = true;
   video.setAttribute('aria-label', 'Prévisualisation de la vidéo locale');
   videoUrl = URL.createObjectURL(file);
-  const fail = message => { if (sequence !== videoSequence) return; clearVideo(); alertAt('video-alert', [message]); };
+  const fail = message => { if (sequence !== videoSequence) return; clearVideo(); signals.unavailable(message); alertAt('video-alert', [message]); };
   const timer = setTimeout(() => fail('Impossible de lire la durée de cette vidéo. Essayez un autre fichier.'), 10000);
   let frameCallback = null; let animationFrame = null;
   const renderFrame = (_now, details) => {
@@ -444,6 +450,7 @@ function openCamera() {
   $('media-reference').textContent = `Session webcam : ${media.id}`;
   window.dispatchEvent(new CustomEvent('visio:mediachange', { detail: { media: { ...media } } }));
   disposeVideo = startLiveCamera({ video,
+    onStream: stream => { if (sequence === videoSequence) signals.start(stream, video); },
     onReady: data => { if (sequence === videoSequence) comparison.prepare(data); },
     onState: message => { if (sequence === videoSequence) { $('live-status').textContent = message; $('video-info').textContent = message; } },
     onFrame: frame => {
@@ -457,7 +464,7 @@ function openCamera() {
       $('video-info').textContent = 'Webcam en direct · aucun enregistrement';
       drawTracking(); updatePlayback();
     },
-    onError: message => { if (sequence === videoSequence) { clearVideo(); alertAt('video-alert', [message]); } },
+    onError: message => { if (sequence === videoSequence) { clearVideo(); signals.unavailable(message); alertAt('video-alert', [message]); } },
   });
 }
 $('start-camera').addEventListener('click', openCamera);
