@@ -17,6 +17,9 @@ export function createLiveComparison() {
     'emmanuel-macron': { label: 'Emmanuel Macron', author: 'Office of Vice President Kamala Harris · Wikimedia Commons',
       source: 'https://commons.wikimedia.org/wiki/File:Emmanuel_Macron.jpg',
       license: 'Domaine public (États-Unis)', licenseUrl: 'https://commons.wikimedia.org/wiki/File:Emmanuel_Macron.jpg#Licensing' },
+    'nicolas-sarkozy': { label: 'Nicolas Sarkozy', author: '© Thierry Dauwe / European People’s Party · recadrage Off2riorob / Ellicrum',
+      source: 'https://commons.wikimedia.org/wiki/File:Nicolas_Sarkozy_2010.jpg',
+      license: 'CC BY 2.0', licenseUrl: 'https://creativecommons.org/licenses/by/2.0/' },
   };
   const portrait = () => portraits[$('filter-portrait').value];
   const updatePortrait = () => {

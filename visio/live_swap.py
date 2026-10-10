@@ -15,7 +15,7 @@ MODELS = {
 MODEL_DIR = DEFAULT_CACHE / "live-models"
 MAX_FRAME_BYTES = 1024 * 1024
 MAX_PIXELS = 1280 * 720
-PORTRAITS = {"brad-pitt": "Brad Pitt", "sam-altman": "Sam Altman", "emmanuel-macron": "Emmanuel Macron"}
+PORTRAITS = {"brad-pitt": "Brad Pitt", "sam-altman": "Sam Altman", "emmanuel-macron": "Emmanuel Macron", "nicolas-sarkozy": "Nicolas Sarkozy"}
 
 
 def decode_frame(payload):

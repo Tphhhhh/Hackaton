@@ -76,3 +76,17 @@ La démo est désormais lancée par le service utilisateur systemd
 `visio-live-8770.service`, indépendant des sessions de commandes de l’agent.
 Après ajout d’un portrait, utiliser `systemctl --user restart visio-live-8770.service`
 pour le précharger, puis vérifier `/api/live/status`.
+
+## Ajout du portrait Nicolas Sarkozy
+
+Quatrième identité dans le sélecteur. Le portrait Wikimedia Commons est crédité
+à Thierry Dauwe / European People's Party, sous licence CC BY 2.0.
+Les 10 tests Python du transport et le test navigateur de sélection des quatre
+portraits passent ; le build de production réussit.
+
+Sur le service CUDA réel, passage Brad → Sarkozy → Brad → Sarkozy, bascule du
+filtre, absence de visage et arrêt validés avec la caméra de test publique.
+Rendu inspecté : 32 points sur l'original, aucun sur le visage transformé.
+Aucune erreur JavaScript ni requête distante observée. Le court contrôle a
+mesuré 8,9 images transformées/s et affiché 78 ms lors de la capture ; il ne
+constitue pas une mesure sur la webcam physique.

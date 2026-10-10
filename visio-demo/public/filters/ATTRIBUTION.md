@@ -39,3 +39,17 @@ Rights statement: https://commons.wikimedia.org/wiki/File:Emmanuel_Macron.jpg#Li
 
 The demonstration uses this portrait as a reference identity for a local
 neural face swap. No endorsement by the depicted person or source is implied.
+
+# Nicolas Sarkozy portrait
+
+Local file: nicolas-sarkozy.jpg, unchanged copy of the Wikimedia Commons crop.
+Source file: Nicolas Sarkozy 2010.jpg (841 × 1252 pixels).
+Photo: © Thierry Dauwe / European People's Party, 28 October 2010.
+Crop/alignment: Off2riorob; current Commons crop: Ellicrum (30 April 2017).
+Source: https://commons.wikimedia.org/wiki/File:Nicolas_Sarkozy_2010.jpg
+Original photograph: https://www.flickr.com/photos/eppofficial/5123732314/
+License: Creative Commons Attribution 2.0 Generic
+https://creativecommons.org/licenses/by/2.0/
+
+The demonstration uses this portrait as a reference identity for a local
+neural face swap. No endorsement by the depicted person or photographer is implied.
