@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 
 QUESTIONS = {
     "C1_TIMELINE": "Pouvez-vous détailler vos dates exactes chez chacun des deux employeurs qui se chevauchent ?",
@@ -55,12 +56,33 @@ def _template(result: dict) -> dict:
             "disclaimer": DISCLAIMER, "engine": "template"}
 
 
+# Avant d'envoyer une preuve au LLM, on masque ce qui identifie quelqu'un : emails, numéros,
+# IBAN, noms cités entre guillemets, adresses. Le LLM reformule des faits, il n'a pas besoin de qui.
+REDACT = [
+    (re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+"), "[email]"),
+    (re.compile(r"\b[A-Z]{2}\d{2}(?: ?[A-Z0-9]{4}){2,7}(?: ?[A-Z0-9]{1,4})?\b"), "[IBAN]"),
+    (re.compile(r"(?:\+|00)\d[\d ().-]{6,}\d"), "[téléphone]"),
+]
+NAMED = {"C11_PAYEE", "C17_PROFILE_NAME"}              # citent un nom ou un pseudo entre « »
+ADDRESS = {"C5_FORWARDER", "C18_SHIPPING_COUNTRY"}     # finissent par une adresse postale
+
+
+def redact(text: str, code: str = "") -> str:
+    for pattern, repl in REDACT:
+        text = pattern.sub(repl, text)
+    if code in NAMED:
+        text = re.sub(r"«[^»]*»", "« [masqué] »", text)
+    if code in ADDRESS:
+        text = re.sub(r" : [^:]*$", " : [adresse].", text)
+    return text
+
+
 def _bedrock(result: dict) -> dict:
     import boto3
 
     client = boto3.client("bedrock-runtime", region_name=os.getenv("AWS_REGION", "us-east-1"))
     model = os.getenv("BEDROCK_LLM_MODEL", "us.anthropic.claude-haiku-4-5-20251001-v1:0")
-    facts = [{"code": s["code"], "evidence": s["evidence"]} for s in result["signals"]]
+    facts = [{"code": s["code"], "evidence": redact(s["evidence"], s["code"])} for s in result["signals"]]
     prompt = (
         "Tu assistes un analyste conformité qui vérifie des candidatures à distance. Voici les signaux "
         f"factuels relevés sur un dossier (score {result['score']}/100) :\n{json.dumps(facts, ensure_ascii=False)}\n"
