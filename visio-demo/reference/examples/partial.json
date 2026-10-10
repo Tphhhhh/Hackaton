@@ -1,0 +1,166 @@
+{
+  "schema_version": "1.0",
+  "session_id": "EXAMPLE-NOT-A-REAL-ANALYSIS",
+  "generation": 1,
+  "simulation": true,
+  "status": "partial",
+  "conclusion": "indeterminate",
+  "freshness": "unverified",
+  "coverage": 1,
+  "sampled_frames": 8,
+  "duration_seconds": 4,
+  "detectors": {
+    "dima": {
+      "status": "ok",
+      "conclusion": "no_signal",
+      "coverage": 1.0,
+      "longest_gap_seconds": 0.5,
+      "score": 0.1,
+      "flagged_fraction": 0.0,
+      "observations": [
+        {
+          "time_seconds": 0.0,
+          "score": 0.1,
+          "reason": null
+        },
+        {
+          "time_seconds": 0.5,
+          "score": 0.1,
+          "reason": null
+        },
+        {
+          "time_seconds": 1.0,
+          "score": 0.1,
+          "reason": null
+        },
+        {
+          "time_seconds": 1.5,
+          "score": 0.1,
+          "reason": null
+        },
+        {
+          "time_seconds": 2.0,
+          "score": 0.1,
+          "reason": null
+        },
+        {
+          "time_seconds": 2.5,
+          "score": 0.1,
+          "reason": null
+        },
+        {
+          "time_seconds": 3.0,
+          "score": 0.1,
+          "reason": null
+        },
+        {
+          "time_seconds": 3.5,
+          "score": 0.1,
+          "reason": null
+        }
+      ],
+      "error": null,
+      "threats": [
+        "face_swap",
+        "reenactment"
+      ],
+      "revision": "EXAMPLE"
+    },
+    "minifasnet": {
+      "status": "error",
+      "conclusion": "indeterminate",
+      "coverage": 0.0,
+      "longest_gap_seconds": 4.0,
+      "score": null,
+      "flagged_fraction": null,
+      "observations": [
+        {
+          "time_seconds": 0.0,
+          "score": null,
+          "reason": "ModelUnavailable"
+        },
+        {
+          "time_seconds": 0.5,
+          "score": null,
+          "reason": "ModelUnavailable"
+        },
+        {
+          "time_seconds": 1.0,
+          "score": null,
+          "reason": "ModelUnavailable"
+        },
+        {
+          "time_seconds": 1.5,
+          "score": null,
+          "reason": "ModelUnavailable"
+        },
+        {
+          "time_seconds": 2.0,
+          "score": null,
+          "reason": "ModelUnavailable"
+        },
+        {
+          "time_seconds": 2.5,
+          "score": null,
+          "reason": "ModelUnavailable"
+        },
+        {
+          "time_seconds": 3.0,
+          "score": null,
+          "reason": "ModelUnavailable"
+        },
+        {
+          "time_seconds": 3.5,
+          "score": null,
+          "reason": "ModelUnavailable"
+        }
+      ],
+      "error": {
+        "code": "ModelUnavailable",
+        "message": "Exemple : second modèle absent.",
+        "action": "Télécharger explicitement les poids.",
+        "retryable": false,
+        "docs": "visio/README.md#erreurs",
+        "cause": null
+      },
+      "threats": [
+        "photo",
+        "screen"
+      ],
+      "revision": "EXAMPLE"
+    }
+  },
+  "errors": [
+    {
+      "code": "ModelUnavailable",
+      "message": "Exemple : second modèle absent.",
+      "action": "Télécharger explicitement les poids.",
+      "retryable": false,
+      "docs": "visio/README.md#erreurs",
+      "cause": null
+    }
+  ],
+  "timing": {},
+  "provenance": {},
+  "config": {
+    "detectors": [
+      "dima",
+      "minifasnet"
+    ],
+    "threads": 2,
+    "sample_fps": 2.0,
+    "threshold": 0.5,
+    "aggregation": "fraction",
+    "flag_fraction": 0.5,
+    "window_seconds": 2.0,
+    "min_coverage": 0.8,
+    "max_gap_seconds": 2.0,
+    "timeout_seconds": 60.0
+  },
+  "config_sha256": "5bf41e9435c1e8144576bb95d9c12f7390aab83243b5101d8c5072babfd2d8ee",
+  "limitations": [
+    "Scores exploratoires non calibrés ; aucune décision d'embauche.",
+    "Ne prouve ni identité ni présence en direct.",
+    "Les intervalles non échantillonnés ne sont pas analysés."
+  ]
+}
