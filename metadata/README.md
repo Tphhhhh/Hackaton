@@ -50,6 +50,9 @@ python -m metadata.run                           # rapport dans out/report.md
 python -m metadata.evaluate                      # détection, faux positifs, réseaux, temps
 python -m metadata.decide C017 --decision verify --analyst "Ludovic" --note "Appel vidéo demandé"
 python -m metadata.audit verify                  # intégrité du journal d'audit
+
+pip install streamlit
+streamlit run metadata/app.py                    # interface de démo dans le navigateur
 ```
 
 Bedrock (optionnel) : `pip install -r requirements.txt`, copier `.env.example` en `.env`,
@@ -69,12 +72,14 @@ similarité locale et un LLM rédige l'explication. Le `.env` n'est jamais commi
 
 ## Limites connues
 
-- **Résultats circulaires sur le jeu de développement** : le générateur et les détecteurs
-  ont été écrits par la même équipe, d'où des scores parfaits (100 % de détection, 0 faux
-  positif, 3/3 réseaux sur plusieurs graines). Ils ne prouvent rien. Le jeu d'évaluation doit
-  être produit à l'aveugle par un coéquipier qui ne voit pas ce code.
+- **Jeu de développement** : le générateur et les détecteurs viennent de la même équipe. Le jeu
+  inclut volontairement des cas durs (fraudes à un seul signal, légitimes avec deux signaux
+  bénins, deux anciens d'un même bootcamp aux CV identiques, réseaux aux CV reformulés dont un
+  sans aucun identifiant partagé). Mode local, 4 graines : détection 80 à 100 %, faux positifs
+  10 à 17 %, 2 à 3 réseaux sur 4. Les chiffres présentés au jury doivent venir d'un jeu écrit à
+  l'aveugle par un coéquipier.
+- **Réseaux reformulés** : la similarité locale (n-grammes) ne relie pas des CV paraphrasés ;
+  c'est précisément le cas que les embeddings Bedrock doivent couvrir (à mesurer).
 - Les poids sont fixés à la main, pas appris.
-- La similarité locale (n-grammes de caractères) repère les copier-coller, pas les
-  reformulations ; les embeddings Bedrock sont prévus pour ça.
 - La liste de transitaires est fictive ; en production elle vient de l'équipe conformité.
 - Comparaison de toutes les paires en O(n²) : suffisant pour quelques milliers de dossiers.

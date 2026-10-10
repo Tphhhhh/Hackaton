@@ -109,32 +109,79 @@ DESC_TEMPLATES = [
 AREAS = ["payments", "search", "onboarding", "analytics", "notifications", "inventory",
          "authentication", "reporting", "pricing", "logistics", "messaging", "catalog"]
 
-# Réseaux : CV quasi identiques, une variante de mots suffit à déjouer un contrôle exact.
+# Réseaux : un même opérateur réécrit son CV d'une identité à l'autre. Chaque membre
+# reçoit une paraphrase différente : un contrôle par copier-coller ne suffit plus.
 NETWORK_CV = [
     {
-        "summary": "Senior full-stack engineer with 9 years delivering scalable web platforms for international "
-                   "clients. Expert in React, Node.js and cloud-native architectures. Available immediately "
-                   "for long-term remote contracts.",
-        "desc": "Developed scalable web platform features in React and Node.js for international clients; "
-                "deployed cloud-native microservices on AWS.",
+        "summaries": [
+            "Senior full-stack engineer with 9 years delivering scalable web platforms for international "
+            "clients. Expert in React, Node.js and cloud-native architectures. Available immediately "
+            "for long-term remote contracts.",
+            "Full-stack developer (9+ years) building large web platforms for clients worldwide. Deep "
+            "expertise in React, Node.js and cloud-native design. Can start right away on a long remote contract.",
+            "Experienced full-stack engineer: nearly a decade of scalable web products for global customers, "
+            "specialised in React and Node.js on cloud-native stacks. Immediately available, remote only.",
+        ],
+        "descs": [
+            "Developed scalable web platform features in React and Node.js for international clients; "
+            "deployed cloud-native microservices on AWS.",
+            "Built web platform modules with React and Node.js for clients abroad and shipped microservices to AWS.",
+            "Delivered React/Node.js features for global customers and ran cloud-native services on AWS.",
+        ],
         "stack": ["React", "Node.js", "AWS"],
     },
     {
-        "summary": "Blockchain and backend developer with 8 years of experience building secure smart contracts "
-                   "and high-performance APIs. Strong in Solidity, Go and PostgreSQL. Open to remote "
-                   "freelance missions worldwide.",
-        "desc": "Built secure smart contracts in Solidity and high-performance Go APIs with PostgreSQL for "
-                "DeFi startups.",
+        "summaries": [
+            "Blockchain and backend developer with 8 years of experience building secure smart contracts "
+            "and high-performance APIs. Strong in Solidity, Go and PostgreSQL. Open to remote "
+            "freelance missions worldwide.",
+            "Backend and blockchain engineer, 8 years writing audited smart contracts and fast APIs. "
+            "Solidity, Go, PostgreSQL. Available for remote freelance work in any time zone.",
+            "Eight years as a backend/Web3 developer: secure Solidity contracts, high-throughput Go services, "
+            "PostgreSQL. Looking for fully remote freelance projects.",
+        ],
+        "descs": [
+            "Built secure smart contracts in Solidity and high-performance Go APIs with PostgreSQL for DeFi startups.",
+            "Wrote audited Solidity contracts and fast Go backends on PostgreSQL for decentralised finance clients.",
+            "Implemented DeFi smart contracts in Solidity and Go services backed by PostgreSQL.",
+        ],
         "stack": ["Solidity", "Go", "PostgreSQL"],
     },
     {
-        "summary": "Mobile engineer with 7 years of experience shipping iOS and Android apps used by millions. "
-                   "Flutter and Kotlin specialist, comfortable with CI/CD and app store releases. Seeking "
-                   "full-time remote position.",
-        "desc": "Shipped Flutter and Kotlin mobile apps used by millions; set up CI/CD and store releases.",
+        "summaries": [
+            "Mobile engineer with 7 years of experience shipping iOS and Android apps used by millions. "
+            "Flutter and Kotlin specialist, comfortable with CI/CD and app store releases. Seeking "
+            "full-time remote position.",
+            "Seven years building iOS and Android applications with millions of users. Flutter and Kotlin "
+            "expert, handles CI/CD and store publishing. Looking for a full-time remote role.",
+        ],
+        "descs": [
+            "Shipped Flutter and Kotlin mobile apps used by millions; set up CI/CD and store releases.",
+            "Released Flutter/Kotlin apps to millions of users and automated build pipelines and store submissions.",
+        ],
         "stack": ["Flutter", "Kotlin", "Firebase"],
     },
+    {
+        "summaries": [
+            "DevOps and cloud engineer, 6 years automating infrastructure with Terraform and Kubernetes on AWS "
+            "and GCP. Security-minded, certified, available for remote contracts.",
+            "Cloud/DevOps specialist with six years of Terraform, Kubernetes and multi-cloud automation (AWS, "
+            "GCP). Strong security focus, open to remote contract work.",
+        ],
+        "descs": [
+            "Automated AWS and GCP infrastructure with Terraform and managed Kubernetes clusters.",
+            "Managed Kubernetes and wrote Terraform modules for multi-cloud environments on AWS and GCP.",
+        ],
+        "stack": ["Terraform", "Kubernetes", "AWS"],
+    },
 ]
+# Faux positif réaliste : deux légitimes sortis du même bootcamp, avec le même modèle de CV.
+BOOTCAMP_CV = {
+    "summary": "Junior web developer trained at Le Wagon after a first career in marketing. Built a full "
+               "marketplace in a team of four during the bootcamp. Eager to learn, looking for a first role.",
+    "desc": "Final bootcamp project: marketplace in Ruby on Rails with Stimulus and PostgreSQL, team of four.",
+    "stack": ["Ruby on Rails", "Stimulus", "PostgreSQL"],
+}
 SYNONYMS = {"scalable": "highly scalable", "Expert": "Specialist", "Strong": "Skilled",
             "Available immediately": "Immediately available", "secure": "audited",
             "Seeking": "Looking for", "comfortable": "experienced", "millions": "several million users"}
@@ -210,9 +257,15 @@ def make_candidate(rng, cid, signals, network=None):
     years = network["years"] if network else rng.randint(2, 12)
 
     if network:
-        summary = _vary(network["cv"]["summary"], rng)
+        k = network["member"] % len(network["cv"]["summaries"])
+        summary = _vary(network["cv"]["summaries"][k], rng)
         stack = network["cv"]["stack"]
-        exps = _experiences(rng, years, stack, "timeline_overlap" in signals, network["cv"]["desc"])
+        exps = _experiences(rng, years, stack, "timeline_overlap" in signals,
+                            network["cv"]["descs"][k % len(network["cv"]["descs"])])
+    elif "bootcamp" in signals:
+        years, stack = 1, BOOTCAMP_CV["stack"]
+        summary = _vary(BOOTCAMP_CV["summary"], rng)
+        exps = _experiences(rng, years, stack, network_desc=BOOTCAMP_CV["desc"])
     else:
         stack = rng.choice(STACKS)
         summary = " ".join([rng.choice(SUMMARY_OPENERS), rng.choice(SUMMARY_MIDDLES), rng.choice(SUMMARY_CLOSERS)])
@@ -281,30 +334,37 @@ def make_candidate(rng, cid, signals, network=None):
     }
 
 
-def generate(seed=42, n_legit=30, n_solo_fraud=12, network_sizes=(3, 3, 2)):
+def generate(seed=42, n_legit=30, n_solo_fraud=10, network_sizes=(3, 3, 2, 2)):
     rng = random.Random(seed)
     specs = []  # (signals, network, label)
-    for _ in range(n_legit):
-        sig = [rng.choice(LEGIT_NOISE)] if rng.random() < 0.3 else []
+    # Légitimes : 40 % avec un signal bénin, 15 % avec deux, et une paire issue du même bootcamp.
+    for i in range(n_legit):
+        r = rng.random()
+        sig = rng.sample(LEGIT_NOISE, 2) if r < 0.15 else [rng.choice(LEGIT_NOISE)] if r < 0.55 else []
+        if i < 2:
+            sig = ["bootcamp"]
         specs.append((sig, None, {"is_fraud": False, "network": None}))
+    # Fraudes isolées : certaines ne laissent qu'un seul signal.
     for _ in range(n_solo_fraud):
-        sig = rng.sample(FRAUD_SIGNALS, rng.randint(2, 4))
+        sig = rng.sample(FRAUD_SIGNALS, rng.choice([1, 2, 2, 3, 4]))
         specs.append((sig, None, {"is_fraud": True, "network": None}))
+    # Réseaux : de 0 à 2 identifiants recyclés. Le dernier ne partage que des CV reformulés.
     for i, size in enumerate(network_sizes):
-        shared = rng.sample(["phone", "wallet", "address"], 2)
+        n_shared = 0 if i == len(network_sizes) - 1 else rng.choice([1, 2])
+        shared = rng.sample(["phone", "wallet", "address"], n_shared)
         net = {
-            "id": f"N{i + 1}", "cv": NETWORK_CV[i % len(NETWORK_CV)], "years": rng.randint(7, 10),
+            "id": f"N{i + 1}", "cv": NETWORK_CV[i % len(NETWORK_CV)], "years": rng.randint(6, 10),
             "phone": f"+44 7{rng.randint(100_000_000, 999_999_999)}" if "phone" in shared else None,
             "wallet": "0x" + "".join(rng.choice("0123456789abcdef") for _ in range(40)) if "wallet" in shared else None,
             "address": rng.choice(FORWARDERS) if "address" in shared else None,
         }
-        for _ in range(size):
-            sig = rng.sample(["camera_refused", "multi_country_logins", "night_activity", "young_profile"], rng.randint(1, 2))
+        for m in range(size):
+            sig = rng.sample(["camera_refused", "multi_country_logins", "night_activity", "young_profile"], rng.randint(0, 2))
             if net["wallet"]:
                 sig.append("crypto_payment")
             if net["address"]:
                 sig.append("forwarder")
-            specs.append((sig, net, {"is_fraud": True, "network": net["id"]}))
+            specs.append((sig, {**net, "member": m}, {"is_fraud": True, "network": net["id"]}))
 
     rng.shuffle(specs)
     candidates, labels = [], {}

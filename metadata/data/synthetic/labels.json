@@ -1,11 +1,9 @@
 {
   "C001": {
     "is_fraud": true,
-    "network": "N1",
+    "network": null,
     "injected_signals": [
-      "crypto_payment",
-      "forwarder",
-      "night_activity"
+      "camera_refused"
     ]
   },
   "C002": {
@@ -14,16 +12,18 @@
     "injected_signals": []
   },
   "C003": {
-    "is_fraud": false,
-    "network": null,
-    "injected_signals": []
+    "is_fraud": true,
+    "network": "N1",
+    "injected_signals": [
+      "crypto_payment",
+      "forwarder",
+      "young_profile"
+    ]
   },
   "C004": {
     "is_fraud": false,
     "network": null,
-    "injected_signals": [
-      "one_trip_abroad"
-    ]
+    "injected_signals": []
   },
   "C005": {
     "is_fraud": false,
@@ -43,87 +43,85 @@
     "injected_signals": []
   },
   "C008": {
-    "is_fraud": false,
-    "network": null,
-    "injected_signals": []
+    "is_fraud": true,
+    "network": "N1",
+    "injected_signals": [
+      "crypto_payment",
+      "forwarder"
+    ]
   },
   "C009": {
     "is_fraud": false,
     "network": null,
     "injected_signals": [
+      "late_worker",
       "moved_house"
     ]
   },
   "C010": {
-    "is_fraud": true,
-    "network": "N1",
-    "injected_signals": [
-      "camera_refused",
-      "crypto_payment",
-      "forwarder",
-      "young_profile"
-    ]
-  },
-  "C011": {
     "is_fraud": false,
     "network": null,
     "injected_signals": [
-      "moved_house"
+      "one_trip_abroad"
+    ]
+  },
+  "C011": {
+    "is_fraud": true,
+    "network": null,
+    "injected_signals": [
+      "multi_country_logins"
     ]
   },
   "C012": {
+    "is_fraud": true,
+    "network": null,
+    "injected_signals": [
+      "forwarder",
+      "timeline_overlap"
+    ]
+  },
+  "C013": {
     "is_fraud": false,
     "network": null,
     "injected_signals": []
   },
-  "C013": {
-    "is_fraud": true,
-    "network": null,
-    "injected_signals": [
-      "multi_country_logins",
-      "night_activity"
-    ]
-  },
   "C014": {
-    "is_fraud": true,
+    "is_fraud": false,
     "network": null,
     "injected_signals": [
-      "address_change_after_hire",
-      "forwarder",
-      "multi_country_logins"
+      "moved_house"
     ]
   },
   "C015": {
     "is_fraud": false,
     "network": null,
     "injected_signals": [
+      "one_trip_abroad",
       "young_profile"
     ]
   },
   "C016": {
     "is_fraud": true,
-    "network": "N1",
+    "network": "N2",
     "injected_signals": [
-      "camera_refused",
       "crypto_payment",
-      "forwarder",
-      "multi_country_logins"
+      "young_profile"
     ]
   },
   "C017": {
-    "is_fraud": true,
+    "is_fraud": false,
     "network": null,
     "injected_signals": [
-      "crypto_payment",
-      "disposable_email",
-      "forwarder",
-      "multi_country_logins"
+      "moved_house"
     ]
   },
   "C018": {
-    "is_fraud": false,
+    "is_fraud": true,
     "network": null,
-    "injected_signals": []
+    "injected_signals": [
+      "address_change_after_hire",
+      "forwarder"
+    ]
   },
   "C019": {
     "is_fraud": false,
@@ -131,19 +129,36 @@
     "injected_signals": []
   },
   "C020": {
-    "is_fraud": true,
-    "network": "N2",
+    "is_fraud": false,
+    "network": null,
     "injected_signals": [
-      "forwarder",
-      "multi_country_logins"
+      "moved_house",
+      "young_profile"
     ]
   },
   "C021": {
     "is_fraud": false,
     "network": null,
-    "injected_signals": []
+    "injected_signals": [
+      "bootcamp"
+    ]
   },
   "C022": {
+    "is_fraud": true,
+    "network": "N3",
+    "injected_signals": [
+      "forwarder",
+      "young_profile"
+    ]
+  },
+  "C023": {
+    "is_fraud": true,
+    "network": "N2",
+    "injected_signals": [
+      "crypto_payment"
+    ]
+  },
+  "C024": {
     "is_fraud": true,
     "network": null,
     "injected_signals": [
@@ -152,61 +167,40 @@
       "multi_country_logins"
     ]
   },
-  "C023": {
-    "is_fraud": false,
-    "network": null,
-    "injected_signals": []
-  },
-  "C024": {
+  "C025": {
     "is_fraud": true,
     "network": null,
     "injected_signals": [
-      "disposable_email",
-      "forwarder",
-      "multi_country_logins",
-      "timeline_overlap"
-    ]
-  },
-  "C025": {
-    "is_fraud": false,
-    "network": null,
-    "injected_signals": [
-      "moved_house"
+      "address_change_after_hire",
+      "crypto_payment",
+      "young_profile"
     ]
   },
   "C026": {
-    "is_fraud": true,
-    "network": "N3",
-    "injected_signals": [
-      "crypto_payment",
-      "forwarder",
-      "young_profile"
-    ]
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": []
   },
   "C027": {
     "is_fraud": true,
     "network": null,
     "injected_signals": [
       "camera_refused",
-      "crypto_payment",
-      "forwarder",
-      "young_profile"
+      "multi_country_logins"
     ]
   },
   "C028": {
-    "is_fraud": true,
+    "is_fraud": false,
     "network": null,
     "injected_signals": [
-      "forwarder",
-      "night_activity",
-      "timeline_overlap"
+      "camera_refused"
     ]
   },
   "C029": {
     "is_fraud": true,
-    "network": null,
+    "network": "N1",
     "injected_signals": [
-      "address_change_after_hire",
+      "crypto_payment",
       "forwarder"
     ]
   },
@@ -219,23 +213,26 @@
     "is_fraud": true,
     "network": null,
     "injected_signals": [
+      "crypto_payment",
+      "disposable_email",
       "forwarder",
-      "young_profile"
+      "multi_country_logins"
     ]
   },
   "C032": {
-    "is_fraud": true,
+    "is_fraud": false,
     "network": null,
     "injected_signals": [
-      "address_change_after_hire",
-      "forwarder",
-      "young_profile"
+      "camera_refused",
+      "one_trip_abroad"
     ]
   },
   "C033": {
     "is_fraud": false,
     "network": null,
-    "injected_signals": []
+    "injected_signals": [
+      "bootcamp"
+    ]
   },
   "C034": {
     "is_fraud": false,
@@ -244,39 +241,35 @@
   },
   "C035": {
     "is_fraud": true,
-    "network": "N2",
+    "network": "N4",
     "injected_signals": [
-      "forwarder",
       "night_activity"
     ]
   },
   "C036": {
+    "is_fraud": true,
+    "network": null,
+    "injected_signals": [
+      "disposable_email",
+      "forwarder"
+    ]
+  },
+  "C037": {
+    "is_fraud": true,
+    "network": "N2",
+    "injected_signals": [
+      "crypto_payment"
+    ]
+  },
+  "C038": {
     "is_fraud": false,
     "network": null,
     "injected_signals": []
   },
-  "C037": {
-    "is_fraud": false,
-    "network": null,
-    "injected_signals": [
-      "one_trip_abroad"
-    ]
-  },
-  "C038": {
-    "is_fraud": true,
-    "network": null,
-    "injected_signals": [
-      "address_change_after_hire",
-      "young_profile"
-    ]
-  },
   "C039": {
     "is_fraud": true,
-    "network": "N2",
-    "injected_signals": [
-      "forwarder",
-      "young_profile"
-    ]
+    "network": "N4",
+    "injected_signals": []
   },
   "C040": {
     "is_fraud": false,
@@ -287,20 +280,21 @@
     "is_fraud": false,
     "network": null,
     "injected_signals": [
-      "camera_refused"
+      "camera_refused",
+      "one_trip_abroad"
     ]
   },
   "C042": {
     "is_fraud": false,
     "network": null,
-    "injected_signals": []
+    "injected_signals": [
+      "one_trip_abroad"
+    ]
   },
   "C043": {
     "is_fraud": false,
     "network": null,
-    "injected_signals": [
-      "one_trip_abroad"
-    ]
+    "injected_signals": []
   },
   "C044": {
     "is_fraud": false,
@@ -313,39 +307,41 @@
     "injected_signals": []
   },
   "C046": {
-    "is_fraud": false,
-    "network": null,
-    "injected_signals": [
-      "late_worker"
-    ]
-  },
-  "C047": {
-    "is_fraud": false,
-    "network": null,
-    "injected_signals": []
-  },
-  "C048": {
     "is_fraud": true,
     "network": null,
     "injected_signals": [
       "camera_refused",
       "disposable_email",
-      "multi_country_logins"
+      "forwarder",
+      "night_activity"
     ]
   },
-  "C049": {
+  "C047": {
     "is_fraud": true,
     "network": "N3",
     "injected_signals": [
       "camera_refused",
-      "crypto_payment",
-      "forwarder",
+      "forwarder"
+    ]
+  },
+  "C048": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": []
+  },
+  "C049": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": [
       "young_profile"
     ]
   },
   "C050": {
     "is_fraud": false,
     "network": null,
-    "injected_signals": []
+    "injected_signals": [
+      "late_worker",
+      "young_profile"
+    ]
   }
 }

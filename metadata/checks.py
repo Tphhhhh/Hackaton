@@ -110,7 +110,8 @@ def check_login_countries(c: dict) -> Signal | None:
         return None
     others = {e["ip_country"] for e in events if e["ip_country"] != home}
     share = sum(e["ip_country"] != home for e in events) / len(events)
-    if len(others) >= 2 or share > 0.4:
+    # Un voyage ponctuel produit quelques connexions isolées : on exige une part significative.
+    if share > 0.4 or (len(others) >= 2 and share > 0.15):
         return Signal("C7_LOGIN_COUNTRIES", 20,
                       f"{share:.0%} des connexions hors du pays déclaré ({home}), depuis {len(others)} autre(s) pays.",
                       "T1078")
