@@ -358,27 +358,27 @@
                       <li data-s="fill"><i></i><span id="fillTxt">Pré-remplissage du formulaire</span></li>
                     </ol>
                   </div>
-                  <p class="privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Votre CV sert uniquement à pré-remplir ce formulaire. Vous relisez et corrigez chaque information avant l'envoi. Pas de photo, merci.</p>
+                  <p class="privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Votre CV sert uniquement à pré-remplir ce formulaire. Vous relisez et corrigez chaque information avant l'envoi. Pas de photo, merci.<br>Seuls le CV et vos années d'expérience sont obligatoires ; tout le reste est facultatif.</p>
                 </div>
 
                 <!-- 2 : coordonnées -->
                 <div class="pane" data-step="1">
                   <div class="ai-banner" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Champs remplis à partir de <b class="cvn"></b>. Relisez-les avant de continuer.</span></div>
                   <div class="grid">
-                    <div><label class="f">Prénom <em>*</em></label><input type="text" name="first_name" autocomplete="given-name" required></div>
-                    <div><label class="f">Nom <em>*</em></label><input type="text" name="last_name" autocomplete="family-name" required></div>
-                    <div><label class="f">Email <em>*</em></label><input type="email" name="email" autocomplete="email" required></div>
-                    <div><label class="f">Téléphone <em>*</em></label><input type="tel" name="phone" autocomplete="tel" placeholder="+33 6 12 34 56 78" required></div>
-                    <div><label class="f">Ville de résidence <em>*</em></label><input type="text" name="city" required></div>
-                    <div><label class="f">Pays de résidence <em>*</em></label>
-                      <select name="country" required>
+                    <div><label class="f">Prénom</label><input type="text" name="first_name" autocomplete="given-name"></div>
+                    <div><label class="f">Nom</label><input type="text" name="last_name" autocomplete="family-name"></div>
+                    <div><label class="f">Email</label><input type="email" name="email" autocomplete="email"></div>
+                    <div><label class="f">Téléphone</label><input type="tel" name="phone" autocomplete="tel" placeholder="+33 6 12 34 56 78"></div>
+                    <div><label class="f">Ville de résidence</label><input type="text" name="city"></div>
+                    <div><label class="f">Pays de résidence</label>
+                      <select name="country">
                         <option value="">Choisir…</option>
                         <option value="FR">France</option><option value="DE">Allemagne</option><option value="BE">Belgique</option>
                         <option value="CH">Suisse</option><option value="NL">Pays-Bas</option><option value="ES">Espagne</option>
                         <option value="IT">Italie</option><option value="PT">Portugal</option><option value="UK">Royaume-Uni</option><option value="IE">Irlande</option>
                       </select></div>
-                    <div><label class="f">LinkedIn <span class="opt">(facultatif)</span></label><input type="url" name="linkedin_url" placeholder="https://linkedin.com/in/…"></div>
-                    <div><label class="f">GitHub ou portfolio <span class="opt">(facultatif)</span></label><input type="url" name="github_url" placeholder="https://github.com/…"></div>
+                    <div><label class="f">LinkedIn</label><input type="url" name="linkedin_url" placeholder="https://linkedin.com/in/…"></div>
+                    <div><label class="f">GitHub ou portfolio</label><input type="url" name="github_url" placeholder="https://github.com/…"></div>
                   </div>
                 </div>
 
@@ -389,7 +389,7 @@
                     <div class="full"><label class="f">Titre actuel</label><input type="text" name="headline" placeholder="Ingénieure backend senior"></div>
                     <div><label class="f">Années d'expérience <em>*</em></label><input type="number" name="years_experience" min="0" max="50" required></div>
                     <div><label class="f">Compétences principales</label><input type="text" name="skills" placeholder="Node.js, PostgreSQL, AWS…"></div>
-                    <div class="full"><label class="f">Votre parcours en quelques lignes <em>*</em></label><textarea name="summary" required placeholder="Ce que vous avez construit, ce que vous cherchez maintenant."></textarea></div>
+                    <div class="full"><label class="f">Votre parcours en quelques lignes</label><textarea name="summary" placeholder="Ce que vous avez construit, ce que vous cherchez maintenant."></textarea></div>
                   </div>
                   <div class="sub-h"><b>Expériences</b><button type="button" class="btn btn-line btn-sm" id="addExp">Ajouter une expérience</button></div>
                   <div id="exps"></div>
@@ -404,15 +404,15 @@
                 <!-- 4 : le poste -->
                 <div class="pane" data-step="3">
                   <div class="grid">
-                    <div><label class="f">Prétentions salariales <em>*</em></label>
-                      <div class="suffix"><input type="number" name="salary_expectation" min="20" max="300" step="1" placeholder="70" required><span>k€ brut / an</span></div></div>
-                    <div><label class="f">Disponible à partir du <em>*</em></label><input type="date" name="available_from" required></div>
+                    <div><label class="f">Prétentions salariales</label>
+                      <div class="suffix"><input type="number" name="salary_expectation" min="20" max="300" step="1" placeholder="70"><span>k€ brut / an</span></div></div>
+                    <div><label class="f">Disponible à partir du</label><input type="date" name="available_from"></div>
                     <div class="full"><label class="f">Comment avez-vous connu ce poste ?</label>
                       <select name="source">
                         <option value="">Choisir…</option><option value="linkedin">LinkedIn</option><option value="fjordlane">Site carrières Fjordlane</option>
                         <option value="referral">Recommandation</option><option value="other">Autre</option>
                       </select></div>
-                    <div class="full"><label class="f">Un mot pour l'équipe <span class="opt">(facultatif)</span></label>
+                    <div class="full"><label class="f">Un mot pour l'équipe</label>
                       <textarea name="message" placeholder="Ce qui vous attire dans ce poste, vos questions…"></textarea></div>
                   </div>
                   <div class="notice">
@@ -424,14 +424,14 @@
               </div>
               <div class="form-foot">
                 <button type="button" class="btn btn-line" id="prev" style="visibility:hidden">Retour</button>
-                <button type="button" class="btn btn-ink" id="next">Continuer sans CV</button>
+                <button type="button" class="btn btn-ink" id="next">Continuer</button>
               </div>
             </form>
           </div>
 
           <div class="success" id="success" style="display:none">
             <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></div>
-            <h2>Merci <span id="okName"></span>, c'est envoyé.</h2>
+            <h2>Merci<span id="okName"></span>, c'est envoyé.</h2>
             <div class="ref">Référence de candidature : <span id="okRef"></span></div>
             <ol>
               <li class="now"><span>Maintenant</span>Vérification de la cohérence de votre dossier par notre équipe.</li>
@@ -627,17 +627,18 @@ function show(i) {
   panes.forEach((p, k) => p.classList.toggle("active", k === i));
   bars.forEach((b, k) => { b.classList.toggle("on", k <= i); $("i", b).style.setProperty("--w", k < i ? "100%" : k === i ? "50%" : "0"); });
   $("#prev").style.visibility = i ? "visible" : "hidden";
-  $("#next").textContent = i === panes.length - 1 ? "Envoyer ma candidature" : i === 0 ? (cvName ? "Vérifier mes informations" : "Continuer sans CV") : "Continuer";
+  $("#next").textContent = i === panes.length - 1 ? "Envoyer ma candidature" : i === 0 ? "Vérifier mes informations" : "Continuer";
   $("#err").textContent = "";
 }
 function valid(i) {
+  if (i === 0 && !cvName) { $("#err").textContent = "Déposez votre CV (PDF) pour continuer : il remplit le formulaire pour vous."; return false; }
   let ok = true;
   $$("[required]", panes[i]).forEach((el) => {
     const bad = !el.value.trim() || (el.type === "email" && !/^\S+@\S+\.\S+$/.test(el.value));
     el.classList.toggle("invalid", bad);
     if (bad) ok = false;
   });
-  if (!ok) { $("#err").textContent = "Quelques champs obligatoires sont manquants ou invalides."; return false; }
+  if (!ok) { $("#err").textContent = "Indiquez vos années d'expérience pour continuer."; return false; }
   if (i === panes.length - 1 && !$("#consent").checked) { $("#err").textContent = "Merci de confirmer avoir lu ce qui est vérifié."; return false; }
   return true;
 }
@@ -688,7 +689,7 @@ async function submit() {
     if (!res.ok) throw new Error(out.error);
     $("#formWrap").style.display = "none";
     $("#success").style.display = "block";
-    $("#okName").textContent = data.first_name;
+    $("#okName").textContent = data.first_name ? " " + data.first_name : "";
     $("#okRef").textContent = out.id;
     $("#goInterview").href = "/?app=" + out.id;
     $("#postuler").scrollIntoView();

@@ -84,7 +84,8 @@ def _profile_lookup(url: str) -> dict | None:
 
 def to_candidate(form: dict, app_id: str) -> dict:
     """Convertit le formulaire de candidature au format de schema.py."""
-    country = form["country"]
+    get = lambda k: str(form.get(k) or "").strip()      # tout est facultatif sauf le CV et l'ancienneté
+    country = get("country") or "FR"
     profiles = []
     for platform in ("linkedin", "github"):
         url = form.get(f"{platform}_url", "").strip()
@@ -99,20 +100,20 @@ def to_candidate(form: dict, app_id: str) -> dict:
         "stage": "candidature",
         "applied_at": date.today().isoformat(),
         "hired_at": None,
-        "full_name": f"{form['first_name'].strip()} {form['last_name'].strip()}",
-        "email": form["email"].strip(),
-        "phone": form["phone"].strip(),
-        "declared_location": {"city": form["city"].strip(), "country": country,
+        "full_name": f"{get('first_name')} {get('last_name')}".strip(),   # vide si non renseigné
+        "email": get("email"),
+        "phone": get("phone"),
+        "declared_location": {"city": get("city"), "country": country,
                               "timezone": COUNTRY_TZ.get(country, "Europe/Paris"),
                               "utc_offset": COUNTRY_OFFSET.get(country, 2)},
         "cv": {
-            "summary": form.get("summary", "").strip(),
+            "summary": get("summary"),
             "years_experience": int(form.get("years_experience") or 0),
             "experiences": [{"company": e["company"], "title": e["title"], "start": _month(e["start"]),
                              "end": _month(e.get("end")), "description": e.get("description", "")}
                             for e in form.get("experiences", []) if e.get("company") and e.get("start")],
             "education": [e for e in form.get("education", []) if e.get("school")],
-            "skills": [s.strip() for s in form.get("skills", "").split(",") if s.strip()],
+            "skills": [s.strip() for s in get("skills").split(",") if s.strip()],
             "file_name": form.get("cv_file_name"),
         },
         "profiles": profiles,
@@ -192,7 +193,7 @@ def listing() -> list[dict]:
         out = []
         for app_id, c in APPLICATIONS.items():
             if r := RESULTS.get(app_id):
-                out.append({"id": app_id, "name": c["full_name"], "city": c["declared_location"]["city"],
+                out.append({"id": app_id, "name": c["full_name"] or f"Candidat {app_id}", "city": c["declared_location"]["city"],
                             "country": c["declared_location"]["country"], "email": c["email"],
                             "applied_at": c["applied_at"], "stage": c.get("stage", "candidature"),
                             "decision": c.get("decision"), "result": r})
@@ -203,7 +204,7 @@ def public_info(app_id: str) -> dict | None:
     c = APPLICATIONS.get(app_id)
     if not c:
         return None
-    return {"id": app_id, "first_name": c["full_name"].split(" ")[0], "name": c["full_name"],
+    return {"id": app_id, "first_name": c["full_name"].split(" ")[0], "name": c["full_name"] or f"Candidat {app_id}",
             "city": c["declared_location"]["city"], "country": c["declared_location"]["country"],
             "stage": c.get("stage", "candidature")}
 

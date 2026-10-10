@@ -177,7 +177,7 @@ async function load() {
   const a = await (await fetch("/api/applications/" + appId)).json();
   if (a.error) { $("#err").textContent = "Ce lien d'onboarding n'est plus valide."; return; }
   app = a;
-  $("#hello").textContent = `Bienvenue chez Fjordlane, ${a.first_name}.`;
+  $("#hello").textContent = `Bienvenue chez Fjordlane${a.first_name ? ", " + a.first_name : ""}.`;
   $("#me").textContent = a.name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
   $("#countryRo").value = COUNTRIES[a.country] || a.country;
   $("[name=city]").value = a.city;
@@ -208,7 +208,7 @@ $("#send").onclick = async () => {
     const out = await res.json();
     if (!res.ok) throw new Error(out.error);
     $("#formWrap").style.display = "none"; $("#success").style.display = "block";
-    $("#okName").textContent = app.first_name;
+    $("#okName").textContent = app.first_name || "merci";
     $$(".todo li")[2].className = "done";
     window.scrollTo({ top: 0, behavior: "smooth" });
   } catch (e) {

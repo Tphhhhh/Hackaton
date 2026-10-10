@@ -167,7 +167,7 @@ if (appId) {  // arrivée depuis la page de candidature : on reprend le lieu dé
   fetch("/api/applications/" + appId).then((r) => r.json()).then((a) => {
     if (a.error) return;
     $("city").value = a.city; $("country").value = a.country;
-    document.querySelector("#consent h1").textContent = `Bonjour ${a.first_name}, votre entretien commence bientôt.`;
+    document.querySelector("#consent h1").textContent = `Bonjour${a.first_name ? " " + a.first_name : ""}, votre entretien commence bientôt.`;
   });
 }
 const sim = { vpn: false, cam: false, vm: false };
