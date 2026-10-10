@@ -49,17 +49,40 @@ def check_timeline_overlap(c: dict) -> Signal | None:
     return None
 
 
+# « 9 ans d'expérience », « depuis 7 ans », « (9+ years) », « 8 years building… ».
+# Exclut l'âge (« 25 ans », « 25 years old », « âgé de 25 ans ») : ce n'est pas une ancienneté.
+YEARS = re.compile(r"(\d{1,2})\+?\s*(?:ans|years?)\b(?!\s*old)", re.IGNORECASE)
+AGE_BEFORE = re.compile(r"(?:\bde|j'ai|j’ai|i am|i'm|aged?)\s*$", re.IGNORECASE)
+EXPERIENCE_AFTER = re.compile(r"\s*(?:d['’]\s?exp|of\s+exp|experience|in\s+|as\s+|dans\s+|en\s+|d['’]\s?ancien)", re.IGNORECASE)
+
+
+def claimed_years(text: str) -> list[int]:
+    """Années d'expérience revendiquées dans un texte libre (résumé de CV)."""
+    out = []
+    for m in YEARS.finditer(text or ""):
+        before, after = text[max(0, m.start() - 12):m.start()], text[m.end():m.end() + 12]
+        if AGE_BEFORE.search(before) and not EXPERIENCE_AFTER.match(after):
+            continue
+        if 0 < int(m.group(1)) <= 45:
+            out.append(int(m.group(1)))
+    return out
+
+
 def check_claimed_years(c: dict) -> Signal | None:
     """Ancienneté annoncée dans le résumé ou le champ dédié vs somme des expériences listées."""
-    claimed = [int(x) for x in re.findall(r"(\d+)\+?\s+(?:years|ans)\b", c["cv"]["summary"])]
-    claimed.append(int(c["cv"].get("years_experience", 0)))
+    if not c["cv"]["experiences"]:  # aucune expérience saisie : information manquante, pas incohérence
+        return None
+    claimed = set(claimed_years(c["cv"]["summary"]))
+    if c["cv"].get("years_experience"):
+        claimed.add(int(c["cv"]["years_experience"]))
     today = date.fromisoformat(c["applied_at"])
     months = sum(max(0, (_month(e["end"], today) - _month(e["start"], today)).days // 30) for e in c["cv"]["experiences"])
     listed = months / 12
-    gaps = [y for y in claimed if abs(y - listed) >= 2]
+    gaps = sorted(y for y in claimed if abs(y - listed) >= 2)
     if gaps:
         return Signal("C2_SENIORITY", 10,
-                      f"Ancienneté annoncée {sorted(set(claimed))} an(s) mais {listed:.1f} an(s) d'expériences listées.")
+                      f"Annonce {' ou '.join(map(str, gaps))} ans d'expérience, mais les postes listés "
+                      f"totalisent {listed:.0f} an{'s' if round(listed) > 1 else ''}.")
     return None
 
 
@@ -73,7 +96,7 @@ def check_young_profile(c: dict) -> Signal | None:
         age_days = (applied - date.fromisoformat(p["created_at"])).days
         if p["platform"] == "linkedin" and age_days < 180 and years >= 3:
             return Signal("C3_YOUNG_PROFILE", 15,
-                          f"Profil {p['platform']} créé {age_days} jours avant la candidature "
+                          f"Profil {p['platform'].replace('linkedin', 'LinkedIn').replace('github', 'GitHub')} créé {age_days} jours avant la candidature "
                           f"({p.get('connections', '?')} relations) pour {years} ans d'expérience revendiqués.",
                           "T1585.001")
     return None
@@ -142,6 +165,26 @@ def check_working_hours(c: dict) -> Signal | None:
 def check_payment(c: dict) -> Signal | None:
     if c["payment"]["method"] == "crypto":
         return Signal("C9_CRYPTO", 20, "Paiement du salaire demandé en cryptomonnaie.")
+    return None
+
+
+def _name_tokens(name: str) -> set[str]:
+    import unicodedata
+    flat = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode().lower()
+    return {t for t in re.split(r"[^a-z]+", flat) if len(t) > 1}
+
+
+def check_payee(c: dict) -> Signal | None:
+    """Compte de paie au nom d'une autre personne (salaire reversé à un intermédiaire).
+
+    Ne compare que l'identité déclarée par le candidat à celle du titulaire du compte :
+    rien n'est déduit du nom lui-même (ni origine, ni langue).
+    """
+    holder = c["payment"].get("holder", "").strip()
+    if not holder or c["payment"]["method"] == "crypto":
+        return None
+    if not _name_tokens(holder) & _name_tokens(c["full_name"]):
+        return Signal("C11_PAYEE", 20, f"Le compte de paie est au nom de « {holder} », pas du candidat.")
     return None
 
 
@@ -242,7 +285,7 @@ def check_video_settings(c: dict) -> Signal | None:
 
 CHECKS = [check_timeline_overlap, check_claimed_years, check_young_profile, check_camera_refused,
           check_forwarder, check_address_change, check_login_countries, check_working_hours,
-          check_payment, check_email, check_virtual_camera, check_browser_timezone, check_vm_gpu,
+          check_payment, check_payee, check_email, check_virtual_camera, check_browser_timezone, check_vm_gpu,
           check_interview_ip, check_latency, check_video_settings]
 
 

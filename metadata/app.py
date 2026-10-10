@@ -49,7 +49,7 @@ def decisions_for(cid: str) -> list[dict]:
 
 
 # --- Barre latérale ---------------------------------------------------------------
-st.sidebar.title("🛡️ Know Your Freelancer")
+st.sidebar.title("🛡️ Sentinelle")
 data_path = st.sidebar.text_input("Fichier de dossiers", str(DATA_DIR / "candidates.json"))
 labels_path = Path(data_path).with_name("labels.json")
 video_path = st.sidebar.text_input("Scores du module vidéo", str(Path(data_path).with_name("video_scores.json")))

@@ -34,6 +34,7 @@ LOG = Path("out/audit.jsonl")
 # Décalage UTC en octobre (heure d'été) du pays déclaré.
 COUNTRY_OFFSET = {"FR": 2, "DE": 2, "CH": 2, "BE": 2, "NL": 2, "ES": 2, "IT": 2, "PT": 1, "UK": 1, "GB": 1, "IE": 1}
 
+DECISIONS = {"clear", "verify", "escalate", "reject"}
 SESSIONS: dict[str, dict] = {}
 LOCK = threading.Lock()
 
@@ -214,6 +215,16 @@ class Handler(BaseHTTPRequestHandler):
             return self._json({"ok": True} if ok else {"error": "candidature inconnue"}, 200 if ok else 404)
         if self.path == "/api/snapshot":
             return self._json(ingest(payload, self._client_ip()))
+        if self.path == "/api/decision" and payload.get("app_id"):
+            if payload.get("decision") not in DECISIONS or not payload.get("analyst"):
+                return self._json({"error": "décision ou analyste manquant"}, 400)
+            score = applications.decide(payload["app_id"], payload["decision"], payload["analyst"])
+            if score is None:
+                return self._json({"error": "candidature inconnue"}, 404)
+            entry = audit.append("human_decision", {"id": f"app:{payload['app_id']}", "decision": payload["decision"],
+                                                    "note": payload.get("note", ""), "score": score},
+                                 actor=payload["analyst"], log=LOG)
+            return self._json({"ok": True, "hash": entry["hash"]})
         if self.path == "/api/decision":
             with LOCK:
                 sess = SESSIONS.get(payload.get("session_id"))

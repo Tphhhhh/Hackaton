@@ -6,14 +6,15 @@ Partie « métadonnées » du projet (la détection de deepfakes vidéo est un m
 
 Des fraudeurs, dont des réseaux étatiques, se font embaucher à distance sous de fausses
 identités, puis volent des données ou détournent des salaires. Un même opérateur peut
-porter une douzaine d'identités. Ce module aide un analyste (ESN, portage, plateforme de
-freelances) à repérer ces dossiers à partir d'incohérences factuelles et de candidatures
-qui se ressemblent trop.
+porter une douzaine d'identités. La cible : **toute entreprise qui recrute à distance**, en
+particulier des profils tech ou des postes qui donnent accès à des données sensibles
+(production, données clients, paiements). Ce module aide les équipes RH et sécurité à repérer
+ces dossiers à partir d'incohérences factuelles et de candidatures qui se ressemblent trop.
 
 ## Architecture
 
 ```
-candidates.json ─► checks.py      contrôles de cohérence (10 règles explicables)
+candidates.json ─► checks.py      contrôles de cohérence (11 règles explicables)
                 ─► similarity.py  identifiants recyclés + CV quasi identiques ─► réseaux (graphe)
                 ─► scoring.py     score 0-100, niveau, signaux
                 ─► explain.py     résumé + questions de vérification (Bedrock ou gabarit)
@@ -35,6 +36,7 @@ humain          ─► decide.py      décision tracée dans le journal d'audit
 | C8_NIGHT_HOURS | Activité la nuit dans le fuseau déclaré | 15 | |
 | C9_CRYPTO | Salaire demandé en cryptomonnaie | 20 | |
 | C10_DISPOSABLE_EMAIL | Email sur domaine jetable | 10 | |
+| C11_PAYEE | Compte de paie au nom d'une autre personne | 20 | |
 | S1_PERSONA_NETWORK | Lié à d'autres candidatures (identifiants ou CV) | 30 | T1585 |
 
 Score ≥ 25 : dossier à vérifier ; ≥ 50 : risque élevé. Le score priorise la revue, il ne
@@ -95,16 +97,17 @@ python -m metadata.live.server
   métadonnées techniques annoncées. Chaque dépôt est analysé avec les dossiers existants. Le
   bouton « Démo » dépose un des deux CV de `live/demo_cvs/` (Camille, honnête ; Daniel, qui
   recycle le téléphone d'un réseau connu). `python -m metadata.live.make_demo_cvs` les régénère.
-- `http://localhost:8000/onboarding?app=ID` : une fois le candidat retenu (lien dans le panneau
-  recruteur). Statut, adresse de résidence, livraison du matériel, versement (SEPA, Wise,
-  stablecoin). C'est là qu'apparaissent les signaux les plus forts (transitaire, crypto) : le
-  score du dossier est recalculé et monte dans le panneau recruteur.
+- `http://localhost:8000/onboarding?app=ID` : une fois le candidat recruté (lien dans le panneau
+  recruteur). Adresse de résidence, livraison de l'ordinateur, compte bancaire pour la paie.
+  C'est là qu'apparaissent les signaux les plus forts (transitaire, salaire versé à un tiers) :
+  le score du dossier est recalculé et monte dans le panneau recruteur.
 - `http://localhost:8000/` : page candidat. Écran de consentement (ce qui est mesuré, ce qui ne
   l'est jamais), puis une mesure toutes les 5 secondes.
-- `http://localhost:8000/recruiter` : panneau recruteur. Score, signaux, changements en cours
-  d'appel, questions à poser, décision journalisée.
+- `http://localhost:8000/recruiter` : console « Sentinelle » des équipes RH et sécurité. Pour
+  chaque candidature et chaque entretien : score, signaux en clair, réseau détecté, questions à
+  poser, décision humaine signée dans le journal d'audit.
 
-Démo : déposer le CV de Daniel, puis remplir son onboarding (65 puis 100). Lancer l'entretien, puis activer un VPN ou choisir une caméra virtuelle (OBS) dans la
+Démo : déposer le CV de Daniel, puis remplir son onboarding (65 après la candidature, 100 après l'onboarding). Lancer l'entretien, puis activer un VPN ou choisir une caméra virtuelle (OBS) dans la
 liste : l'alerte apparaît en quelques secondes. Si le réseau du lieu bloque le VPN, le menu
 « Mode démo » de la page candidat simule ces changements (marqués « simulation »).
 

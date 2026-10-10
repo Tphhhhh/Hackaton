@@ -102,9 +102,9 @@ def find_links(candidates: list[dict]) -> list[dict]:
         sim = _cosine(vecs[i], vecs[j])
         shared_addr = bool(addrs[i] & addrs[j])
         if sim >= TEXT_THRESHOLD:
-            reasons.append(f"CV quasi identiques (similarité {sim:.2f})")
+            reasons.append(f"CV quasi identique ({sim:.0%} de similarité)")
         elif shared_addr and sim >= TEXT_WITH_ADDRESS:
-            reasons.append(f"même adresse de livraison et CV proches (similarité {sim:.2f})")
+            reasons.append(f"même adresse de livraison et CV proche ({sim:.0%} de similarité)")
         if reasons:
             links.append({"a": candidates[i]["id"], "b": candidates[j]["id"], "similarity": round(sim, 3),
                           "reasons": reasons})

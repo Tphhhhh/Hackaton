@@ -1,10 +1,10 @@
 """Candidatures déposées via le site de démo (offre d'emploi, puis onboarding).
 
 Comme dans un vrai recrutement, les données arrivent en deux temps :
-1. **Candidature** : CV, coordonnées, parcours, taux journalier, disponibilité.
-2. **Onboarding**, une fois le candidat retenu : adresse de résidence, adresse de livraison
-   du matériel et coordonnées de versement. C'est là que le FBI observe les signaux les plus
-   forts (matériel envoyé chez un transitaire, paiement en cryptomonnaie).
+1. **Candidature** : CV, coordonnées, parcours, prétentions salariales, disponibilité.
+2. **Onboarding**, une fois le candidat recruté : adresse de résidence, adresse de livraison
+   de l'ordinateur et compte bancaire pour la paie. C'est là que le FBI observe les signaux les plus
+   forts (ordinateur envoyé chez un transitaire, salaire versé sur le compte d'un tiers).
 
 Chaque dépôt est converti au format de `schema.py`, puis analysé AVEC le jeu de dossiers
 existant : un candidat qui recycle le téléphone, le compte de paiement ou le CV d'un dossier
@@ -116,7 +116,7 @@ def to_candidate(form: dict, app_id: str) -> dict:
             "file_name": form.get("cv_file_name"),
         },
         "profiles": profiles,
-        "application": {"daily_rate": form.get("daily_rate"), "available_from": form.get("available_from"),
+        "application": {"salary_expectation": form.get("salary_expectation"), "available_from": form.get("available_from"),
                         "source": form.get("source"), "message": form.get("message", "")},
         "interview": {"camera_refused": False},
         # Renseignés à l'onboarding seulement
@@ -130,7 +130,7 @@ def to_candidate(form: dict, app_id: str) -> dict:
 
 
 def apply_onboarding(c: dict, form: dict) -> None:
-    """Ajoute au dossier les données d'onboarding : adresse, livraison du matériel, versement."""
+    """Ajoute au dossier les données d'onboarding : adresse, livraison de l'ordinateur, compte de paie."""
     today = date.today().isoformat()
     home = f"{form['address'].strip()}, {form['postcode'].strip()} {form['city'].strip()}, {c['declared_location']['country']}"
     shipping = form.get("shipping_address", "").strip()
@@ -140,9 +140,8 @@ def apply_onboarding(c: dict, form: dict) -> None:
     c["shipping_addresses"] = [{"from": c["applied_at"], "address": home}]
     if shipping and shipping.lower() != home.lower():
         c["shipping_addresses"].append({"from": today, "address": shipping})
-    c["payment"] = {"method": form["payout_method"], "account": form.get("payout_account", "").strip()}
-    c["onboarding"] = {"status": form.get("status"), "company_id": form.get("company_id"),
-                       "start_date": form.get("start_date")}
+    c["payment"] = {"method": "iban", "account": form["iban"].strip(), "holder": form.get("account_holder", "").strip()}
+    c["onboarding"] = {"start_date": form.get("start_date")}
 
 
 def _reanalyse() -> None:
@@ -177,6 +176,17 @@ def onboard(app_id: str, form: dict) -> bool:
         return True
 
 
+def decide(app_id: str, decision: str, analyst: str) -> int | None:
+    """Enregistre la décision humaine sur une candidature ; renvoie le score au moment de la décision."""
+    with LOCK:
+        c, r = APPLICATIONS.get(app_id), RESULTS.get(app_id)
+        if not c or not r:
+            return None
+        c["decision"] = {"decision": decision, "analyst": analyst, "at": date.today().isoformat()}
+        _save_store()
+        return r["score"]
+
+
 def listing() -> list[dict]:
     with LOCK:
         out = []
@@ -184,7 +194,8 @@ def listing() -> list[dict]:
             if r := RESULTS.get(app_id):
                 out.append({"id": app_id, "name": c["full_name"], "city": c["declared_location"]["city"],
                             "country": c["declared_location"]["country"], "email": c["email"],
-                            "applied_at": c["applied_at"], "stage": c.get("stage", "candidature"), "result": r})
+                            "applied_at": c["applied_at"], "stage": c.get("stage", "candidature"),
+                            "decision": c.get("decision"), "result": r})
         return sorted(out, key=lambda a: -a["result"]["score"])
 
 
@@ -230,9 +241,9 @@ def demo_example(kind: str) -> dict:
             ],
             "education": [{"school": "INSA Lyon", "degree": "Diplôme d'ingénieur", "year": 2018}],
             "profile_created": (today - timedelta(days=365 * 6)).isoformat(), "profile_connections": 412,
-            "daily_rate": 650, "available_from": (today + timedelta(days=30)).isoformat(), "source": "linkedin",
-            "message": "Le projet de refonte de la facturation me parle beaucoup : j'ai mené un chantier similaire "
-                       "chez Kairo Tech. Disponible pour un premier échange dès cette semaine.",
+            "salary_expectation": 72, "available_from": (today + timedelta(days=60)).isoformat(), "source": "linkedin",
+            "message": "Les paiements me passionnent : j'ai construit l'API de facturation de Kairo Tech et migré "
+                       "le tunnel de paiement de Brightloop. Disponible pour échanger dès cette semaine.",
         }
     src = _network_source()
     return {
@@ -245,24 +256,22 @@ def demo_example(kind: str) -> dict:
                          "description": e["description"]} for e in src["cv"]["experiences"][:3]],
         "education": src["cv"]["education"],
         "profile_created": (today - timedelta(days=41)).isoformat(), "profile_connections": 17,
-        "daily_rate": 420, "available_from": today.isoformat(), "source": "other",
+        "salary_expectation": 55, "available_from": today.isoformat(), "source": "other",
         "message": "Available immediately, full-time, any time zone. Happy to start this week.",
     }
 
 
 def demo_onboarding(kind: str) -> dict:
-    today = date.today()
-    start = (today + timedelta(days=21)).isoformat()
+    start = (date.today() + timedelta(days=30)).isoformat()
     if kind == "honest":
-        return {"status": "freelance", "company_id": "912 345 678 00021", "address": "14 rue Sala",
-                "postcode": "69002", "city": "Lyon", "shipping_address": "", "payout_method": "sepa",
-                "payout_account": "FR76 3000 4012 3400 0123 4567 890", "start_date": start}
+        return {"address": "14 rue Sala", "postcode": "69002", "city": "Lyon", "shipping_address": "",
+                "iban": "FR76 3000 4012 3400 0123 4567 890", "account_holder": "Camille Laurent", "start_date": start}
+    # Le fraudeur fait livrer l'ordinateur chez le transitaire de son réseau, et verser
+    # le salaire sur le compte d'un intermédiaire.
     src = _network_source()
-    return {"status": "freelance", "company_id": "", "address": "Keizersgracht 210", "postcode": "1016 DX",
-            "city": "Amsterdam", "shipping_address": src["shipping_addresses"][0]["address"],
-            "payout_method": "crypto" if src["payment"]["method"] == "crypto" else "sepa",
-            "payout_account": src["payment"]["account"],
-            "start_date": start}
+    return {"address": "Keizersgracht 210", "postcode": "1016 DX", "city": "Amsterdam",
+            "shipping_address": src["shipping_addresses"][0]["address"],
+            "iban": "NL91 ABNA 0417 1643 00", "account_holder": "P. de Vries Services", "start_date": start}
 
 
 _load_store()

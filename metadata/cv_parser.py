@@ -16,6 +16,8 @@ import os
 import re
 from datetime import date
 
+from .checks import claimed_years
+
 COUNTRIES = {
     "france": "FR", "allemagne": "DE", "germany": "DE", "deutschland": "DE", "belgique": "BE", "belgium": "BE",
     "suisse": "CH", "switzerland": "CH", "pays-bas": "NL", "netherlands": "NL", "espagne": "ES", "spain": "ES",
@@ -29,9 +31,19 @@ SECTIONS = {
     "education": {"formation", "formations", "education", "études"},
     "skills": {"compétences", "skills", "compétences techniques", "technical skills"},
 }
-MONTHS = r"(\d{1,2})[/.-](\d{4})"
-RANGE = re.compile(MONTHS + r"\s*[–—-]\s*(?:" + MONTHS + r"|(aujourd'hui|aujourd’hui|présent|present|now|en cours))",
-                   re.IGNORECASE)
+MONTH_NAMES = {
+    "jan": 1, "janv": 1, "janvier": 1, "january": 1, "fev": 2, "fév": 2, "févr": 2, "février": 2, "feb": 2,
+    "february": 2, "mar": 3, "mars": 3, "march": 3, "avr": 4, "avril": 4, "apr": 4, "april": 4, "mai": 5,
+    "may": 5, "juin": 6, "jun": 6, "june": 6, "juil": 7, "juillet": 7, "jul": 7, "july": 7, "aout": 8,
+    "août": 8, "aug": 8, "august": 8, "sep": 9, "sept": 9, "septembre": 9, "september": 9, "oct": 10,
+    "octobre": 10, "october": 10, "nov": 11, "novembre": 11, "november": 11, "dec": 12, "déc": 12,
+    "décembre": 12, "december": 12,
+}
+_NAME = "|".join(sorted(MONTH_NAMES, key=len, reverse=True))
+# Une date : « 03/2021 », « mars 2021 », « Sept. 2021 » ou « 2021 »
+DATE = rf"(?:(\d{{1,2}})[/.-]|({_NAME})\.?\s+)?((?:19|20)\d{{2}})"
+NOW = r"aujourd'hui|aujourd’hui|présent|present|now|en cours|current|actuel"
+RANGE = re.compile(rf"{DATE}\s*(?:[–—-]|à|to|au)\s*(?:{DATE}|({NOW}))", re.IGNORECASE)
 EMAIL = re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+")
 PHONE = re.compile(r"\+?\d[\d .()-]{7,}\d")
 LINKEDIN = re.compile(r"(?:https?://)?(?:www\.)?linkedin\.[a-z.]+/in/[\w-]+", re.IGNORECASE)
@@ -44,6 +56,17 @@ def _url(m: re.Match | None) -> str:
         return ""
     u = m.group(0)
     return u if u.startswith("http") else "https://" + u
+
+
+def _ym(num: str | None, name: str | None, year: str, first: bool) -> str:
+    """« AAAA-MM ». Sans mois : janvier pour un début, décembre pour une fin."""
+    if num:
+        month = int(num)
+    elif name:
+        month = MONTH_NAMES.get(name.lower().rstrip("."), 1)
+    else:
+        month = 1 if first else 12
+    return f"{int(year):04d}-{min(max(month, 1), 12):02d}"
 
 
 def _section_of(line: str) -> str | None:
@@ -95,19 +118,23 @@ def parse_rules(text: str) -> dict:
     exp = buckets["experience"]
     for i, line in enumerate(exp):
         m = RANGE.search(line)
-        if not m or i == 0:
+        if not m:
             continue
-        head = exp[i - 1]
+        # Titre et entreprise : sur la même ligne que les dates, sinon sur la ligne d'avant
+        head = (line[:m.start()] + line[m.end():]).strip(" |·•,–—-()")
+        if len(head) < 3 and i > 0 and not RANGE.search(exp[i - 1]):
+            head = exp[i - 1]
         parts = SPLIT_TITLE.split(head, maxsplit=1)
         title, company = (parts + [""])[:2]
         desc = []
         for j in range(i + 1, len(exp)):
             # s'arrête au prochain poste : une ligne de dates, ou la ligne titre juste avant
-            if RANGE.search(exp[j]) or (j + 1 < len(exp) and RANGE.search(exp[j + 1])):
+            if RANGE.search(exp[j]) or (j + 1 < len(exp) and RANGE.search(exp[j + 1])
+                                        and len(RANGE.sub("", exp[j + 1]).strip(" |·•,–—-()")) < 3):
                 break
             desc.append(exp[j])
-        start = f"{int(m.group(2)):04d}-{int(m.group(1)):02d}"
-        end = f"{int(m.group(4)):04d}-{int(m.group(3)):02d}" if m.group(3) else ""
+        start = _ym(m.group(1), m.group(2), m.group(3), first=True)
+        end = "" if m.group(7) else _ym(m.group(4), m.group(5), m.group(6), first=False)
         out["experiences"].append({"title": title.strip(), "company": company.strip(), "start": start,
                                    "end": end, "description": " ".join(desc)})
 
@@ -122,11 +149,13 @@ def parse_rules(text: str) -> dict:
     skills = re.split(r"[,·•|]", " , ".join(buckets["skills"]))
     out["skills"] = ", ".join(s.strip() for s in skills if s.strip())
 
-    if m := re.search(r"(\d{1,2})\+?\s*(?:ans|years)", out["summary"]):
-        out["years_experience"] = int(m.group(1))
-    elif out["experiences"]:
-        first = min(e["start"] for e in out["experiences"])
-        out["years_experience"] = max(0, date.today().year - int(first[:4]))
+    if years := claimed_years(out["summary"]):
+        out["years_experience"] = years[0]
+    elif out["experiences"]:  # sinon : durée cumulée des postes listés
+        today = f"{date.today():%Y-%m}"
+        months = sum(max(0, (int((e["end"] or today)[:4]) - int(e["start"][:4])) * 12
+                         + int((e["end"] or today)[5:7]) - int(e["start"][5:7])) for e in out["experiences"])
+        out["years_experience"] = round(months / 12)
     return {k: v for k, v in out.items() if v not in ("", None, [])}
 
 

@@ -168,13 +168,6 @@
   .euro span { position:absolute; right:13px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:14px; }
   .demo-menu hr { border:0; border-top:1px solid var(--line); margin:6px 4px; }
   .demo-menu a { display:block; padding:6px 12px; font-size:12px; }
-  .pay { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
-  @media (max-width:640px) { .pay { grid-template-columns:1fr; } }
-  .pay label { border:1.5px solid var(--line); border-radius:12px; padding:14px; cursor:pointer; display:flex; gap:10px; align-items:flex-start; transition:border .15s, background .15s; }
-  .pay label:hover { border-color:var(--brand-2); }
-  .pay input { margin-top:4px; accent-color:var(--brand); }
-  .pay label.sel { border-color:var(--brand); background:var(--brand-soft); }
-  .pay b { display:block; font-size:14px; } .pay span { font-size:12px; color:var(--muted); }
   .hero.small { padding:44px 0 84px; }
   .todo { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:22px; max-width:760px; }
   @media (max-width:760px) { .todo { grid-template-columns:1fr 1fr; } }
@@ -196,7 +189,7 @@
 <nav>
   <div class="wrap">
     <a class="logo" href="/apply"><span class="logo-mark">✦</span>Fjordlane</a>
-    <div class="navlinks"><span>Mon espace</span><span>Missions</span><span>Factures</span><span>Aide</span></div>
+    <div class="navlinks"><span>Mon espace</span><span>Documents</span><span>Équipe</span><span>Aide</span></div>
     <span class="badge-demo">Démo · entreprise fictive</span>
   </div>
 </nav>
@@ -205,10 +198,10 @@
   <div class="wrap">
     <div class="crumbs">Mon espace › Onboarding</div>
     <h1 id="hello">Bienvenue chez Fjordlane 🎉</h1>
-    <p class="lead">Votre candidature a été retenue pour la mission <b>Développeur·se Full-Stack Senior</b>. Il ne reste que quelques informations pour préparer votre contrat, vos factures et l'envoi de votre ordinateur.</p>
+    <p class="lead">Vous rejoignez l'équipe Paiements comme <b>Ingénieur·e Backend Senior</b>. Il ne reste que quelques informations pour préparer votre contrat, votre paie et l'envoi de votre ordinateur.</p>
     <div class="todo">
-      <div><b>✓ Candidature</b>Retenue</div>
-      <div><b>✓ Entretien</b>Validé par l'équipe</div>
+      <div><b>✓ Entretiens</b>Validés</div>
+      <div><b>✓ Offre</b>Signée</div>
       <div><b>● Onboarding</b>5 minutes</div>
       <div><b>○ Démarrage</b><span id="startLbl">À planifier</span></div>
     </div>
@@ -220,30 +213,19 @@
     <div id="formWrap">
       <form id="form" novalidate>
         <div class="block">
-          <h3>Votre statut</h3>
-          <p class="sub">Pour établir le contrat de prestation.</p>
-          <div class="pay" id="status">
-            <label class="sel"><input type="radio" name="status" value="freelance" checked><div><b>Indépendant</b><span>Micro-entreprise, EI, freelance</span></div></label>
-            <label><input type="radio" name="status" value="company"><div><b>Société</b><span>SASU, EURL, BV, GmbH…</span></div></label>
-            <label><input type="radio" name="status" value="umbrella"><div><b>Portage salarial</b><span>Via une société de portage</span></div></label>
-          </div>
-          <div style="margin-top:14px"><label class="f">Numéro d'immatriculation <span style="color:var(--muted);font-weight:400">(SIRET, KvK, numéro TVA…)</span></label><input type="text" name="company_id" placeholder="912 345 678 00021"></div>
-        </div>
-
-        <div class="block">
           <h3>Adresse de résidence</h3>
-          <p class="sub">Elle figure sur le contrat et vos factures.</p>
+          <p class="sub">Elle figure sur votre contrat de travail et vos fiches de paie.</p>
           <div class="grid">
             <div class="full"><label class="f">Adresse <em>*</em></label><input type="text" name="address" autocomplete="street-address" required placeholder="Numéro et rue"></div>
             <div><label class="f">Code postal <em>*</em></label><input type="text" name="postcode" autocomplete="postal-code" required></div>
             <div><label class="f">Ville <em>*</em></label><input type="text" name="city" required></div>
-            <div class="full"><label class="f">Pays</label><input type="text" id="countryRo" class="ro" readonly><div class="hint">Celui déclaré dans votre candidature. Pour le modifier, contactez votre chargé de compte.</div></div>
+            <div class="full"><label class="f">Pays</label><input type="text" id="countryRo" class="ro" readonly><div class="hint">Celui déclaré dans votre candidature. Pour le modifier, contactez votre contact RH.</div></div>
           </div>
         </div>
 
         <div class="block">
-          <h3>Votre matériel</h3>
-          <p class="sub">Le client fournit un poste préconfiguré et sécurisé, expédié sous 48 h.</p>
+          <h3>Votre ordinateur</h3>
+          <p class="sub">Nous vous envoyons un poste préconfiguré et sécurisé, sous 48 h.</p>
           <div class="device"><span class="ico">💻</span><div><b>MacBook Pro 14" · M3 Pro, 18 Go</b><small>Chiffrement et gestion à distance activés · livraison contre signature</small></div></div>
           <label class="check"><input type="checkbox" id="sameAddr" checked> Livrer à mon adresse de résidence</label>
           <div id="shipWrap" style="display:none;margin-top:12px">
@@ -253,14 +235,12 @@
         </div>
 
         <div class="block">
-          <h3>Versement de vos factures</h3>
-          <p class="sub">Fjordlane vous paie le 5 de chaque mois pour les jours du mois précédent.</p>
-          <div class="pay" id="pay">
-            <label class="sel"><input type="radio" name="payout_method" value="sepa" checked><div><b>Virement SEPA</b><span>Sur votre compte bancaire</span></div></label>
-            <label><input type="radio" name="payout_method" value="wise"><div><b>Wise</b><span>Compte multidevise</span></div></label>
-            <label><input type="radio" name="payout_method" value="crypto"><div><b>Stablecoin (USDC)</b><span>Via notre partenaire de paiement</span></div></label>
+          <h3>Votre paie</h3>
+          <p class="sub">Votre salaire est versé le dernier jour ouvré du mois, par virement SEPA.</p>
+          <div class="grid">
+            <div class="full"><label class="f">IBAN <em>*</em></label><input type="text" name="iban" required placeholder="FR76 …" autocomplete="off"></div>
+            <div class="full"><label class="f">Titulaire du compte <em>*</em></label><input type="text" name="account_holder" required placeholder="Prénom Nom"><div class="hint">Le compte doit être à votre nom.</div></div>
           </div>
-          <div style="margin-top:14px"><label class="f" id="accLabel">IBAN <em>*</em></label><input type="text" name="payout_account" required placeholder="FR76 …"></div>
         </div>
 
         <div class="block">
@@ -281,8 +261,8 @@
     <div class="success" id="success" style="display:none">
       <div class="tick">✓</div>
       <h2>Tout est prêt, <span id="okName"></span> !</h2>
-      <p>Votre contrat arrive par email. Votre ordinateur sera expédié dès la validation de votre dossier par notre équipe.</p>
-      <a class="btn btn-ghost" href="/apply">Retour aux missions</a>
+      <p>Votre contrat arrive par email. Votre ordinateur sera expédié dès la validation de votre dossier par notre équipe RH.</p>
+      <a class="btn btn-ghost" href="/apply">Retour au site</a>
     </div>
   </div>
 </main>
@@ -291,8 +271,8 @@
 
 <div class="demo-fab">
   <div class="demo-menu" id="demoMenu">
-    <button data-kind="honest">✅ Remplir : candidate honnête<small>Adresse à Lyon, virement SEPA</small></button>
-    <button data-kind="fraud">🚩 Remplir : fraudeur<small>Livraison chez un transitaire, paiement en crypto</small></button>
+    <button data-kind="honest">✅ Remplir : candidate honnête<small>Adresse à Lyon, compte à son nom</small></button>
+    <button data-kind="fraud">🚩 Remplir : fraudeur<small>Livraison chez un transitaire, salaire versé à un tiers</small></button>
   </div>
   <button id="demoBtn">Démo ▾</button>
 </div>
@@ -315,16 +295,6 @@ async function load() {
 }
 load();
 
-/* Choix exclusifs (statut, versement) */
-function radios(group, onPick) {
-  $$(`#${group} input`).forEach((r) => r.onchange = () => {
-    $$(`#${group} label`).forEach((l) => l.classList.toggle("sel", $("input", l).checked));
-    onPick?.(r.value);
-  });
-}
-const ACC = { sepa: ["IBAN", "FR76 …"], wise: ["Email du compte Wise", "vous@exemple.com"], crypto: ["Adresse du portefeuille USDC (réseau Ethereum)", "0x…"] };
-radios("status");
-radios("pay", (v) => { $("#accLabel").innerHTML = ACC[v][0] + " <em>*</em>"; $("[name=payout_account]").placeholder = ACC[v][1]; });
 $("#sameAddr").onchange = () => { $("#shipWrap").style.display = $("#sameAddr").checked ? "none" : "block"; };
 $("[name=start_date]").onchange = (e) => { $("#startLbl").textContent = e.target.value ? new Date(e.target.value).toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) : "À planifier"; };
 
@@ -356,11 +326,7 @@ $("#send").onclick = async () => {
 $("#demoBtn").onclick = () => $("#demoMenu").classList.toggle("open");
 $$("#demoMenu button").forEach((b) => b.onclick = async () => {
   const ex = await (await fetch("/api/demo-onboarding?kind=" + b.dataset.kind)).json();
-  for (const k of ["company_id", "address", "postcode", "city", "payout_account", "start_date", "shipping_address"]) $(`[name=${k}]`).value = ex[k] || "";
-  for (const [g, k] of [["status", "status"], ["pay", "payout_method"]]) {
-    const r = $(`#${g} input[value=${ex[k]}]`); r.checked = true; r.onchange();
-  }
-  $("[name=payout_account]").value = ex.payout_account;
+  for (const k of ["address", "postcode", "city", "iban", "account_holder", "start_date", "shipping_address"]) $(`[name=${k}]`).value = ex[k] || "";
   $("#sameAddr").checked = !ex.shipping_address; $("#sameAddr").onchange();
   $("[name=start_date]").onchange({ target: $("[name=start_date]") });
   $("#certify").checked = true;

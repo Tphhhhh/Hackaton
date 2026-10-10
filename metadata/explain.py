@@ -19,6 +19,7 @@ QUESTIONS = {
     "C7_LOGIN_COUNTRIES": "Avez-vous voyagé ou utilisé un VPN depuis votre prise de poste ?",
     "C8_NIGHT_HOURS": "Quelles sont vos heures de travail habituelles et depuis quel fuseau horaire ?",
     "C9_CRYPTO": "Pouvez-vous fournir un RIB à votre nom dans une banque de votre pays de résidence ?",
+    "C11_PAYEE": "Pouvez-vous fournir un RIB à votre nom ? Qui est le titulaire du compte indiqué ?",
     "C10_DISPOSABLE_EMAIL": "Pouvez-vous confirmer une adresse email personnelle durable ?",
     "S1_PERSONA_NETWORK": "Connaissez-vous les autres candidats qui partagent vos coordonnées ou votre CV ?",
     "I1_VIRTUAL_DEVICE": "Pouvez-vous refaire l'appel avec la webcam intégrée de votre ordinateur, sans logiciel ?",

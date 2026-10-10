@@ -44,7 +44,7 @@ def analyse(candidates: list[dict], video_scores: dict | None = None) -> dict:
     for c in candidates:
         t = time.perf_counter()
         reasons = [r for l in links if c["id"] in (l["a"], l["b"]) for r in l["reasons"]]
-        res = score(run_checks(c) + video_signals(video_scores.get(c["id"])), net_of.get(c["id"]), reasons)
+        res = score(run_checks(c) + video_signals(video_scores.get(c["id"])), net_of.get(c["id"]), reasons, c["id"])
         res["explanation"] = explain(res)
         res["id"] = c["id"]
         res["detect_ms"] = round((time.perf_counter() - t) * 1000 + t_links * 1000 / len(candidates), 2)
