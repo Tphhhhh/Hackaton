@@ -4,7 +4,7 @@ export function createSignalPanel({ onMicrophone }) {
   const panel = document.createElement('div');
   panel.id = 'video-signal-layers';
   panel.innerHTML = `<div class="signal-layers-heading"><h4>Indicateurs complémentaires</h4><span>Expérimental</span></div>
-    <p class="signals-help">Observations sur les 10 dernières secondes, indépendantes du score global.</p>
+    <p class="signals-help">Flux <span class="signal-source-original">original</span><span class="signal-source-filtered">transformé</span> · 10 dernières secondes. Ces observations ne modifient pas le score.</p>
     <div id="signal-layer-rows"></div>
     <button id="layers-microphone" class="text-button" type="button" disabled>Activer la cohérence voix / bouche</button>
     <p class="signals-help">Micro local facultatif, sans enregistrement. Comparaison d’activité, sans lecture labiale.</p>`;

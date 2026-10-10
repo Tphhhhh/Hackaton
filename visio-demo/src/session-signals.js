@@ -9,9 +9,11 @@ export function createSessionSignals({ onMetadata = () => {}, onAudio = () => {}
   const panel=document.createElement('aside'); panel.id='session-panel'; panel.setAttribute('aria-label','Signaux techniques de cet appareil');
   panel.innerHTML=`
     <div class="signals-heading"><div><p class="signals-kicker">CONSOLE</p><h2>Analyse de session</h2></div><span id="signals-dot" class="signals-dot"></span></div>
-    <div class="console-source" aria-label="Flux analysé"><button id="console-source-original" aria-pressed="true">Original</button><button id="console-source-filtered" aria-pressed="false">Transformé</button></div>
+    <p class="console-source-label" id="console-source-label">Flux analysé</p>
+    <div class="console-source" role="group" aria-labelledby="console-source-label"><button id="console-source-original" aria-pressed="true">Original</button><button id="console-source-filtered" aria-pressed="false">Transformé</button></div>
     <div class="console-overall"><span>Score global · confiance</span><div><strong id="console-overall-score">—</strong><span> / 100</span></div><p id="console-overall-state">En attente des analyses</p></div>
-    <p class="console-legend">0 : inquiétant · 100 : rassurant</p>
+    <p class="console-legend"><span>0 · Inquiétant</span><span>100 · Rassurant</span></p>
+    <p class="console-scale-help">Plus le score est élevé, plus les indices sont rassurants. Ce n’est pas une preuve d’authenticité.</p>
     <section class="console-group" aria-labelledby="console-video-title">
       <div class="console-group-heading"><h3 id="console-video-title">Analyse vidéo</h3><span id="console-video-bars-value">— / 5</span></div>
       <div id="console-video-bars" class="console-bars" role="meter" aria-valuemin="0" aria-valuemax="5" aria-label="Analyse vidéo indisponible"><i></i><i></i><i></i><i></i><i></i></div>

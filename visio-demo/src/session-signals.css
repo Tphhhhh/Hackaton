@@ -155,3 +155,19 @@
  .compare-mode .comparison-workspace { grid-template-columns: minmax(0, 1fr); }
  #signal-layer-rows { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Make source selection and score direction explicit, without changing values. */
+.console-source-label { margin: 24px 0 8px; color: var(--ink); font-size: 13px; font-weight: 500; }
+.console-source { margin: 0 0 24px; background: #e8edf1; border-radius: 10px; gap: 4px; }
+.console-source button { min-height: 44px; font-size: 14px; color: #45515e; }
+.console-source button[aria-pressed=true] { background: #1d354a; color: #fff; box-shadow: none; }
+.console-source button:hover:not([aria-pressed=true]) { background: #dce4ec; color: #172b3e; }
+.console-legend { display: flex; justify-content: space-between; gap: 12px; color: #465565; font-size: 13px; padding-top: 12px; margin: 0; border-top: 3px solid #d6dfe5; }
+.console-scale-help { font-size: 13px; line-height: 1.55; color: #465565; margin: 10px 0 20px; }
+.signal-source-original, .signal-source-filtered { font-weight: 500; }
+#video-signal-layers[data-source=original] .signal-source-filtered,
+#video-signal-layers[data-source=filtered] .signal-source-original { display: none; }
+.compare-mode:has(#console-source-original[aria-pressed=true]) .comparison-workspace>.conference:first-child .room-heading,
+.compare-mode:has(#console-source-filtered[aria-pressed=true]) #filtered-panel .room-heading { color: #174c7e; }
+.compare-mode:has(#console-source-original[aria-pressed=true]) .comparison-workspace>.conference:first-child .media-card,
+.compare-mode:has(#console-source-filtered[aria-pressed=true]) #filtered-panel .media-card { border-color: #678aa8; box-shadow: 0 0 0 2px #e0eaf3; }
