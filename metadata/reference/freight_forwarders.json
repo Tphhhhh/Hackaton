@@ -1,0 +1,10 @@
+{
+  "_note": "Adresses de transitaires/réexpéditeurs FICTIVES pour le POC. En production : liste tenue à jour par l'équipe conformité.",
+  "addresses": [
+    "12 Logistics Park Rd, Unit 4, Newark, NJ 07114, US",
+    "88 Cargo Way, Suite 210, Miami, FL 33166, US",
+    "3 Forwarding Lane, Dock B, Felixstowe IP11 3XX, UK",
+    "Zone Fret 2, Bât. 7, 95700 Roissy-en-France, FR",
+    "Hafenstrasse 45, Lager 9, 20457 Hamburg, DE"
+  ]
+}
