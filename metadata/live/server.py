@@ -161,11 +161,12 @@ class Handler(BaseHTTPRequestHandler):
             self._send(200, (HERE / "apply.html").read_bytes(), "text/html; charset=utf-8")
         elif path == "/onboarding":
             self._send(200, (HERE / "onboarding.html").read_bytes(), "text/html; charset=utf-8")
-        elif path.startswith(("/vendor/", "/demo-cvs/")):
+        elif path.startswith(("/vendor/", "/demo-cvs/", "/assets/")):
             # Fichiers statiques : uniquement le nom de fichier, jamais de chemin relatif.
             folder, name = path.strip("/").split("/", 1)
             f = HERE / folder.replace("-", "_") / Path(name).name
-            ctype = "application/pdf" if f.suffix == ".pdf" else "text/javascript; charset=utf-8"
+            ctype = {".pdf": "application/pdf", ".css": "text/css; charset=utf-8",
+                     ".svg": "image/svg+xml"}.get(f.suffix, "text/javascript; charset=utf-8")
             if f.is_file():
                 self._send(200, f.read_bytes(), ctype)
             else:

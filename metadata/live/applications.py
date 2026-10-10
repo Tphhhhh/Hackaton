@@ -262,7 +262,8 @@ def demo_example(kind: str) -> dict:
 
 
 def demo_onboarding(kind: str) -> dict:
-    start = (date.today() + timedelta(days=30)).isoformat()
+    d = date.today() + timedelta(days=30)
+    start = (d + timedelta(days=(7 - d.weekday()) % 7)).isoformat()  # un lundi
     if kind == "honest":
         return {"address": "14 rue Sala", "postcode": "69002", "city": "Lyon", "shipping_address": "",
                 "iban": "FR76 3000 4012 3400 0123 4567 890", "account_holder": "Camille Laurent", "start_date": start}
