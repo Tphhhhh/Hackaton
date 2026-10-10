@@ -110,7 +110,10 @@ $("join").onclick = async () => {
   await startCamera();
   await listCameras();
   snapshot();
-  setInterval(snapshot, 5000);
+  // Minuteur dans un Worker : Chrome ralentit fortement les minuteurs d'un onglet en arrière-plan,
+  // or pendant la démo le jury regarde l'onglet recruteur.
+  const ticker = new Worker(URL.createObjectURL(new Blob(["setInterval(() => postMessage(0), 5000)"])));
+  ticker.onmessage = () => snapshot();
 };
 $("camera").onchange = () => startCamera($("camera").value);
 $("simVpn").onclick = () => { sim.vpn = true; snapshot(); };

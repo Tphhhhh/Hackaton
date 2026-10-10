@@ -124,11 +124,13 @@ def public_view() -> list[dict]:
     with LOCK:
         out = []
         for s in SESSIONS.values():
+            if time.time() - s["last_seen"] > 60:  # onglet fermé ou rechargé : on n'encombre pas le panneau
+                continue
             snap = s["snapshots"][-1]
             out.append({"id": s["id"], "declared": s["declared"], "started": s["started"],
-                        "online": time.time() - s["last_seen"] < 12, "snapshot": snap,
+                        "online": time.time() - s["last_seen"] < 15, "snapshot": snap,
                         "events": s["events"][-20:], "result": s["result"], "decision": s.get("decision")})
-        return sorted(out, key=lambda s: -s["result"]["score"])
+        return sorted(out, key=lambda s: (not s["online"], -s["result"]["score"]))
 
 
 class Handler(BaseHTTPRequestHandler):
