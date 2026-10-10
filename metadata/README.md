@@ -87,6 +87,12 @@ reste un signal faible (5). Le générateur écrit des scores **simulés** en at
 python -m metadata.live.server
 ```
 
+- `http://localhost:8000/apply` : offre d'emploi fictive (« Fjordlane »). Le formulaire en trois
+  étapes collecte tout ce que l'analyse utilise (identité, parcours, profils, adresse de livraison
+  du matériel, mode de paiement) plus les métadonnées techniques annoncées au candidat. Chaque
+  dépôt est analysé avec les dossiers existants : une candidature qui recycle le paiement ou le
+  téléphone d'un réseau y est reliée tout de suite. Le bouton « Démo » en bas à gauche remplit
+  le formulaire avec une candidate honnête ou un fraudeur.
 - `http://localhost:8000/` : page candidat. Écran de consentement (ce qui est mesuré, ce qui ne
   l'est jamais), puis une mesure toutes les 5 secondes.
 - `http://localhost:8000/recruiter` : panneau recruteur. Score, signaux, changements en cours

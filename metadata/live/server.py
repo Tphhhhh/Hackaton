@@ -2,6 +2,7 @@
 
     python -m metadata.live.server            # puis ouvrir http://localhost:8000
 
+- http://localhost:8000/apply       offre d'emploi fictive : le formulaire collecte les données analysées
 - http://localhost:8000/            page candidat : consentement, puis une mesure toutes les 5 s
 - http://localhost:8000/recruiter   panneau recruteur : score, alertes, chronologie, décision
 
@@ -21,6 +22,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 from .. import audit
+from . import applications
 from ..checks import (Signal, check_browser_timezone, check_interview_ip, check_latency,
                       check_video_settings, check_virtual_camera, check_vm_gpu, combination_bonus)
 from ..explain import explain
@@ -127,7 +129,8 @@ def public_view() -> list[dict]:
             if time.time() - s["last_seen"] > 60:  # onglet fermé ou rechargé : on n'encombre pas le panneau
                 continue
             snap = s["snapshots"][-1]
-            out.append({"id": s["id"], "declared": s["declared"], "started": s["started"],
+            info = applications.public_info(s["id"])
+            out.append({"id": s["id"], "name": info["name"] if info else None, "declared": s["declared"], "started": s["started"],
                         "online": time.time() - s["last_seen"] < 15, "snapshot": snap,
                         "events": s["events"][-20:], "result": s["result"], "decision": s.get("decision")})
         return sorted(out, key=lambda s: (not s["online"], -s["result"]["score"]))
@@ -152,7 +155,17 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         path = self.path.split("?")[0]
-        if path in ("/", "/candidate"):
+        if path in ("/apply", "/offre"):
+            self._send(200, (HERE / "apply.html").read_bytes(), "text/html; charset=utf-8")
+        elif path == "/api/applications":
+            self._json(applications.listing())
+        elif path.startswith("/api/applications/"):
+            info = applications.public_info(path.rsplit("/", 1)[-1])
+            self._json(info or {"error": "inconnue"}, 200 if info else 404)
+        elif path == "/api/demo-example":
+            kind = "fraud" if "fraud" in self.path else "honest"
+            self._json(applications.demo_example(kind))
+        elif path in ("/", "/candidate"):
             self._send(200, (HERE / "candidate.html").read_bytes(), "text/html; charset=utf-8")
         elif path == "/recruiter":
             self._send(200, (HERE / "recruiter.html").read_bytes(), "text/html; charset=utf-8")
@@ -169,6 +182,13 @@ class Handler(BaseHTTPRequestHandler):
             payload = json.loads(self.rfile.read(length) or b"{}")
         except json.JSONDecodeError:
             return self._json({"error": "JSON invalide"}, 400)
+        if self.path == "/api/apply":
+            payload.setdefault("meta", {}).setdefault("ip", {})["seen_by_server"] = self._client_ip()
+            try:
+                app_id = applications.submit(payload)
+            except (KeyError, ValueError) as exc:
+                return self._json({"error": f"champ manquant ou invalide : {exc}"}, 400)
+            return self._json({"id": app_id})
         if self.path == "/api/snapshot":
             return self._json(ingest(payload, self._client_ip()))
         if self.path == "/api/decision":
@@ -190,7 +210,9 @@ def main():
     p.add_argument("--host", default="127.0.0.1")
     p.add_argument("--port", type=int, default=8000)
     args = p.parse_args()
-    print(f"Page candidat : http://localhost:{args.port}/   Panneau recruteur : http://localhost:{args.port}/recruiter")
+    print(f"Offre d'emploi : http://localhost:{args.port}/apply\n"
+          f"Entretien (candidat) : http://localhost:{args.port}/\n"
+          f"Panneau recruteur : http://localhost:{args.port}/recruiter")
     ThreadingHTTPServer((args.host, args.port), Handler).serve_forever()
 
 

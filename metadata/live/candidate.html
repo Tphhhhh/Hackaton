@@ -97,7 +97,15 @@
 </main>
 <script>
 const $ = (id) => document.getElementById(id);
-const sessionId = Math.random().toString(36).slice(2, 8).toUpperCase();
+const appId = new URLSearchParams(location.search).get("app");
+const sessionId = appId || Math.random().toString(36).slice(2, 8).toUpperCase();
+if (appId) {  // arrivée depuis la page de candidature : on reprend le lieu déclaré
+  fetch("/api/applications/" + appId).then((r) => r.json()).then((a) => {
+    if (a.error) return;
+    $("city").value = a.city; $("country").value = a.country;
+    document.querySelector("#consent h1").textContent = `Bonjour ${a.first_name}, avant votre entretien vidéo`;
+  });
+}
 const sim = { vpn: false, cam: false, vm: false };
 let stream = null, declared = null, lastIp = null, geo = {};
 const HOSTING = /amazon|aws|google|microsoft|azure|digitalocean|ovh|hetzner|linode|akamai|vultr|choopa|m247|datacamp|leaseweb|contabo|scaleway|oracle|alibaba|tencent|hosting|server|cloud|vpn/i;

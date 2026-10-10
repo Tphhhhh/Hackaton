@@ -34,6 +34,13 @@
   .empty { color:var(--muted); text-align:center; padding:48px; }
   .flash { animation:flash 1.2s; } @keyframes flash { from { background:#fff3c4; } to { background:var(--card); } }
   .note { font-size:12px; color:var(--muted); margin-top:8px; }
+  h2.section { font-size:15px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin:24px 0 12px; }
+  .app { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 20px; margin-bottom:10px;
+         display:grid; grid-template-columns:90px 220px 1fr; gap:20px; align-items:start; }
+  @media (max-width: 900px) { .app { grid-template-columns:1fr; } }
+  .app .score { font-size:40px; }
+  .app .who b { font-size:16px; } .app .who div { color:var(--muted); font-size:13px; }
+  .linked { margin-top:8px; padding:8px 10px; border-radius:8px; background:#fff1f0; color:var(--high); font-size:13px; }
 </style>
 </head>
 <body>
@@ -41,13 +48,37 @@
   <h1>🛡️ Know Your Freelancer · entretiens en direct</h1>
   <p>Mesures toutes les 5 secondes. Aide à la décision : l'outil n'élimine jamais personne automatiquement.</p>
 </header>
-<main id="root"><p class="empty">En attente d'un candidat… Ouvrez la page candidat dans un autre onglet.</p></main>
+<main>
+  <h2 class="section">Candidatures reçues</h2>
+  <div id="apps"><p class="empty">Aucune candidature pour l'instant. Ouvrez <a href="/apply" target="_blank">l'offre d'emploi</a>.</p></div>
+  <h2 class="section">Entretiens en direct</h2>
+  <div id="root"><p class="empty">En attente d'un candidat en entretien…</p></div>
+</main>
 <script>
 const DECISIONS = { clear: "Valider", verify: "Demander une vérification", escalate: "Escalader", reject: "Refuser" };
 const lastScore = {};
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
+function appCard(a) {
+  const r = a.result;
+  const sig = r.signals.length ? r.signals.sort((x, y) => y.weight - x.weight).map((x) =>
+      `<div class="signal"><b>+${x.weight}</b> ${esc(x.code)}<br>${esc(x.evidence)}</div>`).join("")
+    : `<p class="lvl-faible" style="margin:0">Aucune incohérence détectée.</p>`;
+  const linked = r.linked?.length ? `<div class="linked">🕸️ Relié à ${r.linked.length} dossier(s) déjà reçu(s) : ${r.linked.map((l) => esc(l.name) + " (" + esc(l.id) + ")").join(", ")}</div>` : "";
+  return `<section class="app"><div><div class="score lvl-${r.level}">${r.score}</div><div class="lvl-${r.level}">risque ${r.level}</div></div>
+    <div class="who"><b>${esc(a.name)}</b><div>${esc(a.city)} (${esc(a.country)}) · ${esc(a.email)}</div><div>Réf. ${esc(a.id)} · ${esc(a.applied_at)}</div>${linked}</div>
+    <div>${sig}</div></section>`;
+}
+
+async function refreshApps() {
+  try {
+    const apps = await (await fetch("/api/applications", { cache: "no-store" })).json();
+    if (apps.length && document.activeElement?.tagName !== "INPUT") document.getElementById("apps").innerHTML = apps.map(appCard).join("");
+  } catch {}
+}
+
 async function refresh() {
+  refreshApps();
   let sessions;
   try { sessions = await (await fetch("/api/sessions", { cache: "no-store" })).json(); } catch { return; }
   if (!sessions.length) return;
@@ -76,7 +107,7 @@ function card(s) {
     <div>
       <div class="score lvl-${r.level}">${r.score}</div>
       <div class="lvl-${r.level}">risque ${r.level}</div>
-      <p>Session <b>${esc(s.id)}</b><br>${esc(s.declared.city)} (${esc(s.declared.country)})<br>
+      <p>${s.name ? `<b>${esc(s.name)}</b><br>` : ""}Session <b>${esc(s.id)}</b><br>${esc(s.declared.city)} (${esc(s.declared.country)})<br>
          <span class="pill ${s.online ? "" : "off"}">${s.online ? "en ligne" : "déconnecté"}</span>
          ${snap.simulated ? `<span class="pill sim">simulation</span>` : ""}</p>
       <h3>Décision</h3>

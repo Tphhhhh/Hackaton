@@ -51,7 +51,7 @@ def check_timeline_overlap(c: dict) -> Signal | None:
 
 def check_claimed_years(c: dict) -> Signal | None:
     """Ancienneté annoncée dans le résumé ou le champ dédié vs somme des expériences listées."""
-    claimed = [int(x) for x in re.findall(r"(\d+)\s+years", c["cv"]["summary"])]
+    claimed = [int(x) for x in re.findall(r"(\d+)\+?\s+(?:years|ans)\b", c["cv"]["summary"])]
     claimed.append(int(c["cv"].get("years_experience", 0)))
     today = date.fromisoformat(c["applied_at"])
     months = sum(max(0, (_month(e["end"], today) - _month(e["start"], today)).days // 30) for e in c["cv"]["experiences"])
@@ -68,11 +68,14 @@ def check_young_profile(c: dict) -> Signal | None:
     applied = date.fromisoformat(c["applied_at"])
     years = c["cv"].get("years_experience", 0)
     for p in c["profiles"]:
+        if not p.get("created_at"):  # date inconnue (profil non enrichi) : pas de signal
+            continue
         age_days = (applied - date.fromisoformat(p["created_at"])).days
         if p["platform"] == "linkedin" and age_days < 180 and years >= 3:
             return Signal("C3_YOUNG_PROFILE", 15,
                           f"Profil {p['platform']} créé {age_days} jours avant la candidature "
-                          f"({p['connections']} relations) pour {years} ans d'expérience revendiqués.", "T1585.001")
+                          f"({p.get('connections', '?')} relations) pour {years} ans d'expérience revendiqués.",
+                          "T1585.001")
     return None
 
 

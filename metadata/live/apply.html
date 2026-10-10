@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fjordlane · Développeur·se Full-Stack Senior</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:#0f1b2d; --ink-2:#3b4a5e; --muted:#6b7a8f; --line:#e3e8ef; --bg:#f7f8fb; --card:#fff;
+    --brand:#1f4fd8; --brand-2:#6a8cff; --brand-soft:#eaf0ff; --accent:#ff7a59; --ok:#12805c; --err:#c4314b;
+    --radius:16px; --shadow:0 1px 2px rgba(15,27,45,.04), 0 8px 24px rgba(15,27,45,.06);
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; font:16px/1.6 Inter, system-ui, sans-serif; color:var(--ink); background:var(--bg); }
+  a { color:var(--brand); text-decoration:none; }
+  .wrap { max-width:1160px; margin:0 auto; padding:0 24px; }
+  @media (max-width:640px) { .wrap { padding:0 16px; } }
+
+  /* Navigation */
+  nav { position:sticky; top:0; z-index:20; background:rgba(255,255,255,.85); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
+  nav .wrap { display:flex; align-items:center; gap:28px; height:64px; }
+  .logo { display:flex; align-items:center; gap:10px; font-weight:700; font-size:19px; color:var(--ink); letter-spacing:-.01em; }
+  .logo-mark { width:30px; height:30px; border-radius:9px; background:linear-gradient(135deg,var(--brand),var(--brand-2)); display:grid; place-items:center; color:#fff; font-size:15px; }
+  .navlinks { display:flex; gap:22px; font-size:14px; color:var(--ink-2); }
+  .navlinks span { cursor:default; }
+  .badge-demo { margin-left:auto; font-size:12px; font-weight:600; color:#8a4b00; background:#fff4e0; border:1px solid #ffd9a0; padding:4px 10px; border-radius:999px; }
+  @media (max-width:760px) { .navlinks { display:none; } }
+
+  /* Hero */
+  .hero { background:radial-gradient(1200px 400px at 85% -10%, rgba(106,140,255,.35), transparent 60%),
+                     radial-gradient(800px 300px at -10% 0%, rgba(255,122,89,.18), transparent 60%),
+                     linear-gradient(180deg,#0f1b2d,#16264a); color:#fff; padding:56px 0 88px; }
+  .crumbs { font-size:13px; color:#b8c4dd; margin-bottom:18px; }
+  .hero h1 { font-family:Fraunces, Georgia, serif; font-size:clamp(32px,4.6vw,52px); line-height:1.08; margin:0 0 14px; letter-spacing:-.02em; }
+  .hero p.lead { font-size:18px; color:#d5ddef; max-width:640px; margin:0 0 26px; }
+  .chips { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:30px; }
+  .chip { display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:999px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.16); font-size:14px; }
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; border:0; border-radius:12px; padding:13px 22px; font:600 15px Inter, sans-serif; cursor:pointer; transition:transform .12s, box-shadow .12s, background .12s; }
+  .btn:active { transform:translateY(1px); }
+  .btn-primary { background:var(--accent); color:#fff; box-shadow:0 8px 20px rgba(255,122,89,.35); }
+  .btn-primary:hover { box-shadow:0 10px 26px rgba(255,122,89,.45); }
+  .btn-brand { background:var(--brand); color:#fff; }
+  .btn-brand:hover { background:#1a43b8; }
+  .btn-ghost { background:transparent; color:var(--ink-2); border:1px solid var(--line); }
+  .btn-ghost:hover { border-color:var(--brand-2); color:var(--brand); }
+  .btn:disabled { opacity:.55; cursor:not-allowed; }
+
+  /* Corps */
+  .layout { display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:32px; margin-top:-56px; position:relative; }
+  @media (max-width:960px) { .layout { grid-template-columns:1fr; } .side { order:-1; } }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); }
+  .content { padding:36px; }
+  @media (max-width:640px) { .content { padding:22px; } }
+  .content h2 { font-family:Fraunces, Georgia, serif; font-size:24px; margin:32px 0 10px; letter-spacing:-.01em; }
+  .content h2:first-child { margin-top:0; }
+  .content p, .content li { color:var(--ink-2); }
+  .content ul { padding-left:20px; }
+  .tags { display:flex; flex-wrap:wrap; gap:8px; }
+  .tag { padding:6px 12px; border-radius:8px; background:var(--brand-soft); color:var(--brand); font-size:13px; font-weight:600; }
+  .steps { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:14px; }
+  @media (max-width:760px) { .steps { grid-template-columns:1fr 1fr; } }
+  .step { padding:16px; border:1px solid var(--line); border-radius:12px; background:#fbfcfe; }
+  .step b { display:block; font-size:13px; color:var(--brand); margin-bottom:4px; }
+  .step span { font-size:14px; color:var(--ink-2); }
+  .trust { display:flex; gap:16px; padding:20px; border-radius:14px; background:linear-gradient(135deg,#f1f5ff,#f8faff); border:1px solid #dbe4ff; margin-top:28px; }
+  .trust .ico { font-size:26px; }
+  .trust p { margin:4px 0 0; font-size:14px; }
+
+  .side .card { position:sticky; top:84px; padding:24px; }
+  .side .row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px dashed var(--line); font-size:14px; }
+  .side .row:last-of-type { border-bottom:0; }
+  .side .row span:first-child { color:var(--muted); }
+  .side .rate { font-family:Fraunces, Georgia, serif; font-size:30px; font-weight:700; }
+  .side .btn { width:100%; margin-top:16px; }
+  .side small { display:block; text-align:center; color:var(--muted); margin-top:10px; }
+
+  /* Formulaire */
+  #postuler { scroll-margin-top:80px; margin:40px 0 80px; }
+  .form-card { padding:0; overflow:hidden; }
+  .form-head { padding:28px 36px 0; }
+  .form-head h2 { font-family:Fraunces, Georgia, serif; font-size:28px; margin:0 0 4px; }
+  .form-head p { margin:0; color:var(--muted); }
+  .stepper { display:flex; gap:8px; padding:22px 36px; border-bottom:1px solid var(--line); }
+  .stepper div { flex:1; }
+  .stepper .bar { height:6px; border-radius:6px; background:var(--line); overflow:hidden; }
+  .stepper .bar i { display:block; height:100%; width:0; background:linear-gradient(90deg,var(--brand),var(--brand-2)); transition:width .35s; }
+  .stepper .lbl { font-size:12px; color:var(--muted); margin-top:6px; font-weight:600; }
+  .stepper .on .lbl { color:var(--brand); }
+  .form-body { padding:30px 36px; }
+  @media (max-width:640px) { .form-head, .stepper, .form-body, .form-foot { padding-left:20px !important; padding-right:20px !important; } }
+  .pane { display:none; animation:fade .3s ease; }
+  .pane.active { display:block; }
+  @keyframes fade { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:16px 18px; }
+  .grid .full { grid-column:1/-1; }
+  @media (max-width:640px) { .grid { grid-template-columns:1fr; } }
+  label.f { display:block; font-size:13px; font-weight:600; color:var(--ink-2); margin-bottom:6px; }
+  label.f em { color:var(--accent); font-style:normal; }
+  input[type=text], input[type=email], input[type=tel], input[type=url], input[type=number], input[type=month], input[type=date], select, textarea {
+    width:100%; padding:11px 13px; border:1px solid var(--line); border-radius:10px; font:15px Inter, sans-serif; color:var(--ink); background:#fff; transition:border .15s, box-shadow .15s; }
+  textarea { min-height:96px; resize:vertical; }
+  input:focus, select:focus, textarea:focus { outline:none; border-color:var(--brand-2); box-shadow:0 0 0 4px rgba(106,140,255,.18); }
+  .invalid { border-color:var(--err) !important; box-shadow:0 0 0 4px rgba(196,49,75,.12) !important; }
+  .hint { font-size:12px; color:var(--muted); margin-top:5px; }
+  .section-t { font-weight:700; font-size:15px; margin:26px 0 12px; display:flex; align-items:center; justify-content:space-between; }
+  .section-t:first-child { margin-top:0; }
+  .drop { border:2px dashed #c9d5f5; border-radius:14px; padding:26px; text-align:center; background:#f8faff; cursor:pointer; transition:background .15s, border-color .15s; }
+  .drop:hover, .drop.drag { background:var(--brand-soft); border-color:var(--brand-2); }
+  .drop b { color:var(--brand); }
+  .drop .file { margin-top:8px; font-weight:600; color:var(--ok); }
+  .exp { border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:12px; position:relative; background:#fcfdff; }
+  .exp .rm { position:absolute; top:10px; right:12px; border:0; background:none; color:var(--muted); cursor:pointer; font-size:18px; }
+  .exp .rm:hover { color:var(--err); }
+  .pay { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  @media (max-width:640px) { .pay { grid-template-columns:1fr; } }
+  .pay label { border:1.5px solid var(--line); border-radius:12px; padding:14px; cursor:pointer; display:flex; gap:10px; align-items:flex-start; transition:border .15s, background .15s; }
+  .pay label:hover { border-color:var(--brand-2); }
+  .pay input { margin-top:4px; accent-color:var(--brand); }
+  .pay label.sel { border-color:var(--brand); background:var(--brand-soft); }
+  .pay b { display:block; font-size:14px; } .pay span { font-size:12px; color:var(--muted); }
+  .check { display:flex; gap:10px; align-items:flex-start; font-size:14px; color:var(--ink-2); }
+  .check input { margin-top:4px; accent-color:var(--brand); width:16px; height:16px; }
+  .notice { display:grid; grid-template-columns:1fr 1fr; gap:16px; padding:18px; border-radius:12px; background:#f6f8fc; border:1px solid var(--line); margin:22px 0 16px; font-size:13px; }
+  @media (max-width:640px) { .notice { grid-template-columns:1fr; } }
+  .notice h4 { margin:0 0 6px; font-size:13px; } .notice ul { margin:0; padding-left:18px; color:var(--ink-2); }
+  .form-foot { display:flex; justify-content:space-between; gap:12px; padding:20px 36px; border-top:1px solid var(--line); background:#fbfcfe; }
+  .err { color:var(--err); font-size:13px; margin-top:12px; min-height:18px; }
+
+  .success { text-align:center; padding:56px 36px; }
+  .success .tick { width:76px; height:76px; border-radius:50%; margin:0 auto 18px; display:grid; place-items:center; font-size:38px; color:#fff; background:linear-gradient(135deg,#19a974,#12805c); box-shadow:0 12px 30px rgba(18,128,92,.35); animation:pop .45s cubic-bezier(.2,1.6,.4,1); }
+  @keyframes pop { from { transform:scale(.3); opacity:0; } to { transform:none; opacity:1; } }
+  .success h2 { font-family:Fraunces, Georgia, serif; font-size:30px; margin:0 0 8px; }
+  .success p { color:var(--ink-2); max-width:520px; margin:0 auto 22px; }
+  .ref { display:inline-block; font-family:ui-monospace, monospace; background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:4px 10px; margin-bottom:22px; }
+
+  /* Démo */
+  .demo-fab { position:fixed; left:18px; bottom:18px; z-index:30; }
+  .demo-fab > button { border:1px solid var(--line); background:#fff; border-radius:999px; padding:9px 14px; font:600 13px Inter, sans-serif; color:var(--ink-2); box-shadow:var(--shadow); cursor:pointer; }
+  .demo-menu { display:none; position:absolute; bottom:46px; left:0; width:260px; background:#fff; border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow); padding:8px; }
+  .demo-menu.open { display:block; }
+  .demo-menu button { display:block; width:100%; text-align:left; border:0; background:none; padding:10px 12px; border-radius:10px; font:14px Inter, sans-serif; cursor:pointer; color:var(--ink); }
+  .demo-menu button:hover { background:var(--bg); }
+  .demo-menu small { display:block; color:var(--muted); font-size:12px; }
+  footer { border-top:1px solid var(--line); padding:28px 0; color:var(--muted); font-size:13px; background:#fff; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="wrap">
+    <a class="logo" href="#"><span class="logo-mark">✦</span>Fjordlane</a>
+    <div class="navlinks"><span>Missions</span><span>Entreprises</span><span>Comment ça marche</span><span>Blog</span></div>
+    <span class="badge-demo">Démo · entreprise fictive</span>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="crumbs">Missions › Tech › Développement web</div>
+    <h1>Développeur·se Full-Stack Senior<br>pour une fintech européenne</h1>
+    <p class="lead">Rejoignez l'équipe produit d'un client dans le paiement B2B et construisez avec elle sa nouvelle plateforme de facturation. 100 % à distance, depuis l'Europe.</p>
+    <div class="chips">
+      <span class="chip">🌍 Remote · Europe</span>
+      <span class="chip">💶 600 – 700 € / jour</span>
+      <span class="chip">📅 12 mois renouvelables</span>
+      <span class="chip">🚀 Démarrage en novembre</span>
+    </div>
+    <a class="btn btn-primary" href="#postuler">Postuler en 5 minutes →</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="layout">
+    <article class="card content">
+      <h2>La mission</h2>
+      <p>Notre client traite plusieurs milliards d'euros de factures par an pour des PME européennes. Vous rejoignez une squad de six personnes pour refondre le parcours de facturation : nouvelles API, tableau de bord client et intégration avec les banques partenaires.</p>
+      <ul>
+        <li>Concevoir et livrer des API Node.js robustes, testées et documentées</li>
+        <li>Construire des interfaces React exigeantes, accessibles et rapides</li>
+        <li>Participer aux revues de code, au design technique et aux astreintes</li>
+      </ul>
+
+      <h2>La stack</h2>
+      <div class="tags"><span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Node.js</span><span class="tag">PostgreSQL</span><span class="tag">AWS Lambda</span><span class="tag">Terraform</span><span class="tag">Kafka</span></div>
+
+      <h2>Ce que nous cherchons</h2>
+      <ul>
+        <li>5 ans d'expérience ou plus en développement full-stack</li>
+        <li>Une vraie aisance à l'écrit : l'équipe travaille en asynchrone</li>
+        <li>Un chevauchement d'au moins 4 heures avec le fuseau de Paris</li>
+      </ul>
+
+      <h2>Le processus</h2>
+      <div class="steps">
+        <div class="step"><b>1 · Candidature</b><span>5 minutes, sans lettre de motivation</span></div>
+        <div class="step"><b>2 · Vérification</b><span>Cohérence du dossier, sous 24 h</span></div>
+        <div class="step"><b>3 · Entretien vidéo</b><span>45 min avec l'équipe technique</span></div>
+        <div class="step"><b>4 · Proposition</b><span>Réponse sous une semaine</span></div>
+      </div>
+
+      <div class="trust">
+        <div class="ico">🛡️</div>
+        <div>
+          <b>Recrutement vérifié</b>
+          <p>Pour protéger nos clients et les vrais freelances contre l'usurpation d'identité, nous vérifions la cohérence des candidatures avec l'aide d'un outil automatisé. Il ne décide jamais seul : chaque dossier est examiné par une personne de notre équipe.</p>
+        </div>
+      </div>
+    </article>
+
+    <aside class="side">
+      <div class="card">
+        <div class="rate">650 €<span style="font-size:15px;color:var(--muted);font-family:Inter"> / jour</span></div>
+        <div class="row"><span>Lieu</span><span>Remote, Europe</span></div>
+        <div class="row"><span>Durée</span><span>12 mois</span></div>
+        <div class="row"><span>Rythme</span><span>Temps plein</span></div>
+        <div class="row"><span>Matériel</span><span>Fourni et livré</span></div>
+        <a class="btn btn-brand" href="#postuler">Postuler</a>
+        <small>38 candidatures cette semaine</small>
+      </div>
+    </aside>
+  </div>
+
+  <section id="postuler">
+    <div class="card form-card">
+      <div id="formWrap">
+        <div class="form-head">
+          <h2>Votre candidature</h2>
+          <p>Trois étapes, environ cinq minutes. Les champs marqués <span style="color:var(--accent)">*</span> sont obligatoires.</p>
+        </div>
+        <div class="stepper" id="stepper">
+          <div class="on"><div class="bar"><i></i></div><div class="lbl">1 · Vous</div></div>
+          <div><div class="bar"><i></i></div><div class="lbl">2 · Parcours</div></div>
+          <div><div class="bar"><i></i></div><div class="lbl">3 · Logistique</div></div>
+        </div>
+
+        <form id="form" novalidate>
+          <div class="form-body">
+            <!-- Étape 1 -->
+            <div class="pane active" data-step="0">
+              <div class="grid">
+                <div><label class="f">Prénom <em>*</em></label><input type="text" name="first_name" required></div>
+                <div><label class="f">Nom <em>*</em></label><input type="text" name="last_name" required></div>
+                <div><label class="f">Email <em>*</em></label><input type="email" name="email" required></div>
+                <div><label class="f">Téléphone <em>*</em></label><input type="tel" name="phone" placeholder="+33 6 12 34 56 78" required></div>
+                <div><label class="f">Ville de résidence <em>*</em></label><input type="text" name="city" required></div>
+                <div><label class="f">Pays de résidence <em>*</em></label>
+                  <select name="country" required>
+                    <option value="">Choisir…</option>
+                    <option value="FR">France</option><option value="DE">Allemagne</option><option value="BE">Belgique</option>
+                    <option value="CH">Suisse</option><option value="NL">Pays-Bas</option><option value="ES">Espagne</option>
+                    <option value="IT">Italie</option><option value="PT">Portugal</option><option value="UK">Royaume-Uni</option><option value="IE">Irlande</option>
+                  </select></div>
+                <div class="full"><label class="f">Adresse</label><input type="text" name="address" placeholder="Numéro et rue"></div>
+                <div><label class="f">Profil LinkedIn</label><input type="url" name="linkedin_url" placeholder="https://linkedin.com/in/…"></div>
+                <div><label class="f">GitHub</label><input type="url" name="github_url" placeholder="https://github.com/…"></div>
+                <div class="full">
+                  <label class="f">CV (PDF)</label>
+                  <div class="drop" id="drop">
+                    <div>📄 Glissez votre CV ici ou <b>parcourez vos fichiers</b></div>
+                    <div class="hint">PDF, 5 Mo maximum. Nous ne demandons pas de photo.</div>
+                    <div class="file" id="fileName"></div>
+                    <input type="file" id="cvFile" accept="application/pdf" hidden>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Étape 2 -->
+            <div class="pane" data-step="1">
+              <div class="grid">
+                <div><label class="f">Années d'expérience <em>*</em></label><input type="number" name="years_experience" min="0" max="50" required></div>
+                <div><label class="f">Compétences clés</label><input type="text" name="skills" placeholder="React, Node.js, AWS…"></div>
+                <div class="full"><label class="f">En quelques lignes <em>*</em></label><textarea name="summary" required placeholder="Votre parcours, ce que vous aimez construire, ce que vous cherchez."></textarea></div>
+              </div>
+              <div class="section-t">Expériences <button type="button" class="btn btn-ghost" id="addExp" style="padding:7px 12px;font-size:13px">+ Ajouter</button></div>
+              <div id="exps"></div>
+              <div class="section-t">Formation</div>
+              <div class="grid">
+                <div><label class="f">École</label><input type="text" id="eduSchool"></div>
+                <div><label class="f">Diplôme et année</label>
+                  <div style="display:flex;gap:8px"><input type="text" id="eduDegree" placeholder="Master"><input type="number" id="eduYear" placeholder="2018" style="max-width:110px"></div></div>
+              </div>
+            </div>
+
+            <!-- Étape 3 -->
+            <div class="pane" data-step="2">
+              <div class="section-t">Livraison du matériel</div>
+              <label class="check"><input type="checkbox" id="sameAddr" checked> Livrer l'ordinateur à mon adresse de résidence</label>
+              <div id="shipWrap" style="display:none;margin-top:12px">
+                <label class="f">Adresse de livraison <em>*</em></label><input type="text" name="shipping_address" placeholder="Adresse complète, ville, pays">
+              </div>
+
+              <div class="section-t">Rémunération</div>
+              <div class="pay" id="pay">
+                <label class="sel"><input type="radio" name="payment_method" value="iban" checked><div><b>Virement SEPA</b><span>Sur un compte bancaire (IBAN)</span></div></label>
+                <label><input type="radio" name="payment_method" value="wise"><div><b>Wise / PayPal</b><span>Compte de paiement en ligne</span></div></label>
+                <label><input type="radio" name="payment_method" value="crypto"><div><b>Cryptomonnaie</b><span>Stablecoin USDT ou USDC</span></div></label>
+              </div>
+              <div style="margin-top:14px"><label class="f" id="accLabel">IBAN <em>*</em></label><input type="text" name="payment_account" required placeholder="FR76 …"></div>
+
+              <div class="notice">
+                <div>
+                  <h4>🔎 Ce que nous vérifions</h4>
+                  <ul>
+                    <li>La cohérence de votre parcours (dates, ancienneté)</li>
+                    <li>Les coordonnées partagées avec d'autres candidatures</li>
+                    <li>Des informations techniques de connexion : fuseau horaire, adresse IP et pays, temps de réponse, moteur graphique</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4>🚫 Ce que nous ne demandons jamais</h4>
+                  <ul>
+                    <li>Photo, âge, nationalité, origine ou situation familiale</li>
+                    <li>Votre langue maternelle ou votre accent</li>
+                  </ul>
+                  <p class="hint" style="margin-top:8px">Un outil d'IA nous aide à repérer les incohérences ; une personne décide toujours (AI Act, art. 50).</p>
+                </div>
+              </div>
+              <label class="check"><input type="checkbox" id="consent"> J'ai lu ce qui est vérifié et j'accepte que ma candidature soit traitée ainsi. <em style="color:var(--accent);font-style:normal">*</em></label>
+            </div>
+            <div class="err" id="err"></div>
+          </div>
+          <div class="form-foot">
+            <button type="button" class="btn btn-ghost" id="prev" style="visibility:hidden">← Retour</button>
+            <button type="button" class="btn btn-brand" id="next">Continuer →</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="success" id="success" style="display:none">
+        <div class="tick">✓</div>
+        <h2>Merci <span id="okName"></span>, c'est envoyé !</h2>
+        <div class="ref">Référence <span id="okRef"></span></div>
+        <p>Votre dossier est en cours de vérification par notre équipe. Pour gagner du temps, vous pouvez passer dès maintenant votre entretien vidéo avec l'équipe technique.</p>
+        <a class="btn btn-primary" id="goInterview" href="/">Passer mon entretien vidéo →</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">Fjordlane est une entreprise fictive créée pour la démonstration du hackathon Secure Horizons. Aucune donnée n'est transmise à un tiers en dehors des services techniques listés dans le formulaire.</div></footer>
+
+<div class="demo-fab">
+  <div class="demo-menu" id="demoMenu">
+    <button data-kind="honest">✅ Remplir : candidate honnête<small>Parcours cohérent, virement SEPA</small></button>
+    <button data-kind="fraud">🚩 Remplir : fraudeur<small>Recycle le paiement et l'adresse d'un réseau déjà vu</small></button>
+  </div>
+  <button id="demoBtn">Démo ▾</button>
+</div>
+
+<script>
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+let step = 0, cvName = "", profile = {};
+const panes = $$(".pane"), bars = $$("#stepper > div");
+
+/* ---------- Expériences ---------- */
+function addExp(e = {}) {
+  const div = document.createElement("div");
+  div.className = "exp";
+  div.innerHTML = `
+    <button type="button" class="rm" title="Retirer">×</button>
+    <div class="grid">
+      <div><label class="f">Entreprise</label><input type="text" data-k="company" value="${e.company || ""}"></div>
+      <div><label class="f">Poste</label><input type="text" data-k="title" value="${e.title || ""}"></div>
+      <div><label class="f">Début</label><input type="month" data-k="start" value="${e.start || ""}"></div>
+      <div><label class="f">Fin</label><input type="month" data-k="end" value="${e.end || ""}"><div class="hint">Laisser vide si en cours</div></div>
+      <div class="full"><label class="f">Réalisations</label><input type="text" data-k="description" value="${(e.description || "").replace(/"/g, "&quot;")}"></div>
+    </div>`;
+  $(".rm", div).onclick = () => div.remove();
+  $("#exps").appendChild(div);
+}
+$("#addExp").onclick = () => addExp();
+addExp();
+
+/* ---------- CV ---------- */
+const drop = $("#drop"), file = $("#cvFile");
+drop.onclick = () => file.click();
+drop.ondragover = (e) => { e.preventDefault(); drop.classList.add("drag"); };
+drop.ondragleave = () => drop.classList.remove("drag");
+drop.ondrop = (e) => { e.preventDefault(); drop.classList.remove("drag"); if (e.dataTransfer.files[0]) setCv(e.dataTransfer.files[0].name); };
+file.onchange = () => file.files[0] && setCv(file.files[0].name);
+function setCv(name) { cvName = name; $("#fileName").textContent = "✓ " + name; }
+
+/* ---------- Logistique et paiement ---------- */
+$("#sameAddr").onchange = (e) => { $("#shipWrap").style.display = e.target.checked ? "none" : "block"; };
+const ACC = { iban: ["IBAN", "FR76 …"], wise: ["Email du compte Wise ou PayPal", "vous@exemple.com"], crypto: ["Adresse du portefeuille", "0x…"] };
+$$("#pay input").forEach((r) => r.onchange = () => {
+  $$("#pay label").forEach((l) => l.classList.toggle("sel", $("input", l).checked));
+  $("#accLabel").innerHTML = ACC[r.value][0] + " <em>*</em>";
+  $("[name=payment_account]").placeholder = ACC[r.value][1];
+});
+
+/* ---------- Navigation entre étapes ---------- */
+function show(i) {
+  step = i;
+  panes.forEach((p, k) => p.classList.toggle("active", k === i));
+  bars.forEach((b, k) => { b.classList.toggle("on", k <= i); $("i", b).style.width = k < i ? "100%" : k === i ? "50%" : "0"; });
+  $("#prev").style.visibility = i ? "visible" : "hidden";
+  $("#next").textContent = i === panes.length - 1 ? "Envoyer ma candidature" : "Continuer →";
+  $("#err").textContent = "";
+}
+function valid(i) {
+  let ok = true;
+  $$("[required]", panes[i]).forEach((el) => {
+    const bad = !el.value.trim() || (el.type === "email" && !/^\S+@\S+\.\S+$/.test(el.value));
+    el.classList.toggle("invalid", bad);
+    if (bad) ok = false;
+  });
+  if (i === 2 && !$("#sameAddr").checked && !$("[name=shipping_address]").value.trim()) {
+    $("[name=shipping_address]").classList.add("invalid"); ok = false;
+  }
+  if (i === 2 && !$("#consent").checked) { $("#err").textContent = "Merci de confirmer avoir lu ce qui est vérifié."; return false; }
+  if (!ok) $("#err").textContent = "Quelques champs obligatoires sont manquants ou invalides.";
+  return ok;
+}
+$("#prev").onclick = () => show(step - 1);
+$("#next").onclick = async () => {
+  if (!valid(step)) return;
+  if (step < panes.length - 1) { show(step + 1); $("#postuler").scrollIntoView(); return; }
+  await submit();
+};
+show(0);
+
+/* ---------- Métadonnées techniques (annoncées dans le formulaire) ---------- */
+const HOSTING = /amazon|aws|google|microsoft|azure|digitalocean|ovh|hetzner|linode|akamai|vultr|choopa|m247|datacamp|leaseweb|contabo|scaleway|oracle|alibaba|tencent|hosting|server|cloud|vpn/i;
+const withTimeout = (p, ms = 3000) => Promise.race([p, new Promise((_, r) => setTimeout(() => r(new Error("timeout")), ms))]);
+function gpu() {
+  try { const gl = document.createElement("canvas").getContext("webgl"); const x = gl.getExtension("WEBGL_debug_renderer_info");
+        return x ? gl.getParameter(x.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER); } catch { return ""; }
+}
+async function rtt() {
+  const out = [];
+  for (let i = 0; i < 3; i++) {
+    const t0 = performance.now();
+    try { await withTimeout(fetch(`https://www.cloudflare.com/cdn-cgi/trace?t=${Date.now()}${i}`, { mode: "no-cors", cache: "no-store" })); out.push(Math.round(performance.now() - t0)); } catch {}
+  }
+  return out;
+}
+async function ipInfo() {
+  try {
+    const { ip } = await (await withTimeout(fetch("https://api.ipify.org?format=json"))).json();
+    const g = await (await withTimeout(fetch(`https://ipapi.co/${ip}/json/`))).json();
+    return { address: ip, country: g.country_code === "GB" ? "UK" : g.country_code, org: g.org || "", type: HOSTING.test(g.org || "") ? "datacenter" : "residential" };
+  } catch { return {}; }
+}
+
+/* ---------- Envoi ---------- */
+async function submit() {
+  const btn = $("#next"); btn.disabled = true; btn.textContent = "Envoi…";
+  const f = new FormData($("#form"));
+  const data = Object.fromEntries(f.entries());
+  data.experiences = $$(".exp").map((d) => Object.fromEntries($$("[data-k]", d).map((i) => [i.dataset.k, i.value.trim()])));
+  data.education = $("#eduSchool").value ? [{ school: $("#eduSchool").value, degree: $("#eduDegree").value, year: Number($("#eduYear").value) || null }] : [];
+  if ($("#sameAddr").checked) data.shipping_address = "";
+  data.cv_file_name = cvName;
+  Object.assign(data, profile);  // enrichissement de profil simulé (mode démo uniquement)
+  const [ip, r] = await Promise.all([ipInfo(), rtt()]);
+  data.meta = { browser_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                browser_utc_offset: -new Date().getTimezoneOffset() / 60, gpu_renderer: gpu(), ip, rtt_ms: r };
+  try {
+    const res = await fetch("/api/apply", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+    const out = await res.json();
+    if (!res.ok) throw new Error(out.error);
+    $("#formWrap").style.display = "none";
+    $("#success").style.display = "block";
+    $("#okName").textContent = data.first_name;
+    $("#okRef").textContent = out.id;
+    $("#goInterview").href = "/?app=" + out.id;
+    $("#postuler").scrollIntoView();
+  } catch (e) {
+    $("#err").textContent = "L'envoi a échoué : " + e.message;
+    btn.disabled = false; btn.textContent = "Envoyer ma candidature";
+  }
+}
+
+/* ---------- Mode démo : pré-remplissage ---------- */
+$("#demoBtn").onclick = () => $("#demoMenu").classList.toggle("open");
+$$("#demoMenu button").forEach((b) => b.onclick = async () => {
+  const ex = await (await fetch("/api/demo-example?kind=" + b.dataset.kind)).json();
+  for (const [k, v] of Object.entries(ex)) {
+    const el = $(`[name=${k}]`);
+    if (el && el.type !== "radio") el.value = v ?? "";
+  }
+  const radio = $(`#pay input[value=${ex.payment_method}]`); radio.checked = true; radio.onchange();
+  $("[name=payment_account]").value = ex.payment_account;
+  $("#exps").innerHTML = ""; (ex.experiences || []).forEach(addExp);
+  const edu = (ex.education || [])[0] || {};
+  $("#eduSchool").value = edu.school || ""; $("#eduDegree").value = edu.degree || ""; $("#eduYear").value = edu.year || "";
+  $("#sameAddr").checked = !ex.shipping_address; $("#sameAddr").onchange({ target: $("#sameAddr") });
+  if (ex.shipping_address) $("[name=shipping_address]").value = ex.shipping_address;
+  setCv(`CV_${ex.first_name}_${ex.last_name}.pdf`);
+  profile = { profile_created: ex.profile_created, profile_connections: ex.profile_connections };
+  $("#consent").checked = true;
+  $("#demoMenu").classList.remove("open");
+  $$(".invalid").forEach((el) => el.classList.remove("invalid"));
+  show(0); $("#postuler").scrollIntoView();
+});
+</script>
+</body>
+</html>
