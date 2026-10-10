@@ -153,3 +153,63 @@ test('metadata subtracts points without a green bonus; selection and missing sou
  await expect(page.locator('#console-overall-score')).toHaveText('—');
  await expect(page.locator('#console-meta-bars')).toHaveAttribute('data-tone','unknown');
 });
+
+test('five live layers use each source independently and expire on stop', async ({page}) => {
+ await camera(page);
+ // Return a genuinely blank transformed image. Original landmarks must not leak into its indicators.
+ const blank = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64');
+ await page.route('**/api/live/swap', route => route.fulfill({body:blank,contentType:'image/png',headers:{
+  'X-Visio-Portrait':route.request().headers()['x-visio-portrait'],'X-Visio-Swapped':'1','X-Visio-Inference-Ms':'1',
+ }}));
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('/');
+ const panel=page.locator('#video-signal-layers');
+ await expect(panel.locator('.signal-layer')).toHaveCount(5);
+ await expect(panel.locator('[data-state=unknown]')).toHaveCount(5);
+ await expect(page.locator('#layers-microphone')).toBeDisabled();
+ await page.locator('#start-camera').click();
+ await expect(panel.locator('[data-signal=rhythm] strong')).toHaveText('Image presque figée',{timeout:30000});
+ await expect(panel.locator('[data-signal=activity]')).toHaveAttribute('data-state','observed');
+ await expect(panel.locator('[data-signal=lips] strong')).toHaveText('Microphone désactivé');
+ await expect(page.locator('#console-video-score')).toContainText('80');
+ await page.locator('#console-source-filtered').click();
+ await expect(panel).toHaveAttribute('data-source','filtered');
+ await expect(panel.locator('[data-signal=activity] strong')).toHaveText('Visage non exploitable',{timeout:30000});
+ await expect(panel.locator('[data-signal=lips] strong')).toHaveText('Visage non exploitable');
+ await page.locator('#console-source-original').click();
+ await expect(panel.locator('[data-signal=activity]')).toHaveAttribute('data-state','observed');
+ await page.screenshot({path:'test-results/layers-desktop.png',fullPage:true});
+ await page.setViewportSize({width:390,height:844});
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+ await page.screenshot({path:'test-results/layers-mobile.png',fullPage:true});
+ await page.locator('#stop-camera').click();
+ await expect(panel.locator('[data-state=unknown]')).toHaveCount(5);
+ await expect(page.locator('#layers-microphone')).toBeDisabled();
+ await page.locator('#console-source-filtered').click();
+ await expect(panel.locator('[data-state=unknown]')).toHaveCount(5);
+ expect(errors).toEqual([]);
+});
+
+test('voice-mouth button samples local audio, stays unknown in silence and releases tracks', async ({page}) => {
+ await camera(page);await page.goto('/');await page.locator('#start-camera').click();
+ await expect(page.locator('#layers-microphone')).toBeEnabled();
+ await page.evaluate(()=>{
+  const original=navigator.mediaDevices.getUserMedia;
+  navigator.mediaDevices.getUserMedia=async constraints=>{
+   if(!constraints.audio)return original(constraints);
+   const context=new AudioContext();const destination=context.createMediaStreamDestination();
+   window.layerAudioContext=context;window.layerAudioStream=destination.stream;
+   return destination.stream;
+  };
+ });
+ await page.locator('#layers-microphone').click();
+ await expect(page.locator('#layers-microphone')).toHaveText('Arrêter le microphone');
+ const lips=page.locator('#video-signal-layers [data-signal=lips]');
+ await expect(lips.locator('strong')).toHaveText('Silence ou son trop faible',{timeout:30000});
+ await expect(lips).toHaveAttribute('data-state','unknown');
+ await page.locator('#layers-microphone').click();
+ await expect(lips.locator('strong')).toHaveText('Microphone désactivé');
+ expect(await page.evaluate(()=>window.layerAudioStream.getTracks().every(t=>t.readyState==='ended'))).toBe(true);
+ await page.evaluate(()=>window.layerAudioContext.close());
+ await page.locator('#stop-camera').click();
+});

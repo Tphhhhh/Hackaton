@@ -6,6 +6,8 @@ import { createLiveComparison } from './live-comparison.js';
 import { startLiveCamera } from './live-camera.js';
 import { createSessionSignals } from './session-signals.js';
 import { createAnalysisConsole } from './analysis-console.js';
+import { createSignalLayers } from './signal-layers.js';
+import { createSignalPanel } from './signal-panel.js';
 import { visibleLandmarks } from './landmarks.js';
 import { connectLocalEngine } from './local-engine.js';
 import { icon, hydrateIcons } from './icons.js';
@@ -44,10 +46,16 @@ let supplementalSequence = { tracking: 0, metadata: 0 };
 let lastOverlayKey = '';
 let liveFrame = null;
 hydrateIcons();
-let analysisConsole;
-const signals = createSessionSignals({ onMetadata: data => analysisConsole?.metadata(data) });
-analysisConsole = createAnalysisConsole();
-const comparison = createLiveComparison({ onVideoScore: analysisConsole.video });
+let analysisConsole, signalPanel, layers;
+const signals = createSessionSignals({
+  onMetadata: data => analysisConsole?.metadata(data),
+  onAudio: (time, rms) => layers?.audio(time, rms),
+  onMicrophone: (enabled, available) => { layers?.microphone(enabled); signalPanel?.microphone(enabled, available); },
+});
+signalPanel = createSignalPanel({ onMicrophone: () => signals.toggleMicrophone() });
+layers = createSignalLayers({ onResults: signalPanel.update });
+analysisConsole = createAnalysisConsole({ onSource: signalPanel.select });
+const comparison = createLiveComparison({ onVideoScore: analysisConsole.video, onSignalFrame: layers.frame, onSignalReset: layers.reset });
 if (new URLSearchParams(location.search).get('mode') === 'clip') document.body.classList.remove('compare-mode');
 
 

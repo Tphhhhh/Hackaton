@@ -5,7 +5,7 @@ const node = (tag, text, cls) => { const n=document.createElement(tag); n.textCo
 const mean = a => a.reduce((s,x)=>s+x,0)/a.length;
 const spread = a => a.length ? Math.sqrt(mean(a.map(x=>(x-mean(a))**2))) : 0;
 
-export function createSessionSignals({ onMetadata = () => {} } = {}) {
+export function createSessionSignals({ onMetadata = () => {}, onAudio = () => {}, onMicrophone = () => {} } = {}) {
   const panel=document.createElement('aside'); panel.id='session-panel'; panel.setAttribute('aria-label','Signaux techniques de cet appareil');
   panel.innerHTML=`
     <div class="signals-heading"><div><p class="signals-kicker">CONSOLE</p><h2>Analyse de session</h2></div><span id="signals-dot" class="signals-dot"></span></div>
@@ -50,7 +50,7 @@ export function createSessionSignals({ onMetadata = () => {} } = {}) {
       <p class="signals-help">Mesures expérimentales sans points de risque.</p>
       <dl id="signals-observations" class="signals-observations"></dl>
       <button id="signals-mic" class="button secondary wide" disabled>Mesurer le microphone</button>
-      <p class="signals-help">Facultatif. Volume et réglages uniquement, sans enregistrement ni reconnaissance vocale. Un son propre ne prouve pas une voix synthétique.</p>
+      <p class="signals-help">Facultatif. Volume, réglages et cohérence avec la bouche, sans enregistrement ni reconnaissance vocale. Un son propre ne prouve pas une voix synthétique.</p>
       <button id="signals-motion" class="text-button" disabled>Mesurer le mouvement du mobile</button>
       <p class="signals-help">Permission éventuelle. L’immobilité ne prouve pas un émulateur.</p>
     </details>
@@ -70,7 +70,7 @@ export function createSessionSignals({ onMetadata = () => {} } = {}) {
   let stream=null, video=null, generation=0, interval, frameId, frames=[], lastPresentation, previousCamera, previousSettings;
   let cameraChanges=0, settingsChanges=0, gpu='', deviceError='', controls=[], interactions={moves:0,keys:0,pastes:0}, keyTimes=[];
   let activeRequest=null, revision=0, debounce, networkPending=false, networkEpoch=0, networkControllers=new Set(), network={ip:'',org:'',rtt_ms:[]}, lastIP='', ipChanges=0, networkAt=0;
-  let mic=null, audioContext=null, analyser=null, audioData=null, audioError='', audioPending=false;
+  let mic=null, audioContext=null, analyser=null, audioData=null, audioError='', audioPending=false, audioTimer;
   let motion=[], motionPending=false, motionListening=false, motionMessage='Non mesuré', challengeStart=null, challengeTimer;
   const rows=new Map();
   let metadataExpiry;
@@ -100,6 +100,7 @@ export function createSessionSignals({ onMetadata = () => {} } = {}) {
     observation('IP WebRTC','Non disponible : aucun appel WebRTC dans cette démo.');
   }
   function stopMic() {
+    clearInterval(audioTimer); onMicrophone(false, !!stream);
     mic?.getTracks().forEach(t=>t.stop()); mic=null; analyser=null; audioData=null;
     audioContext?.close().catch(()=>{}); audioContext=null;
     $('signals-mic').textContent='Mesurer le microphone';
@@ -201,6 +202,7 @@ export function createSessionSignals({ onMetadata = () => {} } = {}) {
     stop();stream=s;video=v;$('signals-refused').checked=false;
     try {const canvas=document.createElement('canvas'),gl=canvas.getContext('webgl');if(gl){const ext=gl.getExtension('WEBGL_debug_renderer_info');gpu=String(gl.getParameter(ext?ext.UNMASKED_RENDERER_WEBGL:gl.RENDERER));gl.getExtension('WEBGL_lose_context')?.loseContext();}}catch{}
     $('signals-dot').classList.add('active');
+    onMicrophone(false, true);
     for(const id of ['signals-mic','signals-motion','signals-start-challenge']) $(id).disabled=false;
     if(video.requestVideoFrameCallback)frameId=video.requestVideoFrameCallback(observeFrame);
     interval=setInterval(()=>{if(!capture()){stop();return;}renderObservations();analyze();if($('signals-network').checked&&!networkPending&&Date.now()-networkAt>30000)checkNetwork();},2500);
@@ -214,17 +216,23 @@ export function createSessionSignals({ onMetadata = () => {} } = {}) {
   $('signals-network').addEventListener('change',()=>{cancelNetwork();$('signals-network-state').textContent=$('signals-network').checked?'En attente de la caméra':'Désactivé';analyze();if($('signals-network').checked)checkNetwork();});
   $('signals-mic').addEventListener('click',async()=>{
     if(mic){stopMic();renderObservations();analyze();return;}if(!stream||audioPending)return;
-    audioPending=true;audioError='';const gen=generation;$('signals-mic').disabled=true;
+    audioPending=true;audioError='';const gen=generation;$('signals-mic').disabled=true;onMicrophone(false,false);
     try {
       const acquired=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
       if(gen!==generation||!stream){acquired.getTracks().forEach(t=>t.stop());return;}
       mic=acquired;audioContext=new AudioContext();await audioContext.resume();
       if(gen!==generation||!mic)return;
       analyser=audioContext.createAnalyser();analyser.fftSize=2048;audioData=new Float32Array(analyser.fftSize);audioContext.createMediaStreamSource(mic).connect(analyser);
+      onMicrophone(true, true);
+      audioTimer=setInterval(()=>{
+        if(!analyser || audioContext?.state!=='running' || document.hidden)return;
+        analyser.getFloatTimeDomainData(audioData);
+        onAudio(performance.now(),Math.sqrt(mean(Array.from(audioData,x=>x*x))));
+      },50);
       mic.getTracks().forEach(t=>t.addEventListener('ended',()=>{if(gen===generation){stopMic();renderObservations();analyze();}}));
       $('signals-mic').textContent='Arrêter le microphone';
     } catch {if(gen===generation){stopMic();audioError='Microphone indisponible ou permission refusée. Aucun indice déduit.';}}
-    finally{if(gen===generation){audioPending=false;$('signals-mic').disabled=!stream;renderObservations();analyze();}}
+    finally{if(gen===generation){audioPending=false;$('signals-mic').disabled=!stream;onMicrophone(!!mic,!!stream);renderObservations();analyze();}}
   });
   $('signals-motion').addEventListener('click',async()=>{
     if(!stream||motionPending||motionListening)return;const gen=generation;motionPending=true;
@@ -246,5 +254,5 @@ export function createSessionSignals({ onMetadata = () => {} } = {}) {
   $('signals-confirm').addEventListener('click',()=>{if(challengeStart===null)return;clearInterval(challengeTimer);$('signals-challenge-result').textContent=`Action confirmée manuellement après ${((performance.now()-challengeStart)/1000).toFixed(1)} s. Aucune validation automatique.`;challengeStart=null;$('signals-confirm').disabled=true;});
   $('signals-challenge').addEventListener('change',()=>{clearInterval(challengeTimer);challengeStart=null;$('signals-confirm').disabled=true;$('signals-challenge-result').textContent='Aucun défi actif.';});
   renderObservations();
-  return {start,stop,unavailable(message){deviceError=message;$('signals-state').textContent=message;}};
+  return {start,stop,toggleMicrophone(){ $('signals-mic').click(); },unavailable(message){deviceError=message;$('signals-state').textContent=message;}};
 }

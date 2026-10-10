@@ -14,6 +14,10 @@ Ouvrir **http://127.0.0.1:8765/**, puis activer la caméra. Un seul serveur doit
 
 La même caméra alimente le suivi, les filtres, GenD PE et les observations techniques. La console calcule un indice de confiance global : **max(0, 100 − indices GenD PE lissés − points d’alerte métadonnées)**. Aucune alerte appareil n’ajoute de points. Les composantes sont affichées avec cinq segments, verts pour un indice de confiance élevé et rouges pour un indice faible, sans interprétation probabiliste. Le choix Original / Transformé sélectionne la vidéo évaluée ; les métadonnées sont communes. Une composante absente empêche le calcul global. Les métadonnées décrivent **cet appareil**, commun aux deux vues, et non l’ordinateur d’un interlocuteur distant. Ce POC n’établit pas d’appel Zoom/Meet/WebRTC.
 
+## Indicateurs vidéo complémentaires
+
+La console ajoute cinq observations indépendantes du score : rythme et répétitions, clignements et mouvements, netteté visage/fond, cohérence voix/bouche et stabilité des contours. Le bouton **Activer la cohérence voix / bouche** utilise le microphone optionnel, sans enregistrement. Les mesures se construisent sur quelques secondes ; les données insuffisantes restent inconnues. Voir [les méthodes et limites](docs/visio-signal-layers.md).
+
 ## Panneau de session
 
 - **Règles conservées** : I1, L1, I3, I4, I5, I2, I6, X1 ; C4 faible (5 points), C10/C15 et C12/C13 facultatifs. X1 conserve +15 pour deux signaux parmi I1/I2/I3/I4/I5, +25 pour trois ou plus.

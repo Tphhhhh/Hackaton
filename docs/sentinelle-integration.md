@@ -28,6 +28,10 @@ Le microphone n’est jamais connecté à une sortie audio, enregistré ou envoy
 
 La console affiche le score global et deux familles : analyse vidéo puis métadonnées, chacune avec cinq segments et un détail repliable. Le score vidéo de confiance vaut `100 − indices GenD PE lissés`. Le score global vaut `max(0, score vidéo de confiance − points métadonnées)`. Une absence d’alerte n’apporte aucun bonus. Ce sont des indices exploratoires, pas des probabilités d’humanité. Le sélecteur Original / Transformé ne change que la source vidéo ; les métadonnées restent communes. Le niveau de chaque groupe est `floor(confiance / 20)` de 0 à 5 : 4–5 vert, 3 ambre, 0–2 rouge. Une source absente est grise et empêche le calcul global. Les métadonnées expirent après 8 s sans réponse ; la vidéo garde son expiration de 3 s. Les règles et leurs poids ne sont pas modifiés.
 
+## Indicateurs vidéo complémentaires
+
+La console présente maintenant cinq observations par source, indépendantes des scores : rythme/répétitions, activité faciale, netteté, cohérence voix/bouche et stabilité des contours. Le micro optionnel alimente aussi une comparaison locale son/bouche. Les mesures du face swap utilisent son propre suivi facial. Voir [les méthodes, limites et durées de vie](visio-signal-layers.md).
+
 ## Nouvelles observations
 
 - `navigator.webdriver` / `Headless` : indicateurs d’automatisation, non preuve de fraude. Pas d’identification fiable de Puppeteer/Playwright à partir du navigateur seul.

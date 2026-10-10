@@ -4,7 +4,7 @@ import { createLiveScores } from './live-scores.js';
 import { createScoreSmoother } from './score-smoothing.js';
 import { startLiveCamera } from './live-camera.js';
 
-export function createLiveComparison({ onVideoScore = () => {} } = {}) {
+export function createLiveComparison({ onVideoScore = () => {}, onSignalFrame = () => {}, onSignalReset = () => {} } = {}) {
   const $ = id => document.getElementById(id);
   const output = $('filtered-canvas'), context = output.getContext('2d');
   const smoothers = { original: createScoreSmoother(), filtered: createScoreSmoother() };
@@ -57,17 +57,18 @@ export function createLiveComparison({ onVideoScore = () => {} } = {}) {
     onResult(result) {
       if (!original || external || !enabled() || !latest?.frame.faces.length || result.portraitId !== $('filter-portrait').value) { result.bitmap.close(); return; }
       swapped?.bitmap.close(); swapped = result;
+      onSignalFrame('filtered', { bitmap: result.bitmap, timestamp: result.frame.timestamp }, { retrack: true });
       if (result.applied) scores.submit(result.originalJpeg, result.filteredJpeg, result.frame.timestamp);
       else scores.reset();
       paint();
     },
     onError(message) {
-      ready = false; failure = message; releaseSwap(); resetScores();
+      ready = false; failure = message; releaseSwap(); resetScores(); onSignalReset('filtered');
       $('toggle-filter').disabled = false; $('toggle-filter').textContent = 'Réessayer le face swap'; paint();
     },
   });
   const disconnect = () => {
-    resetScores();
+    resetScores(); onSignalReset('filtered');
     external = null; stopExternal(); stopExternal = () => {};
     externalFrame?.bitmap?.close(); externalFrame = null;
     $('connect-external').hidden = false; $('disconnect-external').hidden = true; $('toggle-filter').hidden = false;
@@ -81,6 +82,7 @@ export function createLiveComparison({ onVideoScore = () => {} } = {}) {
   };
   const resetScores = () => { scores.reset(); };
   const clear = () => {
+    onSignalReset();
     scores.stop(); neural.stop(); releaseSwap(); latest?.bitmap.close(); latest = null;
     disconnect(); failure = null; ready = false; original = null;
     context.clearRect(0, 0, output.width, output.height); output.hidden = true;
@@ -124,7 +126,7 @@ export function createLiveComparison({ onVideoScore = () => {} } = {}) {
     if (!frame.faces.length && !face) resetScores();
   }
   $('toggle-filter').addEventListener('click', () => {
-    resetScores();
+    resetScores(); onSignalReset('filtered');
     if (failure) {
       failure = null; ready = false;
       $('toggle-filter').setAttribute('aria-pressed', 'true'); neural.start();
@@ -134,6 +136,7 @@ export function createLiveComparison({ onVideoScore = () => {} } = {}) {
     $('toggle-filter').textContent = enabled() ? 'Désactiver le filtre' : 'Activer le filtre'; paint();
   });
   $('filter-portrait').addEventListener('change', () => {
+    onSignalReset('filtered');
     neural.selectPortrait($('filter-portrait').value);
     swapped?.bitmap.close(); swapped = null; resetScores();
     updatePortrait(); paint();
@@ -157,6 +160,7 @@ export function createLiveComparison({ onVideoScore = () => {} } = {}) {
       onState: message => { if (external === token) $('filter-status').textContent = message; },
       onFrame: frame => {
         if (external !== token) { frame.bitmap?.close(); return; }
+        onSignalFrame('filtered', frame, { audioComparable: false });
         externalFrame?.bitmap?.close(); externalFrame = frame.bitmap ? { frame, bitmap: frame.bitmap } : null; paint();
       },
       onError: () => {
@@ -171,11 +175,14 @@ export function createLiveComparison({ onVideoScore = () => {} } = {}) {
     prepare() { neural.start(); scores.start(); },
     render(frame) {
       if (!frame.bitmap) {
+        onSignalReset();
         releaseSwap(); latest?.bitmap.close(); latest = null;
         if (original) original.getContext('2d').clearRect(0, 0, original.width, original.height);
         context.clearRect(0, 0, output.width, output.height); output.dataset.filterApplied = 'false';
         $('filter-status').textContent = 'Caméra momentanément interrompue…'; resetScores(); return;
       }
+      onSignalFrame('original', frame);
+      if (!external && !enabled()) onSignalFrame('filtered', frame);
       latest?.bitmap.close(); latest = { frame, bitmap: frame.bitmap };
       if (!frame.faces.length && ready) releaseSwap();
       if (!external && enabled() && frame.faces.length) neural.submit(frame);

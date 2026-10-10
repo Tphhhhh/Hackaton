@@ -7,7 +7,7 @@ export function confidenceScore(videoRisk, metadataPenalty) {
   return valid(videoRisk) && valid(metadataPenalty) ? Math.max(0,100-videoRisk-metadataPenalty) : null;
 }
 
-export function createAnalysisConsole() {
+export function createAnalysisConsole({ onSource = () => {} } = {}) {
   const $=id=>document.getElementById(id);
   const format=n=>n===null?'—':n.toLocaleString('fr-FR',{maximumFractionDigits:1});
   let selected='original', metadata=null;
@@ -41,7 +41,7 @@ export function createAnalysisConsole() {
     $('console-formula').textContent='Score vidéo (100 − indices GenD PE) moins les points d’alerte métadonnées, avec un minimum de 0. Aucune alerte n’ajoute de points.';
     for(const key of ['original','filtered']) $(`console-source-${key}`).setAttribute('aria-pressed',String(selected===key));
   }
-  for(const key of ['original','filtered']) $(`console-source-${key}`).addEventListener('click',()=>{selected=key;render();});
+  for(const key of ['original','filtered']) $(`console-source-${key}`).addEventListener('click',()=>{selected=key;render();onSource(key);});
   render();
   return {
     video(key,score,note) {video[key]={score:score===null?null:score*100,note};render();},
