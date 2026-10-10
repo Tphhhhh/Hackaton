@@ -368,3 +368,13 @@ dialog::backdrop { background: #10121470; }
   .demo-score { padding: 20px; }
   .demo-score small { font-size: 9px; }
 }
+
+/* Independent display density; all model landmarks are retained internally. */
+.landmark-control { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: #53565d; }
+.landmark-control select { font: inherit; color: #25282d; background: #fff; border: 1px solid #d8dce0; border-radius: 8px; padding: 7px 8px; }
+.filter-points { margin: 20px 22px 0; }
+.live-only { display: none; }
+.compare-mode .live-only { display: inline-flex; }
+.compare-mode #toggle-tracking { display: none; }
+.compare-mode .tracking-bar { flex-wrap: wrap; }
+.compare-mode .tracking-count { margin-left: 0; }

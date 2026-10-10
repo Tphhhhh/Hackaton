@@ -1,55 +1,81 @@
 # Démo à deux vues — branche `live`
 
-La page d’accueil compare le flux webcam original (gauche) à une version
-transformée (droite). Les deux vues du filtre intégré utilisent exactement le
-même `ImageBitmap`, renvoyé par le worker après le tracking. Aucun fichier
-vidéo n’est créé. Un seul visage est suivi à la fois.
+La page compare la webcam originale à un **face swap neuronal InSwapper 128
+FP16**, exécuté sur le GPU NVIDIA de cet ordinateur. C’est le modèle de swap
+utilisé par Deep-Live-Cam ; son application de bureau n’est pas nécessaire.
+La vue transformée a un petit décalage de traitement, indiqué en millisecondes.
+Le modèle remplace le visage, pas les cheveux, la silhouette ou l’arrière-plan.
+Sa résolution faciale native de 128 pixels limite les détails en gros plan.
 
-- **Filtre intégré** : portrait de Brad Pitt projeté sur le maillage facial,
-  avec bord fondu en WebGL. C’est un masque 2D animé, pas un face swap neuronal.
-  Les points affichés à droite sont ceux qui pilotent la déformation.
-  Le portrait original et les crédits sont dans `public/filters/` (CC BY-SA 4.0).
-- **Scores** : scénario explicitement simulé (environ 6–10 % à gauche et
-  91–95 % avec le filtre). Ils évoluent progressivement, redescendent si le
-  filtre est désactivé, disparaissent sans visage et ne sont jamais injectés
-  dans le contrat de résultats GenD. Un futur adaptateur de détection réelle
-  devra remplacer `demo-scores.js` et son affichage « simulation ».
-- **Deep-Live-Cam / OBS** : lancer le logiciel séparément, puis utiliser
-  **Brancher Deep-Live-Cam** pour partager sa fenêtre d’aperçu. L’application
-  recalcule les points sur le flux partagé dans un second worker. Ce mode
-  comporte le délai du logiciel externe et n’est pas synchronisé image par
-  image avec la webcam originale. Aucun son n’est demandé. Revenir au filtre
-  intégré, arrêter la caméra ou quitter la page libère aussi le partage.
+## Démarrer la démo avec le vrai face swap
 
-Deep-Live-Cam n’est ni installé ni lancé par l’application. Sa documentation :
-https://github.com/hacksider/Deep-Live-Cam#usage
-Le test réel CUDA, la fluidité et la disponibilité simultanée de la webcam
-restent à vérifier sur le poste de démonstration. Certaines webcams ne peuvent
-être ouvertes que par une application ; une configuration OBS avec source
-virtuelle ou un pont de capture unique est alors nécessaire. La capture de
-fenêtre demande Chrome/Edge sur ordinateur et une autorisation explicite.
-Choisir uniquement la fenêtre d’aperçu pour ne pas afficher tout le bureau.
+Depuis la racine du dépôt, avec Python 3.12 et un pilote NVIDIA compatible CUDA 12 :
 
-Les tests automatisés couvrent le vrai modèle facial, la différence de pixels
-avec le filtre actif et le retour exact à l’original, les scores, le retour au
-mode extrait, les erreurs de portrait, le partage simulé et l’arrêt des flux.
-Le mode extrait historique est également accessible à `/?mode=clip`.
+```sh
+python3 -m venv visio/.cache/live-runtime
+visio/.cache/live-runtime/bin/pip install -r visio/requirements-live.lock.txt
+visio/.cache/live-runtime/bin/python -m visio.setup_live
+cd visio-demo
+npm ci
+npm run build
+cd ..
+OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 visio/.cache/live-runtime/bin/python -m visio.server --port 8770 --live-swap
+```
 
-Depuis `visio-demo`, lancer `npm ci` puis `npm run dev` et ouvrir l’adresse
-locale affichée. Cliquer sur **Activer la caméra** et autoriser la webcam.
-Le visage est suivi automatiquement (478 points), en vue miroir. **Arrêter la
-caméra** libère le flux ; quitter la page le libère également. Le bouton de
-suivi masque ou affiche les points. Le microphone n’est jamais demandé.
+Ouvrir **http://127.0.0.1:8770/**, puis **Activer la caméra**. Le serveur
+préchauffe les modèles avant d’annoncer son URL. Les téléchargements et le
+runtime restent dans `visio/.cache/`, ignoré par Git. Environ 469 Mo de poids,
+plus les bibliothèques CUDA. Les trois poids ont une révision et des SHA-256
+figés dans `visio/live_swap.py` ; `setup_live` vérifie leur intégrité.
 
-Le suivi fonctionne sans serveur Python. Les images ne sont ni enregistrées,
-ni envoyées à un serveur : `getUserMedia` alimente directement la vidéo, et un
-worker MediaPipe traite une seule image en mémoire à la fois, à au plus 20 Hz.
-Le débit réel dépend du matériel. Une seule personne est suivie. Le suivi
-facial ne produit pas de score GenD et ne vérifie pas l’identité.
+- **Points** : sélecteurs indépendants Aucun / Léger / Complet. Par défaut,
+  32 points à gauche et aucun à droite. MediaPipe calcule toujours les 478
+  repères ; le réglage modifie seulement leur affichage. Les points éventuels
+  à droite sont ceux de l’image originale envoyée au swap, pas une mesure de
+  la nouvelle identité.
+- **Traitement** : MediaPipe en worker dans le navigateur, puis image JPEG
+  (grand côté ≤640 pixels) vers `/api/live/swap` sur ce même ordinateur.
+  Une seule requête en cours ; les images intermédiaires sont ignorées.
+  Aucun fichier webcam n’est enregistré, aucun microphone demandé, aucun
+  service distant utilisé. Le portrait est chargé une fois au démarrage.
+- **Arrêt** : désactivation du filtre, arrêt caméra, changement d’extrait et
+  fermeture de page invalident les réponses tardives. L’arrêt caméra libère
+  ses pistes et les bitmaps. Une image déjà admise sur le GPU peut terminer
+  son calcul en mémoire ; sa réponse est ignorée après arrêt.
+- **Échecs** : moteur absent, GPU occupé ou erreur d’inférence ne déclenchent
+  jamais un masque 2D de substitution. Le message reste visible ; un bouton
+  permet de réessayer. Les résultats vieux de plus de deux secondes sont
+  retirés, avec leur score simulé.
+- **Scores** : scénario **explicitement simulé**, indépendant du face swap.
+  GenD PE n’est pas connecté au live. Les scores sont absents sans visage
+  ou sans transformation réussie, et descendent quand le filtre est coupé.
+- **Flux externe** : « Partager un flux externe » conserve la possibilité
+  de partager une fenêtre Deep-Live-Cam / OBS. Son tracking est recalculé
+  indépendamment. Arrêter la webcam arrête aussi ce partage.
 
-Utiliser `localhost`, `127.0.0.1` ou HTTPS (condition d’accès caméra des
-navigateurs). Chrome/Edge récents sont les cibles testées. La caméra physique
-et les autres navigateurs nécessitent une validation sur l’appareil cible.
+Le serveur écoute uniquement sur `127.0.0.1`, exige la même origine et un
+en-tête explicite, borne les JPEG à 1 Mio et 1280×720 pixels, et partage le
+verrou GPU avec l’analyse des fichiers. L’environnement live est séparé de
+celui de GenD ; pour analyser des clips GenD, utiliser son serveur/environnement
+habituel. Le mode extrait historique reste accessible à `/?mode=clip`.
+
+Le suivi MediaPipe seul fonctionne aussi via `npm run dev`, sans Python.
+Le face swap demande le serveur ci-dessus ; son absence est affichée.
+Chrome/Edge récents sont les cibles testées. La caméra physique et le rendu
+sur votre visage restent à apprécier sur le poste de démonstration.
+
+Modèles : [dépôt Deep-Live-Cam](https://github.com/hacksider/Deep-Live-Cam),
+[poids](https://huggingface.co/hacksider/deep-live-cam),
+[InsightFace et conditions des modèles préentraînés](https://github.com/deepinsight/insightface#license).
+La bibliothèque InsightFace est sous MIT ; ses modèles préentraînés ont des
+conditions distinctes, destinées à la recherche non commerciale.
+Portrait : `public/filters/ATTRIBUTION.md` (CC BY-SA 4.0).
+
+Les tests navigateur utilisent le vrai modèle MediaPipe et un transport de
+swap simulé pour tester les erreurs, la concurrence et les arrêts. Ils ne
+mesurent pas la qualité neuronale. Les tests Python vérifient JPEG, bornes,
+origine, verrou GPU et absence de fichier webcam. Le contrôle GPU réel se
+fait séparément sur une image de test publique.
 
 Au premier `npm run dev` ou `npm run build`, `prepare:live` copie le runtime
 WebAssembly et télécharge le modèle public Face Landmarker v1. Source Google :
@@ -166,7 +192,7 @@ Référence du contrôle : `/home/theophile/code/perso/Hackaton/docs/visio-inter
 
 ## Interface conférence et intégration à transmettre
 
-- Les boutons en bas pilotent réellement le lecteur : lecture/pause, son, retour au début, plein écran et retrait. Aucun accès webcam/micro n’est demandé.
+- Les boutons en bas pilotent réellement le lecteur : lecture/pause, son, retour au début, plein écran et retrait. En mode extrait, aucun accès webcam/micro n’est demandé.
 - Le panneau Visio affiche des jauges **0–1 de scores bruts**, sans pourcentage de certitude ni conclusion sur l’humanité du participant.
 - Le suivi n’affiche que les cadres et points reçus via `receiveTracking`. Aucun faux visage, maillage inventé ou calcul ML. L’état initial indique l’attente du moteur.
 - L’onglet Métadonnées réserve la place aux vérifications de l’autre module, avec valeurs de référence, résultats, erreurs et limites. Il ne lit aucune métadonnée lui-même.

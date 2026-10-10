@@ -24,9 +24,10 @@ SUFFIXES = {".mp4", ".webm", ".mov", ".mkv", ".avi"}
 class DemoServer(ThreadingHTTPServer):
     daemon_threads = False
 
-    def __init__(self, port=8765, frontend=None, analyzer=analyze):
+    def __init__(self, port=8765, frontend=None, analyzer=analyze, swapper=None):
         self.frontend = Path(frontend or ROOT.parent / "visio-demo/dist").resolve()
         self.analyzer = analyzer
+        self.swapper = swapper
         self.config = configuration(ROOT / "config.gend.json")
         self.slot = threading.Lock()
         self.state_lock = threading.Lock()
@@ -102,6 +103,9 @@ class Handler(SimpleHTTPRequestHandler):
         if self.path == "/api/status":
             return self.reply(200, {"backend": "gend", "mode": "local", "tracking_fps": 8,
                                     "analysis_fps": 2, "max_bytes": MAX_UPLOAD})
+        if self.path == "/api/live/status":
+            return self.reply(200, self.server.swapper.info if self.server.swapper else {
+                "ready": False, "error": "Face swap indisponible. Démarrez le serveur avec --live-swap."})
         if urlsplit(self.path).path.startswith("/api/"):
             return self.reply(404, {"error": "Route inconnue."})
         super().do_GET()
@@ -122,6 +126,8 @@ class Handler(SimpleHTTPRequestHandler):
     def do_POST(self):
         if not self.allowed(mutation=True):
             return
+        if self.path == "/api/live/swap":
+            return self.live_swap()
         try:
             media_id = self.media_id()
             suffix = parse_qs(urlsplit(self.path).query).get("suffix", [""])[0].lower()
@@ -161,14 +167,53 @@ class Handler(SimpleHTTPRequestHandler):
         finally:
             self.server.slot.release()
 
+    def live_swap(self):
+        from .live_swap import MAX_FRAME_BYTES
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+            if not 0 < length <= MAX_FRAME_BYTES or self.headers.get("Content-Type") != "image/jpeg" or self.headers.get("Transfer-Encoding"):
+                raise ValueError()
+        except ValueError:
+            return self.reply(400, {"error": "Image JPEG de 1 Mio maximum requise."})
+        if not self.server.swapper:
+            return self.reply(503, {"error": "Face swap indisponible. Démarrez le serveur avec --live-swap."})
+        if not self.server.slot.acquire(blocking=False):
+            return self.reply(409, {"error": "GPU occupé, image ignorée."})
+        try:
+            payload = self.rfile.read(length)
+            if len(payload) != length:
+                raise ValueError("Image incomplète.")
+            jpeg, result = self.server.swapper.process(payload)
+            self.send_response(200)
+            self.send_header("Content-Type", "image/jpeg")
+            self.send_header("Content-Length", str(len(jpeg)))
+            self.send_header("X-Visio-Swapped", "1" if result["applied"] else "0")
+            self.send_header("X-Visio-Inference-Ms", str(result["inference_ms"]))
+            self.end_headers()
+            self.wfile.write(jpeg)
+        except ValueError as error:
+            self.reply(400, {"error": str(error)})
+        except (socket.timeout, ConnectionResetError, BrokenPipeError):
+            pass
+        except Exception:
+            self.reply(500, {"error": "Face swap interrompu. Relancez la caméra ou vérifiez le moteur local."})
+        finally:
+            self.server.slot.release()
+
 
 def main():
     parser = argparse.ArgumentParser(description="Démo GenD locale, accessible uniquement sur 127.0.0.1.")
     parser.add_argument("--port", type=int, default=8765)
+    parser.add_argument("--live-swap", action="store_true", help="Précharger InSwapper sur le GPU NVIDIA pour la webcam")
     args = parser.parse_args()
     if not (ROOT.parent / "visio-demo/dist/index.html").is_file():
         parser.error("Construire l'interface : cd visio-demo && npm ci && npm run build")
-    server = DemoServer(args.port)
+    swapper = None
+    if args.live_swap:
+        from .live_swap import LiveSwapper
+        print("Chargement du face swap neuronal sur CUDA…", flush=True)
+        swapper = LiveSwapper()
+    server = DemoServer(args.port, swapper=swapper)
     print(f"Visio + GenD : http://127.0.0.1:{server.server_port}", flush=True)
     try:
         server.serve_forever()

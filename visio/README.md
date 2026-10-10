@@ -1,5 +1,7 @@
 # Visio — benchmark local sur clips
 
+Pour la webcam avec face swap neuronal sur GPU, voir le [démarrage live](../visio-demo/README.md#démarrer-la-démo-avec-le-vrai-face-swap).
+
 Module indépendant du **background check / métadonnées**. Il compare trois baselines CPU et **GenD CLIP-L/14 sur GPU**, produit un JSON et mesure les faux positifs, le rappel, les abstentions et les erreurs sur un corpus autorisé. Il ne vérifie ni l'identité civile ni une présence en direct. Aucun service AWS. Un serveur HTTP de démonstration optionnel relie l'interface au moteur sur la boucle locale.
 
 ## Interface reliée au moteur

@@ -1,6 +1,13 @@
 import { test, expect } from '@playwright/test';
 
 async function camera(page, { denied = false, delayed = false } = {}) {
+  // Stub only the neural HTTP transport. MediaPipe tracking below is real.
+  // Actual GPU image quality and latency are checked separately against Python.
+  await page.route('**/api/live/status', route => route.fulfill({ json: { ready: true, model: 'test transport' } }));
+  await page.route('**/api/live/swap', route => route.fulfill({
+    contentType: 'image/jpeg', path: new URL('./fixtures/grace-hopper.jpg', import.meta.url).pathname,
+    headers: { 'X-Visio-Swapped': '1', 'X-Visio-Inference-Ms': '42' },
+  }));
   await page.addInitScript(({ denied, delayed }) => {
     window.testStreams = [];
     navigator.mediaDevices.getUserMedia = async constraints => {
@@ -35,17 +42,19 @@ test('live model tracks a face, clears it when absent, mirrors, and releases cam
   expect(await page.evaluate(() => window.testStreams.length)).toBe(0);
   await page.locator('#start-camera').click();
   await expect(page.locator('#live-points')).toHaveText('478', { timeout: 30000 });
-  await expect(page.locator('#face-overlay circle')).toHaveCount(478);
+  await expect(page.locator('#face-overlay circle')).toHaveCount(32);
   await expect(page.locator('#timeline')).toBeHidden();
   await expect(page.locator('#analyze-local')).toBeDisabled();
   expect(await page.evaluate(() => window.testConstraints.audio)).toBe(false);
   const transforms = await page.evaluate(() => ['video', '#face-overlay'].map(s => getComputedStyle(document.querySelector(s)).transform));
   expect(transforms).toEqual(['matrix(-1, 0, 0, 1, 0, 0)', 'matrix(-1, 0, 0, 1, 0, 0)']);
   await page.screenshot({ path: 'test-results/live-desktop.png', fullPage: true });
-  await page.locator('#toggle-tracking').click();
+  await page.locator('#original-landmarks').selectOption('none');
   await expect(page.locator('#face-overlay')).toBeHidden();
-  await page.locator('#toggle-tracking').click();
+  await page.locator('#original-landmarks').selectOption('full');
   await expect(page.locator('#face-overlay circle')).toHaveCount(478);
+  await page.locator('#original-landmarks').selectOption('light');
+  await expect(page.locator('#face-overlay circle')).toHaveCount(32);
   await page.setViewportSize({ width: 390, height: 844 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({ path: 'test-results/live-mobile.png', fullPage: true });
@@ -55,7 +64,7 @@ test('live model tracks a face, clears it when absent, mirrors, and releases cam
   await page.locator('#stop-camera').click();
   await expect(page.locator('#stage-empty')).toBeVisible();
   expect(await page.evaluate(() => window.testStreams[0].getTracks().every(t => t.readyState === 'ended'))).toBe(true);
-  expect(writes).toEqual([]); expect(external).toEqual([]); expect(errors).toEqual([]);
+  expect(writes.every(url => url.endsWith('/api/live/swap'))).toBe(true); expect(external).toEqual([]); expect(errors).toEqual([]);
   // Restart uses a fresh stream and a fresh model timestamp sequence.
   await page.locator('#start-camera').click();
   await expect(page.locator('#live-points')).toHaveText('478', { timeout: 30000 });
@@ -112,7 +121,7 @@ test('model failure closes camera and clears the live state', async ({ page }) =
 
 test('comparison changes actual pixels, scores are simulated, and toggling restores the original', async ({ page }) => {
   await camera(page); await page.goto('/'); await page.locator('#start-camera').click();
-  await expect(page.locator('#filter-status')).toHaveText('Filtre Brad Pitt actif', { timeout: 30000 });
+  await expect(page.locator('#filter-status')).toContainText('Face swap Brad Pitt actif', { timeout: 30000 });
   await expect(page.locator('#demo-banner')).toContainText('SCORES SIMULÉS');
   await expect(page.locator('#filtered-canvas')).toHaveAttribute('data-filter-applied', 'true');
   // Compare the two canvases at the same JS turn. A color tweak or static poster
@@ -120,14 +129,20 @@ test('comparison changes actual pixels, scores are simulated, and toggling resto
   const difference = () => page.evaluate(() => {
     const left = document.querySelector('#live-original'), right = document.querySelector('#filtered-canvas');
     const a = left.getContext('2d').getImageData(0, 0, left.width, left.height).data;
-    const b = right.getContext('2d').getImageData(0, 0, right.width, right.height).data;
+    const scaled = document.createElement('canvas'); scaled.width = left.width; scaled.height = left.height;
+    scaled.getContext('2d').drawImage(right, 0, 0, left.width, left.height);
+    const b = scaled.getContext('2d').getImageData(0, 0, left.width, left.height).data;
     let count = 0; for (let i = 0; i < a.length; i += 4) if (Math.abs(a[i] - b[i]) > 5) count++;
     return count;
   });
   expect(await difference()).toBeGreaterThan(2000);
   expect(Number((await page.locator('#original-score').textContent()).replace(/\D/g, ''))).toBeLessThan(15);
-  expect(Number((await page.locator('#filtered-score').textContent()).replace(/\D/g, ''))).toBeGreaterThan(85);
-  await page.locator('#toggle-tracking').click(); await page.locator('#toggle-filter').click();
+  await expect.poll(async () => Number((await page.locator('#filtered-score').textContent()).replace(/\D/g, ''))).toBeGreaterThan(85);
+  await expect(page.locator('#filtered-canvas')).toHaveAttribute('data-point-count', '0');
+  await page.locator('#filtered-landmarks').selectOption('light');
+  await expect(page.locator('#filtered-canvas')).toHaveAttribute('data-point-count', '32');
+  await page.locator('#filtered-landmarks').selectOption('none');
+  await page.locator('#toggle-filter').click();
   await expect(page.locator('#filtered-canvas')).toHaveAttribute('data-filter-applied', 'false');
   await expect.poll(difference).toBe(0);
   await expect.poll(async () => Number((await page.locator('#filtered-score').textContent()).replace(/\D/g, ''))).toBeLessThan(15);
@@ -162,15 +177,15 @@ test('external window has its own detection and stopping releases both streams',
   expect(await page.evaluate(() => window.displayConstraints.audio)).toBe(false);
   await page.locator('#disconnect-external').click();
   expect(await page.evaluate(() => window.testExternal.getTracks()[0].readyState)).toBe('ended');
-  await expect(page.locator('#filter-status')).toHaveText('Filtre Brad Pitt actif');
+  await expect(page.locator('#filter-status')).toContainText('Face swap Brad Pitt actif');
   await page.locator('#connect-external').click();
   await expect.poll(() => page.evaluate(() => window.testExternal.getTracks()[0].readyState)).toBe('live');
   await page.locator('#stop-camera').click();
   expect(await page.evaluate(() => [...window.testStreams[0].getTracks(), ...window.testExternal.getTracks()].every(t => t.readyState === 'ended'))).toBe(true);
 });
 
-test('failed portrait leaves webcam usable without a fabricated high score', async ({ page }) => {
-  await camera(page); await page.route('**/filters/brad-pitt.jpg', route => route.abort());
+test('unavailable neural engine leaves webcam usable without a fabricated high score', async ({ page }) => {
+  await camera(page); await page.route('**/api/live/status', route => route.fulfill({ json: { ready: false, error: 'Moteur indisponible' } }));
   await page.goto('/'); await page.locator('#start-camera').click();
   await expect(page.locator('#live-points')).toHaveText('478', { timeout: 30000 });
   await expect(page.locator('#filter-status')).toContainText('indisponible');
@@ -182,4 +197,41 @@ test('opening an existing result from the demo returns to the analysis workspace
   await page.goto('/'); await page.locator('#open-sources').click(); await page.locator('[data-example="verify"]').click();
   await expect(page.locator('.conclusion')).toBeVisible();
   await expect(page.locator('#filtered-panel')).toBeHidden();
+});
+
+test('delayed swap has no queue and cannot reappear after disabling or stopping', async ({ page }) => {
+  await camera(page);
+  let release, calls = 0;
+  const held = new Promise(resolve => { release = resolve; });
+  await page.route('**/api/live/swap', async route => {
+    calls++; await held;
+    await route.fulfill({ contentType: 'image/jpeg', path: new URL('./fixtures/grace-hopper.jpg', import.meta.url).pathname,
+      headers: { 'X-Visio-Swapped': '1', 'X-Visio-Inference-Ms': '800' } }).catch(() => {});
+  });
+  await page.goto('/'); await page.locator('#start-camera').click();
+  await expect.poll(() => calls).toBe(1);
+  // Many camera frames arrive while this single request is held.
+  await page.waitForTimeout(650); expect(calls).toBe(1);
+  await page.locator('#toggle-filter').click(); release();
+  await expect(page.locator('#filter-status')).toContainText('Filtre désactivé');
+  await expect(page.locator('#filtered-canvas')).toHaveAttribute('data-filter-applied', 'false');
+  await page.locator('#stop-camera').click();
+  await expect(page.locator('#filtered-canvas')).toBeHidden();
+  await expect(page.locator('#filtered-score')).toHaveText('—');
+  expect(calls).toBe(1);
+});
+
+test('inference failure can retry without restarting the webcam', async ({ page }) => {
+  await camera(page);
+  let failing = true;
+  await page.route('**/api/live/swap', route => failing
+    ? route.fulfill({ status: 500, json: { error: 'Face swap interrompu.' } })
+    : route.fulfill({ contentType: 'image/jpeg', path: new URL('./fixtures/grace-hopper.jpg', import.meta.url).pathname,
+      headers: { 'X-Visio-Swapped': '1', 'X-Visio-Inference-Ms': '40' } }));
+  await page.goto('/'); await page.locator('#start-camera').click();
+  await expect(page.locator('#filter-status')).toContainText('interrompu');
+  await expect(page.locator('#filtered-score')).toHaveText('—');
+  failing = false; await page.getByRole('button', { name: 'Réessayer le face swap' }).click();
+  await expect(page.locator('#filter-status')).toContainText('Face swap Brad Pitt actif');
+  expect(await page.evaluate(() => window.testStreams.length)).toBe(1);
 });

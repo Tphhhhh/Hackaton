@@ -1,5 +1,5 @@
 // Camera frames stay in memory. One frame at a time goes to the local worker.
-export function startLiveCamera({ video, onState, onFrame, onError, onReady = () => {}, acquireMedia, filter = true }) {
+export function startLiveCamera({ video, onState, onFrame, onError, onReady = () => {}, acquireMedia }) {
   let stopped = false;
   let stream;
   let worker;
@@ -56,11 +56,11 @@ export function startLiveCamera({ video, onState, onFrame, onError, onReady = ()
       worker = new Worker(new URL('./live-tracker.worker.js', import.meta.url), { type: 'module' });
       worker.onerror = () => fail('Le suivi facial n’a pas pu démarrer. Rechargez la page puis réessayez.');
       worker.onmessage = ({ data }) => {
-        if (stopped) { data.bitmap?.close(); data.referenceImage?.close(); return; }
+        if (stopped) { data.bitmap?.close(); return; }
         if (data.type === 'ready') {
           clearTimeout(watchdog);
           ready = true;
-          try { onReady(data); } finally { data.referenceImage?.close(); }
+          onReady(data);
           onState(acquireMedia ? 'Partage en direct · suivi actif' : 'Caméra en direct · suivi actif');
         } else if (data.type === 'result') {
           clearTimeout(watchdog);
@@ -68,7 +68,7 @@ export function startLiveCamera({ video, onState, onFrame, onError, onReady = ()
           onFrame(data);
         } else if (data.type === 'error') fail('Le suivi facial est indisponible. Rechargez la page pour relancer le modèle.');
       };
-      worker.postMessage({ type: 'init', filter, baseUrl: new URL(`${import.meta.env.BASE_URL}live-assets/`, location.href).href });
+      worker.postMessage({ type: 'init', baseUrl: new URL(`${import.meta.env.BASE_URL}live-assets/`, location.href).href });
       armWatchdog('Le modèle de suivi n’a pas pu être chargé. Vérifiez les fichiers de l’application puis réessayez.');
       frameHandle = requestAnimationFrame(tick);
     } catch (error) {

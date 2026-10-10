@@ -4,6 +4,7 @@ import '@fontsource/inter-tight/latin-700.css';
 import './style.css';
 import { createLiveComparison } from './live-comparison.js';
 import { startLiveCamera } from './live-camera.js';
+import { visibleLandmarks } from './landmarks.js';
 import { connectLocalEngine } from './local-engine.js';
 import { icon, hydrateIcons } from './icons.js';
 import { parseSupplemental, frameAt, containedRect, MAX_SUPPLEMENTAL_BYTES } from './supplemental.js';
@@ -302,12 +303,13 @@ function drawTracking(time) {
   const live = media?.kind === 'live';
   const video = $('video-stage').querySelector('video');
   const overlay = $('face-overlay');
-  const enabled = $('toggle-tracking').getAttribute('aria-pressed') === 'true';
+  const mode = live ? $('original-landmarks').value : 'full';
+  const enabled = live ? mode !== 'none' : $('toggle-tracking').getAttribute('aria-pressed') === 'true';
   const frame = live ? liveFrame : tracking && video && !video.seeking ? frameAt(tracking.frames, time ?? video.currentTime) : null;
   let status = !enabled ? 'Affichage des coordonnées masqué' : live ? (!frame ? 'Démarrage du suivi…' : !frame.faces.length ? 'Aucun visage détecté' : 'Visage suivi en direct') : !tracking ? 'En attente de coordonnées du moteur' : !frame ? 'Pas de coordonnées à cet instant' : !frame.faces.length ? 'Aucun visage détecté à cet instant' : `${frame.faces.length} visage(s) · ${tracking.source}`;
   if ($('tracking-status').textContent !== status) $('tracking-status').textContent = status;
   $('overlay-chip').textContent = live ? (!enabled ? 'Suivi masqué' : !frame ? 'Suivi en préparation' : frame.faces.length ? 'Suivi en direct' : 'Aucun visage détecté') : !tracking ? 'Coordonnées en attente' : !enabled ? 'Suivi masqué' : !frame ? 'Instant non couvert' : !frame.faces.length ? 'Aucun visage détecté' : 'Coordonnées du moteur';
-  const count = enabled && frame ? frame.faces.reduce((n, face) => n + face.landmarks.length, 0) : null;
+  const count = enabled && frame ? frame.faces.reduce((n, face) => n + visibleLandmarks(face.landmarks, mode).length, 0) : null;
   $('tracking-count').textContent = count === null ? '— point' : `${count} point(s)`;
   if (!enabled || !frame || !video || !media) { overlay.replaceChildren(); overlay.toggleAttribute('hidden', true); lastOverlayKey = ''; return; }
   const { width, height } = $('video-stage').getBoundingClientRect();
@@ -321,7 +323,7 @@ function drawTracking(time) {
   for (const face of frame.faces) {
     const group = svg('g', { 'data-face-id': face.id });
     group.append(svg('rect', { x: rect.x + face.box.x * rect.width, y: rect.y + face.box.y * rect.height, width: face.box.width * rect.width, height: face.box.height * rect.height, rx: 6, class: 'face-box' }));
-    for (const point of face.landmarks) group.append(svg('circle', { cx: rect.x + point.x * rect.width, cy: rect.y + point.y * rect.height, r: live ? 1.2 : 3, class: 'landmark' }));
+    for (const point of visibleLandmarks(face.landmarks, mode)) group.append(svg('circle', { cx: rect.x + point.x * rect.width, cy: rect.y + point.y * rect.height, r: live ? 1.2 : 3, class: 'landmark' }));
     overlay.append(group);
   }
 }
@@ -329,6 +331,7 @@ $('toggle-tracking').addEventListener('click', () => {
   $('toggle-tracking').setAttribute('aria-pressed', String($('toggle-tracking').getAttribute('aria-pressed') !== 'true'));
   lastOverlayKey = ''; drawTracking();
 });
+$('original-landmarks').addEventListener('change', () => { lastOverlayKey = ''; drawTracking(); });
 new ResizeObserver(() => { lastOverlayKey = ''; drawTracking(); }).observe($('stage-shell'));
 const clock = seconds => `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
 function setControl(id, name, label) { $(id).innerHTML = icon(name); $(id).setAttribute('aria-label', label); $(id).title = label; }
