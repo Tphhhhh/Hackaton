@@ -20,7 +20,7 @@ async function seek(page, seconds) {
     await new Promise(resolve => { video.addEventListener('seeked', resolve, { once: true }); video.currentTime = time; });
   }, seconds);
 }
-test.beforeEach(async ({ page }) => { await page.goto('/'); });
+test.beforeEach(async ({ page }) => { await page.goto('/?mode=clip'); });
 
 test('commandes de conférence : lecture, pause, son et retour au début', async ({ page }) => {
   await expect(page.locator('#play-video')).toBeDisabled();

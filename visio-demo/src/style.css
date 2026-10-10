@@ -316,3 +316,55 @@ dialog::backdrop { background: #10121470; }
 .live-summary h3 { margin: 20px 0 12px; font-family: var(--display); font-size: 25px; }
 .live-summary .small-note + .small-note { margin-top: 16px; }
 #stage-empty .text-button { margin-top: 10px; }
+
+/* Two-feed demo. The clip workspace remains available through Sources. */
+#filtered-panel, #demo-banner, .demo-score { display: none; }
+.compare-mode .meeting-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; }
+.compare-mode #analysis-panel { display: none; }
+.compare-mode #filtered-panel, .compare-mode .demo-score { display: block; }
+.compare-mode #demo-banner { display: flex; }
+.demo-banner { align-items: center; justify-content: center; gap: 14px; margin: -16px 0 32px; flex-wrap: wrap; }
+.demo-banner p { font-size: 13px; color: var(--muted); }
+.compare-mode .stage-shell { min-height: 320px; aspect-ratio: 4 / 3; }
+.compare-mode .room-heading { margin-left: 10px; margin-right: 10px; }
+.compare-mode .room-note { display: none; }
+.compare-mode .stage-empty h2 { font-size: 28px; }
+.compare-mode .empty-video-icon { margin-bottom: 16px; }
+.compare-mode .media-card { border-radius: 28px; }
+#live-original, #filtered-canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #101214; transform: scaleX(-1); }
+#filtered-canvas.external-stream { transform: none; }
+.filter-controls { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 18px 22px 22px; min-height: 80px; }
+.filter-controls .button { font-size: 13px; }
+.demo-score { position: relative; padding: 22px 24px; border: 1px solid var(--line); border-radius: 22px; margin-top: 20px; }
+.demo-score>div:first-child { padding-right: 90px; }
+.demo-score span { font-size: 14px; }
+.demo-score small { display: block; margin-top: 5px; font-size: 10px; color: var(--muted); letter-spacing: .03em; }
+.demo-score strong { position: absolute; right: 24px; top: 20px; font-family: var(--display); font-size: 32px; letter-spacing: -.04em; }
+.demo-score-track { height: 5px; background: #e7e8eb; border-radius: 5px; margin-top: 18px; overflow: hidden; }
+.demo-score-track i { display: block; width: 0; height: 100%; background: #268563; transition: width .4s linear; }
+.transformed .demo-score-track i { background: #ca7c26; }
+.transformed { background: #fffaf1; }
+.filter-note { padding: 22px 12px 0; }
+.filter-help { margin: 12px 6px; }
+.filter-help p { font-size: 12px; color: var(--muted); padding: 8px; }
+.filter-credit { font-size: 10px; line-height: 1.6; color: var(--muted); padding: 8px 12px; }
+.filter-credit a { color: inherit; }
+.compare-mode #live-summary { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 32px; padding: 24px 28px; }
+.compare-mode #live-summary h3 { margin: 0; font-size: 22px; }
+.compare-mode #live-summary .badge { justify-self: start; }
+.compare-mode #live-summary .summary-metrics { margin: 0; padding: 8px 0; grid-column: 2; grid-row: 1 / 4; }
+.compare-mode #live-summary .small-note { margin: 0; }
+@media (max-width: 850px) {
+  .compare-mode .meeting-layout { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .demo-banner { text-align: center; }
+  .compare-mode #live-summary { display: block; }
+  .compare-mode #live-summary h3 { margin: 14px 0; }
+  .compare-mode #live-summary .small-note { margin-top: 10px; }
+}
+@media (max-width: 480px) {
+  .compare-mode .stage-shell { min-height: 340px; }
+  .compare-mode .room-heading { flex-wrap: wrap; }
+  .filter-controls { padding: 16px; }
+  .demo-score { padding: 20px; }
+  .demo-score small { font-size: 9px; }
+}

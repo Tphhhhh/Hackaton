@@ -1,5 +1,5 @@
 // Camera frames stay in memory. One frame at a time goes to the local worker.
-export function startLiveCamera({ video, onState, onFrame, onError }) {
+export function startLiveCamera({ video, onState, onFrame, onError, onReady = () => {}, acquireMedia, filter = true }) {
   let stopped = false;
   let stream;
   let worker;
@@ -41,8 +41,8 @@ export function startLiveCamera({ video, onState, onFrame, onError }) {
   (async () => {
     try {
       if (!navigator.mediaDevices?.getUserMedia) throw new Error('Utilisez localhost ou une adresse HTTPS pour accéder à la caméra.');
-      onState('Autorisez l’accès à votre caméra dans le navigateur…');
-      stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } } });
+      onState(acquireMedia ? 'Choisissez la fenêtre d’aperçu à partager…' : 'Autorisez l’accès à votre caméra dans le navigateur…');
+      stream = await (acquireMedia ? acquireMedia() : navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } } }));
       if (stopped) { stream.getTracks().forEach(track => track.stop()); return; }
       stream.getVideoTracks().forEach(track => {
         track.addEventListener('ended', () => fail('La caméra a été déconnectée. Rebranchez-la puis relancez-la.'));
@@ -52,22 +52,23 @@ export function startLiveCamera({ video, onState, onFrame, onError }) {
       armWatchdog('La caméra ne fournit pas d’image. Vérifiez sa disponibilité puis réessayez.');
       await video.play();
       if (stopped) return;
-      onState('Caméra connectée · chargement du suivi facial…');
+      onState(acquireMedia ? 'Flux partagé connecté · chargement du suivi facial…' : 'Caméra connectée · chargement du suivi facial…');
       worker = new Worker(new URL('./live-tracker.worker.js', import.meta.url), { type: 'module' });
       worker.onerror = () => fail('Le suivi facial n’a pas pu démarrer. Rechargez la page puis réessayez.');
       worker.onmessage = ({ data }) => {
-        if (stopped) return;
+        if (stopped) { data.bitmap?.close(); data.referenceImage?.close(); return; }
         if (data.type === 'ready') {
           clearTimeout(watchdog);
           ready = true;
-          onState('Caméra en direct · suivi actif');
+          try { onReady(data); } finally { data.referenceImage?.close(); }
+          onState(acquireMedia ? 'Partage en direct · suivi actif' : 'Caméra en direct · suivi actif');
         } else if (data.type === 'result') {
           clearTimeout(watchdog);
           busy = false;
           onFrame(data);
         } else if (data.type === 'error') fail('Le suivi facial est indisponible. Rechargez la page pour relancer le modèle.');
       };
-      worker.postMessage({ type: 'init', baseUrl: new URL(`${import.meta.env.BASE_URL}live-assets/`, location.href).href });
+      worker.postMessage({ type: 'init', filter, baseUrl: new URL(`${import.meta.env.BASE_URL}live-assets/`, location.href).href });
       armWatchdog('Le modèle de suivi n’a pas pu être chargé. Vérifiez les fichiers de l’application puis réessayez.');
       frameHandle = requestAnimationFrame(tick);
     } catch (error) {

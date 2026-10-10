@@ -21,7 +21,7 @@ test('explicit click sends selected bytes and binds result and real-coordinate c
       coordinate_space:'normalized',frames:[{time_seconds:0,faces:[]}] };
     await route.fulfill(json({media_id:mediaId,result:{...fixture,simulation:false},tracking}));
   });
-  await page.goto('/');
+  await page.goto('/?mode=clip');
   await page.locator('#video-file').setInputFiles(clip);
   await expect(page.locator('#analyze-local')).toBeEnabled();
   expect(posts).toBe(0);
@@ -43,7 +43,7 @@ test('replacing media cancels the active request and never displays its stale re
     started();await gate;
     await route.fulfill(json({media_id:mediaId,result:{...fixture,simulation:false},tracking:null})).catch(()=>{});
   });
-  await page.goto('/');
+  await page.goto('/?mode=clip');
   await page.locator('#video-file').setInputFiles(clip);
   await page.locator('#analyze-local').click();await admitted;
   await page.locator('#video-file').setInputFiles(clip);
@@ -56,7 +56,7 @@ test('replacing media cancels the active request and never displays its stale re
 
 test('wrong media binding and backend errors remain explicit without stale gauges', async ({ page }) => {
   await page.route('**/api/analyze/**', route=>route.fulfill(json({media_id:'wrong',result:fixture})));
-  await page.goto('/');await page.locator('#video-file').setInputFiles(clip);
+  await page.goto('/?mode=clip');await page.locator('#video-file').setInputFiles(clip);
   await page.locator('#analyze-local').click();
   await expect(page.locator('#engine-status')).toContainText('autre extrait');
   await expect(page.locator('.conclusion')).toHaveCount(0);

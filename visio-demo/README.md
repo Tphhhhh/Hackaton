@@ -1,4 +1,39 @@
-# Webcam en direct — branche `live`
+# Démo à deux vues — branche `live`
+
+La page d’accueil compare le flux webcam original (gauche) à une version
+transformée (droite). Les deux vues du filtre intégré utilisent exactement le
+même `ImageBitmap`, renvoyé par le worker après le tracking. Aucun fichier
+vidéo n’est créé. Un seul visage est suivi à la fois.
+
+- **Filtre intégré** : portrait de Brad Pitt projeté sur le maillage facial,
+  avec bord fondu en WebGL. C’est un masque 2D animé, pas un face swap neuronal.
+  Les points affichés à droite sont ceux qui pilotent la déformation.
+  Le portrait original et les crédits sont dans `public/filters/` (CC BY-SA 4.0).
+- **Scores** : scénario explicitement simulé (environ 6–10 % à gauche et
+  91–95 % avec le filtre). Ils évoluent progressivement, redescendent si le
+  filtre est désactivé, disparaissent sans visage et ne sont jamais injectés
+  dans le contrat de résultats GenD. Un futur adaptateur de détection réelle
+  devra remplacer `demo-scores.js` et son affichage « simulation ».
+- **Deep-Live-Cam / OBS** : lancer le logiciel séparément, puis utiliser
+  **Brancher Deep-Live-Cam** pour partager sa fenêtre d’aperçu. L’application
+  recalcule les points sur le flux partagé dans un second worker. Ce mode
+  comporte le délai du logiciel externe et n’est pas synchronisé image par
+  image avec la webcam originale. Aucun son n’est demandé. Revenir au filtre
+  intégré, arrêter la caméra ou quitter la page libère aussi le partage.
+
+Deep-Live-Cam n’est ni installé ni lancé par l’application. Sa documentation :
+https://github.com/hacksider/Deep-Live-Cam#usage
+Le test réel CUDA, la fluidité et la disponibilité simultanée de la webcam
+restent à vérifier sur le poste de démonstration. Certaines webcams ne peuvent
+être ouvertes que par une application ; une configuration OBS avec source
+virtuelle ou un pont de capture unique est alors nécessaire. La capture de
+fenêtre demande Chrome/Edge sur ordinateur et une autorisation explicite.
+Choisir uniquement la fenêtre d’aperçu pour ne pas afficher tout le bureau.
+
+Les tests automatisés couvrent le vrai modèle facial, la différence de pixels
+avec le filtre actif et le retour exact à l’original, les scores, le retour au
+mode extrait, les erreurs de portrait, le partage simulé et l’arrêt des flux.
+Le mode extrait historique est également accessible à `/?mode=clip`.
 
 Depuis `visio-demo`, lancer `npm ci` puis `npm run dev` et ouvrir l’adresse
 locale affichée. Cliquer sur **Activer la caméra** et autoriser la webcam.

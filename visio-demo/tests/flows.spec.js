@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 const example = name => JSON.parse(readFileSync(new URL(`../reference/examples/${name}.json`, import.meta.url)));
 const upload = (page, value, name = 'result.json') => page.locator('#json-file').setInputFiles({ name, mimeType: 'application/json', buffer: Buffer.from(typeof value === 'string' ? value : JSON.stringify(value)) });
 const fixture = seconds => new URL(`./fixtures/simulation-${seconds}s.mp4`, import.meta.url).pathname;
-test.beforeEach(async ({ page }) => { await page.goto('/'); });
+test.beforeEach(async ({ page }) => { await page.goto('/?mode=clip'); });
 async function chooseExample(page, id) {
   await page.locator('#open-sources').click();
   await page.locator(`[data-example="${id}"]`).click();

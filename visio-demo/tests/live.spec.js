@@ -109,3 +109,77 @@ test('model failure closes camera and clears the live state', async ({ page }) =
   await expect(page.locator('#start-camera')).toBeEnabled();
   await expect(page.locator('#face-overlay circle')).toHaveCount(0);
 });
+
+test('comparison changes actual pixels, scores are simulated, and toggling restores the original', async ({ page }) => {
+  await camera(page); await page.goto('/'); await page.locator('#start-camera').click();
+  await expect(page.locator('#filter-status')).toHaveText('Filtre Brad Pitt actif', { timeout: 30000 });
+  await expect(page.locator('#demo-banner')).toContainText('SCORES SIMULÉS');
+  await expect(page.locator('#filtered-canvas')).toHaveAttribute('data-filter-applied', 'true');
+  // Compare the two canvases at the same JS turn. A color tweak or static poster
+  // cannot pass the round trip to byte-identical source pixels when disabled.
+  const difference = () => page.evaluate(() => {
+    const left = document.querySelector('#live-original'), right = document.querySelector('#filtered-canvas');
+    const a = left.getContext('2d').getImageData(0, 0, left.width, left.height).data;
+    const b = right.getContext('2d').getImageData(0, 0, right.width, right.height).data;
+    let count = 0; for (let i = 0; i < a.length; i += 4) if (Math.abs(a[i] - b[i]) > 5) count++;
+    return count;
+  });
+  expect(await difference()).toBeGreaterThan(2000);
+  expect(Number((await page.locator('#original-score').textContent()).replace(/\D/g, ''))).toBeLessThan(15);
+  expect(Number((await page.locator('#filtered-score').textContent()).replace(/\D/g, ''))).toBeGreaterThan(85);
+  await page.locator('#toggle-tracking').click(); await page.locator('#toggle-filter').click();
+  await expect(page.locator('#filtered-canvas')).toHaveAttribute('data-filter-applied', 'false');
+  await expect.poll(difference).toBe(0);
+  await expect.poll(async () => Number((await page.locator('#filtered-score').textContent()).replace(/\D/g, ''))).toBeLessThan(15);
+  await page.locator('#toggle-filter').click();
+  await expect(page.locator('#filtered-canvas')).toHaveAttribute('data-filter-applied', 'true');
+  await page.evaluate(() => { window.testBlank = true; });
+  await expect(page.locator('#original-score')).toHaveText('—'); await expect(page.locator('#filtered-score')).toHaveText('—');
+  await page.locator('#stop-camera').click(); await expect(page.locator('#filtered-canvas')).toBeHidden();
+});
+
+test('external window has its own detection and stopping releases both streams', async ({ page }) => {
+  await camera(page);
+  await page.addInitScript(() => {
+    navigator.mediaDevices.getDisplayMedia = async constraints => {
+      window.displayConstraints = constraints;
+      const canvas = document.createElement('canvas'); canvas.width = 640; canvas.height = 480;
+      const context = canvas.getContext('2d'); context.fillStyle = '#55aa88';
+      context.fillRect(0, 0, 640, 480);
+      const stream = canvas.captureStream(20); window.testExternal = stream;
+      const timer = setInterval(() => context.fillRect(0, 0, 640, 480), 50);
+      const track = stream.getVideoTracks()[0], stop = track.stop.bind(track);
+      track.stop = () => { clearInterval(timer); stop(); }; return stream;
+    };
+  });
+  await page.goto('/'); await page.locator('#start-camera').click();
+  await expect(page.locator('#live-points')).toHaveText('478', { timeout: 30000 });
+  await page.locator('#connect-external').click();
+  await expect(page.locator('#filter-status')).toContainText('Flux externe', { timeout: 30000 });
+  await expect(page.locator('#filtered-tracking')).toHaveText('Aucun visage détecté');
+  await expect(page.locator('#live-points')).toHaveText('478');
+  await expect(page.locator('#filtered-score')).toHaveText('—');
+  expect(await page.evaluate(() => window.displayConstraints.audio)).toBe(false);
+  await page.locator('#disconnect-external').click();
+  expect(await page.evaluate(() => window.testExternal.getTracks()[0].readyState)).toBe('ended');
+  await expect(page.locator('#filter-status')).toHaveText('Filtre Brad Pitt actif');
+  await page.locator('#connect-external').click();
+  await expect.poll(() => page.evaluate(() => window.testExternal.getTracks()[0].readyState)).toBe('live');
+  await page.locator('#stop-camera').click();
+  expect(await page.evaluate(() => [...window.testStreams[0].getTracks(), ...window.testExternal.getTracks()].every(t => t.readyState === 'ended'))).toBe(true);
+});
+
+test('failed portrait leaves webcam usable without a fabricated high score', async ({ page }) => {
+  await camera(page); await page.route('**/filters/brad-pitt.jpg', route => route.abort());
+  await page.goto('/'); await page.locator('#start-camera').click();
+  await expect(page.locator('#live-points')).toHaveText('478', { timeout: 30000 });
+  await expect(page.locator('#filter-status')).toContainText('indisponible');
+  await expect(page.locator('#filtered-score')).toHaveText('—');
+  await expect(page.locator('#connect-external')).toBeEnabled();
+});
+
+test('opening an existing result from the demo returns to the analysis workspace', async ({ page }) => {
+  await page.goto('/'); await page.locator('#open-sources').click(); await page.locator('[data-example="verify"]').click();
+  await expect(page.locator('.conclusion')).toBeVisible();
+  await expect(page.locator('#filtered-panel')).toBeHidden();
+});

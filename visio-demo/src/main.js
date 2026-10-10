@@ -2,6 +2,7 @@ import '@fontsource/inter/latin-400.css';
 import '@fontsource/inter/latin-500.css';
 import '@fontsource/inter-tight/latin-700.css';
 import './style.css';
+import { createLiveComparison } from './live-comparison.js';
 import { startLiveCamera } from './live-camera.js';
 import { connectLocalEngine } from './local-engine.js';
 import { icon, hydrateIcons } from './icons.js';
@@ -40,6 +41,8 @@ let supplementalSequence = { tracking: 0, metadata: 0 };
 let lastOverlayKey = '';
 let liveFrame = null;
 hydrateIcons();
+const comparison = createLiveComparison();
+if (new URLSearchParams(location.search).get('mode') === 'clip') document.body.classList.remove('compare-mode');
 
 
 function alertAt(id, messages = []) {
@@ -178,7 +181,7 @@ window.visioDemo = Object.freeze({
 const examples = [ ['verify', 'Indice à vérifier', verify], ['no_signal', 'Aucun indice', noSignal], ['indeterminate', 'Insuffisante', indeterminate], ['partial', 'Partielle', partial], ['failed', 'Échec', failed], ['cancelled', 'Annulée', cancelled] ];
 for (const [id, label, value] of examples) {
   const button = el('button', 'example-button', label); button.dataset.example = id; button.setAttribute('aria-pressed', 'false'); button.setAttribute('aria-label', `Simulation : ${label}`);
-  button.addEventListener('click', () => { const outcome = receiveResult({ ...value, simulation: true }, `Simulation · ${label}`); if (outcome.ok) button.setAttribute('aria-pressed', 'true'); $('sources-dialog').close(); selectTab('visio'); });
+  button.addEventListener('click', () => { enterClipWorkspace(); const outcome = receiveResult({ ...value, simulation: true }, `Simulation · ${label}`); if (outcome.ok) button.setAttribute('aria-pressed', 'true'); $('sources-dialog').close(); selectTab('visio'); });
   $('examples').append(button);
 }
 $('clear-result').addEventListener('click', clearResult);
@@ -213,8 +216,12 @@ for (const name of ['visio', 'metadata']) {
 $('open-sources').addEventListener('click', () => $('sources-dialog').showModal());
 $('close-sources').addEventListener('click', () => $('sources-dialog').close());
 for (const id of ['choose-video', 'stage-replace', 'source-video']) $(id).addEventListener('click', () => { $('sources-dialog').close(); $('video-file').click(); });
-for (const id of ['import-result', 'source-result']) $(id).addEventListener('click', () => { $('sources-dialog').close(); selectTab('visio'); $('json-file').click(); });
-for (const id of ['import-metadata', 'source-metadata']) $(id).addEventListener('click', () => { $('sources-dialog').close(); selectTab('metadata'); $('metadata-file').click(); });
+function enterClipWorkspace() {
+  if (media?.kind === 'live') clearVideo();
+  document.body.classList.remove('compare-mode');
+}
+for (const id of ['import-result', 'source-result']) $(id).addEventListener('click', () => { enterClipWorkspace(); $('sources-dialog').close(); selectTab('visio'); $('json-file').click(); });
+for (const id of ['import-metadata', 'source-metadata']) $(id).addEventListener('click', () => { enterClipWorkspace(); $('sources-dialog').close(); selectTab('metadata'); $('metadata-file').click(); });
 $('source-tracking').addEventListener('click', () => $('tracking-file').click());
 
 function clearSupplemental(kind) {
@@ -342,6 +349,7 @@ $('fullscreen-video').addEventListener('click', async () => { try { if (document
 function clearVideo() {
   videoSequence++;
   liveFrame = null;
+  comparison.clear();
   setLiveMode(false);
   disposeVideo(); disposeVideo = () => {};
   if (videoUrl) { URL.revokeObjectURL(videoUrl); videoUrl = null; }
@@ -360,6 +368,7 @@ $('clear-video').addEventListener('click', clearVideo);
 $('video-file').addEventListener('change', event => {
   const file = event.target.files[0]; if (!file) return;
   clearVideo();
+  document.body.classList.remove('compare-mode');
   const error = videoFileError(file); if (error) return alertAt('video-alert', [error]);
   const sequence = videoSequence;
   const video = el('video'); video.preload = 'metadata'; video.playsInline = true; video.muted = true;
@@ -421,17 +430,22 @@ function openCamera() {
   video.autoplay = true; video.playsInline = true; video.muted = true;
   video.setAttribute('aria-label', 'Webcam en direct, vue miroir');
   media = { id: crypto.randomUUID(), kind: 'live', name: 'Webcam en direct', duration_seconds: null, width: 0, height: 0 };
+  document.body.classList.add('compare-mode');
   setLiveMode(true);
-  $('video-stage').append(video); $('video-stage').hidden = false; $('stage-empty').hidden = true;
+  const originalCanvas = el('canvas'); originalCanvas.id = 'live-original'; originalCanvas.hidden = true;
+  originalCanvas.setAttribute('aria-label', 'Flux webcam original synchronisé');
+  $('video-stage').append(video, originalCanvas); comparison.start(originalCanvas); $('video-stage').hidden = false; $('stage-empty').hidden = true;
   for (const id of ['stage-top', 'stage-name']) $(id).hidden = false;
   $('stage-filename').textContent = 'Vous · vue miroir';
   $('fullscreen-video').disabled = false;
   $('media-reference').textContent = `Session webcam : ${media.id}`;
   window.dispatchEvent(new CustomEvent('visio:mediachange', { detail: { media: { ...media } } }));
   disposeVideo = startLiveCamera({ video,
+    onReady: data => { if (sequence === videoSequence) comparison.prepare(data); },
     onState: message => { if (sequence === videoSequence) { $('live-status').textContent = message; $('video-info').textContent = message; } },
     onFrame: frame => {
-      if (sequence !== videoSequence) return;
+      if (sequence !== videoSequence) { frame.bitmap?.close(); return; }
+      comparison.render(frame);
       media.width = video.videoWidth; media.height = video.videoHeight;
       liveFrame = { time_seconds: frame.timestamp / 1000, faces: frame.faces };
       $('live-points').textContent = String(frame.faces.reduce((sum, face) => sum + face.landmarks.length, 0));
