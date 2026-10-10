@@ -333,3 +333,14 @@ dialog { border: 1px solid var(--line); border-radius: 16px; }
 @media (prefers-reduced-motion: no-preference) {
  .console-source button { transition: background .15s ease-out, color .15s ease-out; }
 }
+
+/* Keep attribution and secondary explanations available without crowding the work area. */
+.compare-mode .filter-help { margin-bottom: 0; }
+.compare-mode .filter-help .filter-credit { padding: 8px 0 12px; }
+.session-info-details { grid-column: 1 / -1; border-top: 1px solid var(--line); margin-top: 8px; }
+.session-info-details>summary { min-height: 44px; padding: 12px 0; font-size: 13px; color: var(--blue); cursor: pointer; }
+.compare-mode #live-summary .session-info-details p { margin: 8px 0; max-width: 80ch; }
+.workspace-name { font-family: inherit; letter-spacing: normal; }
+/* Empty camera instructions may wrap; let their content determine the height. */
+.compare-mode #stage-shell:has(#stage-empty:not([hidden])) { aspect-ratio: auto; min-height: 360px; }
+.compare-mode #stage-empty:not([hidden]) { position: relative; min-height: 360px; }
