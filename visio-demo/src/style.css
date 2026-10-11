@@ -429,14 +429,17 @@ dialog::backdrop { background: rgba(16, 18, 22, .45); }
 /* ── One screen, no scroll (comparison, desktop) ───────────── */
 /* Fixed vertical budget around the frames: bar 84 + top 20 + label 42 + controls 60 + signals 146 + bottom 32. */
 @media (min-width: 1100px) {
-  .compare-mode { --chrome-h: 360px; --rail-w: 320px; --frame-w: min(calc((min(100vw, 1760px) - 2 * var(--gutter) - var(--rail-w) - 56px - 24px) / 2), calc((100dvh - var(--chrome-h)) * 4 / 3)); }
-  .compare-mode .meeting-app { max-width: 1760px; height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+  /* --ui scales text and controls on big screens; frames always take the free space. */
+  .compare-mode { --ui: 1; --chrome-h: calc(360px * var(--ui)); --rail-w: calc(320px * var(--ui)); --gap: calc(24px * var(--ui));
+    --frame-w: min(calc((100vw - 2 * var(--gutter) - var(--rail-w) - 2.33 * var(--gap) - var(--gap)) / 2), calc((100dvh - var(--chrome-h)) * 4 / 3)); }
+  .compare-mode .meeting-app { max-width: none; height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
   .compare-mode .meeting-layout { flex: 1; min-height: 0; padding: 20px 0 32px; }
   .compare-mode .page-footer { display: none; }
-  .compare-mode .workspace-grid { grid-template-columns: auto var(--rail-w); grid-template-rows: auto auto; grid-template-areas: "stage rail" "signals rail"; justify-content: center; align-content: start; column-gap: 56px; }
-  .compare-mode .comparison-workspace { display: flex; gap: 24px; }
+  .compare-mode .workspace-grid { grid-template-columns: auto var(--rail-w); grid-template-rows: auto auto; grid-template-areas: "stage rail" "signals rail"; justify-content: center; align-content: start; column-gap: calc(2.33 * var(--gap)); }
+  .compare-mode .comparison-workspace { display: flex; gap: var(--gap); }
   .compare-mode .conference { flex: none; width: var(--frame-w); }
-  .compare-mode #video-signal-layers { width: calc(var(--frame-w) * 2 + 24px); margin-top: 20px; }
+  .compare-mode #video-signal-layers { width: calc(var(--frame-w) * 2 + var(--gap)); margin-top: calc(20px * var(--ui)); }
+  .compare-mode :is(.topbar, .room-heading, .card-footer, .stage-top, .points-chip, .signal-layers-heading, #signal-layer-rows, .rail) { zoom: var(--ui); }
   .compare-mode .room-heading { margin-bottom: 14px; min-height: 28px; }
   .compare-mode .card-footer { padding-top: 16px; }
   .compare-mode .signal-layers-heading { padding-bottom: 10px; min-height: 32px; align-items: center; }
@@ -457,6 +460,13 @@ dialog::backdrop { background: rgba(16, 18, 22, .45); }
   .compare-mode .console-detail { margin-top: 2px; }
   .compare-mode .console-footnote { margin-top: 14px; }
   .compare-mode #live-summary { margin-top: 8px; }
+}
+@media (min-width: 2200px) and (min-height: 1200px) {
+  .compare-mode { --ui: 1.4; }
+  .compare-mode .rail { max-height: none; overflow: visible; }
+}
+@media (min-width: 3000px) and (min-height: 1650px) {
+  .compare-mode { --ui: 1.9; }
 }
 @media (min-width: 1100px) and (max-height: 760px) {
   .compare-mode .console-overall strong { font-size: 64px; }
