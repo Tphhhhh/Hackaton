@@ -8,12 +8,12 @@ const spread = a => a.length ? Math.sqrt(mean(a.map(x=>(x-mean(a))**2))) : 0;
 export function createSessionSignals({ onMetadata = () => {}, onAudio = () => {}, onMicrophone = () => {} } = {}) {
   const panel=document.createElement('aside'); panel.id='session-panel'; panel.setAttribute('aria-label','Signaux techniques de cet appareil'); panel.tabIndex=-1;
   panel.innerHTML=`
-    <div class="signals-heading"><div><p class="signals-kicker">CONSOLE</p><h2>Analyse de session</h2></div><span id="signals-dot" class="signals-dot"></span></div>
-    <p class="console-source-label" id="console-source-label">Flux analysé</p>
-    <div class="console-source" role="group" aria-labelledby="console-source-label"><button id="console-source-original" aria-pressed="true">Original</button><button id="console-source-filtered" aria-pressed="false">Transformé</button></div>
-    <div class="console-overall"><span>Score global · confiance</span><div><strong id="console-overall-score">—</strong><span> / 100</span></div><p id="console-overall-state">En attente des analyses</p></div>
+    <div class="console-header"><div class="signals-heading"><div><p class="signals-kicker">LES INDICES, EN PERSPECTIVE</p><h2>Analyse de session</h2></div><span id="signals-dot" class="signals-dot"></span></div>
+    <div class="console-source-field"><p class="console-source-label" id="console-source-label">Flux analysé</p>
+    <div class="console-source" role="group" aria-labelledby="console-source-label"><button id="console-source-original" aria-pressed="true">Original</button><button id="console-source-filtered" aria-pressed="false">Transformé</button></div></div></div>
+    <div class="console-result"><div class="console-overall"><span>Score global · confiance</span><div><strong id="console-overall-score">—</strong><span> / 100</span></div><p id="console-overall-state">En attente des analyses</p></div>
     <p class="console-legend"><span>0 · Inquiétant</span><span>100 · Rassurant</span></p>
-    <p class="console-scale-help">Plus le score est élevé, plus les indices sont rassurants. Ce n’est pas une preuve d’authenticité.</p>
+    <p class="console-scale-help">Plus le score est élevé, plus les indices sont rassurants. Ce n’est pas une preuve d’authenticité.</p></div>
     <section class="console-group" aria-labelledby="console-video-title">
       <div class="console-group-heading"><h3 id="console-video-title">Analyse vidéo</h3><span id="console-video-bars-value">— / 5</span></div>
       <div id="console-video-bars" class="console-bars" role="meter" aria-valuemin="0" aria-valuemax="5" aria-label="Analyse vidéo indisponible"><i></i><i></i><i></i><i></i><i></i></div>
@@ -68,7 +68,7 @@ export function createSessionSignals({ onMetadata = () => {}, onAudio = () => {}
     </section>
     <details class="console-detail console-method"><summary>Calcul du score global</summary><p id="console-formula" class="signals-help"></p></details>
     <p class="console-footnote">Indice exploratoire, pas une probabilité. Métadonnées communes aux deux vues ; contrôles incomplets visibles dans les détails.</p>`;
-  document.querySelector('.meeting-layout').append(panel);
+  $('live-summary').before(panel);
   let stream=null, video=null, generation=0, interval, frameId, frames=[], lastPresentation, previousCamera, previousSettings;
   let cameraChanges=0, settingsChanges=0, gpu='', deviceError='', controls=[], interactions={moves:0,keys:0,pastes:0}, keyTimes=[];
   let activeRequest=null, revision=0, debounce, networkPending=false, networkEpoch=0, networkControllers=new Set(), network={ip:'',org:'',rtt_ms:[]}, lastIP='', ipChanges=0, networkAt=0;

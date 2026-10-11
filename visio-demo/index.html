@@ -12,17 +12,18 @@
   <div class="meeting-app">
     <header class="topbar">
       <a class="brand" href="./" aria-label="Visio, accueil"><span class="brand-mark" data-icon="video"></span>visio</a>
-      <h1 class="workspace-name">Comparaison vidéo</h1>
-      <div class="header-right"><span class="local-badge"><span data-icon="lock"></span>Un espace privé</span><button id="open-sources" class="button secondary" aria-haspopup="dialog"><span data-icon="folder"></span><span>Sources & simulations</span></button></div>
+      <span class="workspace-name">Le laboratoire</span>
+      <nav class="workspace-jumps" aria-label="Accès aux zones de travail"><a href="#comparison-video">Comparaison</a><a href="#session-panel">Analyse</a><a href="#video-signal-layers">Signaux</a></nav>
+      <div class="header-right"><span class="local-badge"><span data-icon="lock"></span>Local & privé</span><button id="open-sources" class="button secondary" aria-haspopup="dialog"><span data-icon="folder"></span><span>Sources & simulations</span></button></div>
     </header>
-    <nav class="workspace-jumps" aria-label="Accès aux zones de travail"><a href="#comparison-video">Vidéos</a><a href="#session-panel">Analyse</a><a href="#video-signal-layers">Indicateurs</a></nav>
+    <section class="workspace-intro" aria-labelledby="workspace-title"><div><p class="eyebrow">L’IMAGE SOUS UN AUTRE ANGLE</p><h1 id="workspace-title">Au-delà des <em>apparences.</em></h1></div><p>Deux vues, un même instant. <br>Observez, comparez, explorez les indices.</p></section>
     <main class="meeting-layout">
       <div class="comparison-workspace">
       <section id="comparison-video" class="conference" aria-label="Vidéo de la conférence" tabindex="-1">
         <div class="room-heading"><span>01 · Vous, en direct</span><span id="source-label" class="recording-label">Webcam · en direct</span></div>
         <div class="media-card">
         <div id="stage-shell" class="stage-shell">
-          <div id="stage-empty" class="stage-empty"><div class="empty-video-icon" data-icon="play"></div><h2>Votre visage, en direct.</h2><p>Activez votre webcam.<br>Les deux vues démarrent ensemble.</p><button id="start-camera" class="button primary"><span data-icon="video"></span>Activer la caméra</button><button id="choose-video" class="text-button">Ou choisir un extrait vidéo</button><span class="stage-formats">Sans enregistrement · Microphone désactivé</span></div>
+          <div id="stage-empty" class="stage-empty"><div class="empty-video-icon" data-icon="play"></div><h2>Tout commence par un regard.</h2><p>Activez votre webcam.<br>Les deux vues démarrent ensemble.</p><button id="start-camera" class="button primary"><span data-icon="video"></span>Activer la caméra</button><button id="choose-video" class="text-button">Ou choisir un extrait vidéo</button><span class="stage-formats">Sans enregistrement · Microphone désactivé</span></div>
           <div id="video-stage" hidden></div>
           <svg id="face-overlay" aria-label="Coordonnées faciales fournies par le moteur" xmlns="http://www.w3.org/2000/svg" hidden></svg>
           <div id="stage-top" class="stage-top" hidden><span class="stage-chip"><span class="status-dot"></span><span id="source-chip">LECTURE LOCALE</span></span><span id="overlay-chip" class="stage-chip">Coordonnées en attente</span></div>
@@ -40,7 +41,7 @@
         <div class="room-heading"><span id="filtered-name">02 · Brad Pitt</span><span class="recording-label" id="filter-source-label">Face swap neuronal · GPU</span></div>
         <div class="media-card">
           <div id="filtered-stage" class="stage-shell">
-            <div id="filtered-placeholder" class="stage-empty"><div class="empty-video-icon" data-icon="scan"></div><h2>L’autre version de vous.</h2><p>Le filtre suit les mouvements<br>de votre visage.</p><span class="stage-formats">Même webcam · traitement local</span></div>
+            <div id="filtered-placeholder" class="stage-empty"><div class="portrait-sketch" aria-hidden="true"><svg viewBox="0 0 100 112"><path d="M28 42C28 13 73 13 73 42v22c0 23-45 23-45 0Z M16 106c0-25 17-29 34-29s34 4 34 29 M38 47h2m20 0h2 M50 48l-3 12h7 M41 68q9 5 18 0"/></svg><span></span></div><h2>Le même instant.<br><em>Un autre visage.</em></h2><p>Le filtre suit les mouvements<br>de votre visage.</p><span class="stage-formats">Même webcam · traitement local</span></div>
             <canvas id="filtered-canvas" aria-label="Flux transformé en direct" hidden></canvas>
             <div class="stage-top"><span class="stage-chip">VISAGE TRANSFORMÉ</span><span class="stage-chip">DÉMONSTRATION</span></div>
           </div>
