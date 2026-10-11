@@ -1,0 +1,188 @@
+{
+  "seed": 20261011,
+  "excluded_subjects": [
+    "fadg0",
+    "faks0",
+    "fcft0",
+    "fdrd1",
+    "fedw0",
+    "fram1"
+  ],
+  "pairs": [
+    {
+      "index": 1,
+      "subject": "fcmh0",
+      "donor": "fjre0",
+      "member": "DeepfakeTIMIT/higher_quality/fcmh0/sa1-video-fjre0.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 2,
+      "subject": "fdac1",
+      "donor": "felc0",
+      "member": "DeepfakeTIMIT/higher_quality/fdac1/sa1-video-felc0.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 3,
+      "subject": "felc0",
+      "donor": "fdac1",
+      "member": "DeepfakeTIMIT/higher_quality/felc0/sa1-video-fdac1.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 4,
+      "subject": "fjas0",
+      "donor": "fjwb0",
+      "member": "DeepfakeTIMIT/higher_quality/fjas0/sa1-video-fjwb0.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 5,
+      "subject": "fjem0",
+      "donor": "fkms0",
+      "member": "DeepfakeTIMIT/higher_quality/fjem0/sa1-video-fkms0.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 6,
+      "subject": "fjre0",
+      "donor": "fcmh0",
+      "member": "DeepfakeTIMIT/higher_quality/fjre0/sa1-video-fcmh0.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 7,
+      "subject": "fkms0",
+      "donor": "fjem0",
+      "member": "DeepfakeTIMIT/higher_quality/fkms0/sa1-video-fjem0.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 8,
+      "subject": "mccs0",
+      "donor": "mmdm2",
+      "member": "DeepfakeTIMIT/higher_quality/mccs0/sa1-video-mmdm2.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 9,
+      "subject": "mcem0",
+      "donor": "mdld0",
+      "member": "DeepfakeTIMIT/higher_quality/mcem0/sa1-video-mdld0.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 10,
+      "subject": "mdab0",
+      "donor": "mpdf0",
+      "member": "DeepfakeTIMIT/higher_quality/mdab0/sa1-video-mpdf0.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 11,
+      "subject": "mdbb0",
+      "donor": "mrcz0",
+      "member": "DeepfakeTIMIT/higher_quality/mdbb0/sa1-video-mrcz0.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 12,
+      "subject": "mdld0",
+      "donor": "mcem0",
+      "member": "DeepfakeTIMIT/higher_quality/mdld0/sa1-video-mcem0.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 13,
+      "subject": "mgwt0",
+      "donor": "mjar0",
+      "member": "DeepfakeTIMIT/higher_quality/mgwt0/sa1-video-mjar0.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 14,
+      "subject": "mjar0",
+      "donor": "mgwt0",
+      "member": "DeepfakeTIMIT/higher_quality/mjar0/sa1-video-mgwt0.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 15,
+      "subject": "mjsw0",
+      "donor": "mmdb1",
+      "member": "DeepfakeTIMIT/higher_quality/mjsw0/sa1-video-mmdb1.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 16,
+      "subject": "mmdb1",
+      "donor": "mjsw0",
+      "member": "DeepfakeTIMIT/higher_quality/mmdb1/sa1-video-mjsw0.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 17,
+      "subject": "mmdm2",
+      "donor": "mccs0",
+      "member": "DeepfakeTIMIT/higher_quality/mmdm2/sa1-video-mccs0.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 18,
+      "subject": "mpdf0",
+      "donor": "mdab0",
+      "member": "DeepfakeTIMIT/higher_quality/mpdf0/sa1-video-mdab0.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 19,
+      "subject": "mpgl0",
+      "donor": "mwbt0",
+      "member": "DeepfakeTIMIT/higher_quality/mpgl0/sa1-video-mwbt0.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 20,
+      "subject": "mrcz0",
+      "donor": "mdbb0",
+      "member": "DeepfakeTIMIT/higher_quality/mrcz0/sa1-video-mdbb0.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 21,
+      "subject": "mrgg0",
+      "donor": "msjs1",
+      "member": "DeepfakeTIMIT/higher_quality/mrgg0/sa1-video-msjs1.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 22,
+      "subject": "mrjo0",
+      "donor": "mstk0",
+      "member": "DeepfakeTIMIT/higher_quality/mrjo0/sa1-video-mstk0.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 23,
+      "subject": "msjs1",
+      "donor": "mrgg0",
+      "member": "DeepfakeTIMIT/higher_quality/msjs1/sa1-video-mrgg0.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 24,
+      "subject": "mstk0",
+      "donor": "mrjo0",
+      "member": "DeepfakeTIMIT/higher_quality/mstk0/sa1-video-mrjo0.avi",
+      "utterance": "sa1"
+    },
+    {
+      "index": 25,
+      "subject": "mwbt0",
+      "donor": "mpgl0",
+      "member": "DeepfakeTIMIT/higher_quality/mwbt0/sa1-video-mpgl0.avi",
+      "utterance": "sa1"
+    }
+  ]
+}

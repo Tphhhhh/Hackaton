@@ -1,0 +1,704 @@
+{
+  "model": "gend_pe",
+  "total": 50,
+  "matrix": {
+    "real": {
+      "verify": 2,
+      "no_signal": 23,
+      "indeterminate": 0,
+      "error": 0
+    },
+    "attack": {
+      "verify": 25,
+      "no_signal": 0,
+      "indeterminate": 0,
+      "error": 0
+    }
+  },
+  "correct_end_to_end": {
+    "count": 48,
+    "total": 50,
+    "rate": 0.96,
+    "wilson95": [
+      0.8653990931249297,
+      0.9889611156723802
+    ]
+  },
+  "detected_deepfakes": {
+    "count": 25,
+    "total": 25,
+    "rate": 1.0,
+    "wilson95": [
+      0.8668077490609515,
+      0.9999999999999999
+    ]
+  },
+  "real_without_alert": {
+    "count": 23,
+    "total": 25,
+    "rate": 0.92,
+    "wilson95": [
+      0.7503389104960468,
+      0.9777795987151524
+    ]
+  },
+  "false_positives": {
+    "count": 2,
+    "total": 25,
+    "rate": 0.08,
+    "wilson95": [
+      0.022220401284847563,
+      0.24966108950395313
+    ]
+  },
+  "missed_deepfakes": {
+    "count": 0,
+    "total": 25,
+    "rate": 0.0,
+    "wilson95": [
+      1.3877787807814457e-17,
+      0.13319225093904846
+    ]
+  },
+  "abstentions": {
+    "count": 0,
+    "total": 50,
+    "rate": 0.0,
+    "wilson95": [
+      6.938893903907228e-18,
+      0.07134759913335872
+    ]
+  },
+  "technical_errors": {
+    "count": 0,
+    "total": 50,
+    "rate": 0.0,
+    "wilson95": [
+      6.938893903907228e-18,
+      0.07134759913335872
+    ]
+  },
+  "precision": {
+    "count": 25,
+    "total": 27,
+    "rate": 0.9259259259259259,
+    "wilson95": [
+      0.7663040731697686,
+      0.9794453459390113
+    ]
+  },
+  "correct_conditional": {
+    "count": 48,
+    "total": 50,
+    "rate": 0.96,
+    "wilson95": [
+      0.8653990931249297,
+      0.9889611156723802
+    ]
+  },
+  "config_sha256": "866ffde74c94a1e307ac24fc44c8b6390ecde2c56296162fd7799489e5a05851",
+  "dataset_sha256": "6665e9913df134bb7a8612cbb7dc5a2256f244ea6f2a69903a36ffe94f42baac",
+  "models_manifest_sha256": "f85e51eaeff834f69f24dcc9290ec21143bd486296c238321f2aca2d69d5f344",
+  "rows": [
+    {
+      "clip_id": "timit-real-01",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.3371640807017684,
+      "coverage": 1.0,
+      "flagged_fraction": 0.25,
+      "duration_seconds": 3.88,
+      "total_seconds": 18.129907262002234,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-01",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.9959347024559975,
+      "coverage": 1.0,
+      "flagged_fraction": 1.0,
+      "duration_seconds": 3.88,
+      "total_seconds": 12.910973188001662,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-02",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.0356729484628886,
+      "coverage": 1.0,
+      "flagged_fraction": 0.0,
+      "duration_seconds": 3.8,
+      "total_seconds": 11.355949382996187,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-02",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.8793951719999313,
+      "coverage": 1.0,
+      "flagged_fraction": 1.0,
+      "duration_seconds": 3.8,
+      "total_seconds": 10.316252104996238,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-03",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.5507576628164812,
+      "coverage": 1.0,
+      "flagged_fraction": 0.45454545454545453,
+      "duration_seconds": 5.5200000000000005,
+      "total_seconds": 10.802887964993715,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-03",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.9985669255256653,
+      "coverage": 1.0,
+      "flagged_fraction": 1.0,
+      "duration_seconds": 5.5200000000000005,
+      "total_seconds": 10.901997913999367,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-04",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.2540312177605099,
+      "coverage": 1.0,
+      "flagged_fraction": 0.1111111111111111,
+      "duration_seconds": 4.44,
+      "total_seconds": 10.500130104992422,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-04",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.9968419737286038,
+      "coverage": 1.0,
+      "flagged_fraction": 1.0,
+      "duration_seconds": 4.48,
+      "total_seconds": 10.51446411300276,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-05",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.00623320540986382,
+      "coverage": 1.0,
+      "flagged_fraction": 0.0,
+      "duration_seconds": 6.32,
+      "total_seconds": 11.420979449001607,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-05",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.9903608698111314,
+      "coverage": 1.0,
+      "flagged_fraction": 1.0,
+      "duration_seconds": 6.32,
+      "total_seconds": 11.150368242990226,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-06",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.05917787469095654,
+      "coverage": 1.0,
+      "flagged_fraction": 0.0,
+      "duration_seconds": 4.48,
+      "total_seconds": 10.47552465100307,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-06",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.819614686899715,
+      "coverage": 1.0,
+      "flagged_fraction": 0.7777777777777778,
+      "duration_seconds": 4.5200000000000005,
+      "total_seconds": 9.973908227999345,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-07",
+      "label": "real",
+      "outcome": "verify",
+      "correct": false,
+      "score": 0.4510409692302346,
+      "coverage": 1.0,
+      "flagged_fraction": 0.5,
+      "duration_seconds": 3.88,
+      "total_seconds": 9.704246666005929,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-07",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.9981373697519302,
+      "coverage": 1.0,
+      "flagged_fraction": 1.0,
+      "duration_seconds": 3.88,
+      "total_seconds": 10.264616799002397,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-08",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.006091969728004187,
+      "coverage": 1.0,
+      "flagged_fraction": 0.0,
+      "duration_seconds": 3.7600000000000002,
+      "total_seconds": 10.108587627008092,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-08",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.9797188490629196,
+      "coverage": 1.0,
+      "flagged_fraction": 1.0,
+      "duration_seconds": 3.7600000000000002,
+      "total_seconds": 10.074876505997963,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-09",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.018757973280217912,
+      "coverage": 1.0,
+      "flagged_fraction": 0.0,
+      "duration_seconds": 4.08,
+      "total_seconds": 10.47047950400156,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-09",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.8533146381378174,
+      "coverage": 1.0,
+      "flagged_fraction": 0.8888888888888888,
+      "duration_seconds": 4.08,
+      "total_seconds": 11.424691926004016,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-10",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.011077188809091846,
+      "coverage": 1.0,
+      "flagged_fraction": 0.0,
+      "duration_seconds": 5.96,
+      "total_seconds": 10.249809820001246,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-10",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.9939024597406387,
+      "coverage": 1.0,
+      "flagged_fraction": 1.0,
+      "duration_seconds": 5.96,
+      "total_seconds": 11.274872470996343,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-11",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.009554383112117648,
+      "coverage": 1.0,
+      "flagged_fraction": 0.0,
+      "duration_seconds": 4.0,
+      "total_seconds": 11.87276922800811,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-11",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.9751300439238548,
+      "coverage": 1.0,
+      "flagged_fraction": 1.0,
+      "duration_seconds": 4.0,
+      "total_seconds": 10.516546440005186,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-12",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.00792887380036215,
+      "coverage": 1.0,
+      "flagged_fraction": 0.0,
+      "duration_seconds": 4.2,
+      "total_seconds": 9.451427498992416,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-12",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.9799454675780402,
+      "coverage": 1.0,
+      "flagged_fraction": 1.0,
+      "duration_seconds": 4.2,
+      "total_seconds": 11.35999083200295,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-13",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.07107145469635726,
+      "coverage": 1.0,
+      "flagged_fraction": 0.1,
+      "duration_seconds": 5.0,
+      "total_seconds": 9.609934756997973,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-13",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.7766343027353286,
+      "coverage": 1.0,
+      "flagged_fraction": 0.8,
+      "duration_seconds": 5.0,
+      "total_seconds": 15.949190964995068,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-14",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.024369039960826438,
+      "coverage": 1.0,
+      "flagged_fraction": 0.0,
+      "duration_seconds": 6.0,
+      "total_seconds": 11.653213177996804,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-14",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.9990961700677872,
+      "coverage": 1.0,
+      "flagged_fraction": 1.0,
+      "duration_seconds": 6.0,
+      "total_seconds": 9.723522212996613,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-15",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.45005627987640245,
+      "coverage": 0.875,
+      "flagged_fraction": 0.2857142857142857,
+      "duration_seconds": 3.7600000000000002,
+      "total_seconds": 11.162030727995443,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-15",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.999389037489891,
+      "coverage": 1.0,
+      "flagged_fraction": 1.0,
+      "duration_seconds": 3.7600000000000002,
+      "total_seconds": 14.378180511004757,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-16",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.043519290257245304,
+      "coverage": 1.0,
+      "flagged_fraction": 0.0,
+      "duration_seconds": 4.92,
+      "total_seconds": 10.065487066996866,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-16",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.9993628025054931,
+      "coverage": 1.0,
+      "flagged_fraction": 1.0,
+      "duration_seconds": 4.92,
+      "total_seconds": 10.015060738005559,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-17",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.008401006646454334,
+      "coverage": 1.0,
+      "flagged_fraction": 0.0,
+      "duration_seconds": 4.92,
+      "total_seconds": 10.011849831993459,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-17",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.8985657423734665,
+      "coverage": 1.0,
+      "flagged_fraction": 0.9,
+      "duration_seconds": 4.92,
+      "total_seconds": 10.490606622988707,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-18",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.2965514548122883,
+      "coverage": 1.0,
+      "flagged_fraction": 0.2,
+      "duration_seconds": 5.0,
+      "total_seconds": 13.281725499997265,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-18",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.9911609470844269,
+      "coverage": 1.0,
+      "flagged_fraction": 1.0,
+      "duration_seconds": 5.0,
+      "total_seconds": 11.437520313993446,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-19",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.11762882179270188,
+      "coverage": 1.0,
+      "flagged_fraction": 0.1111111111111111,
+      "duration_seconds": 4.12,
+      "total_seconds": 19.21461931000522,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-19",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.986449248260922,
+      "coverage": 1.0,
+      "flagged_fraction": 1.0,
+      "duration_seconds": 4.12,
+      "total_seconds": 20.851577729001292,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-20",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.008279594541009929,
+      "coverage": 1.0,
+      "flagged_fraction": 0.0,
+      "duration_seconds": 4.2,
+      "total_seconds": 12.273069204005878,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-20",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.9631617466608683,
+      "coverage": 1.0,
+      "flagged_fraction": 1.0,
+      "duration_seconds": 4.2,
+      "total_seconds": 16.036748419996,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-21",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.05848184875635938,
+      "coverage": 1.0,
+      "flagged_fraction": 0.0,
+      "duration_seconds": 5.36,
+      "total_seconds": 19.43531503599661,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-21",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.9989591620185159,
+      "coverage": 1.0,
+      "flagged_fraction": 1.0,
+      "duration_seconds": 5.36,
+      "total_seconds": 10.817556381007307,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-22",
+      "label": "real",
+      "outcome": "verify",
+      "correct": false,
+      "score": 0.9033224761486054,
+      "coverage": 1.0,
+      "flagged_fraction": 1.0,
+      "duration_seconds": 4.72,
+      "total_seconds": 10.206571276008617,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-22",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.9839453233612908,
+      "coverage": 0.9,
+      "flagged_fraction": 1.0,
+      "duration_seconds": 4.72,
+      "total_seconds": 10.623346066000522,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-23",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.2742563519626856,
+      "coverage": 1.0,
+      "flagged_fraction": 0.3,
+      "duration_seconds": 4.6,
+      "total_seconds": 10.073897209003917,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-23",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.9990648686885834,
+      "coverage": 1.0,
+      "flagged_fraction": 1.0,
+      "duration_seconds": 4.6,
+      "total_seconds": 9.974140473990701,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-24",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.05688615160761401,
+      "coverage": 1.0,
+      "flagged_fraction": 0.0,
+      "duration_seconds": 3.72,
+      "total_seconds": 9.426469697005814,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-24",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.9992723539471626,
+      "coverage": 1.0,
+      "flagged_fraction": 1.0,
+      "duration_seconds": 3.72,
+      "total_seconds": 9.959667764996993,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-real-25",
+      "label": "real",
+      "outcome": "no_signal",
+      "correct": true,
+      "score": 0.20959618201272356,
+      "coverage": 1.0,
+      "flagged_fraction": 0.2222222222222222,
+      "duration_seconds": 4.16,
+      "total_seconds": 10.28615000800346,
+      "error_codes": ""
+    },
+    {
+      "clip_id": "timit-attack-25",
+      "label": "attack",
+      "outcome": "verify",
+      "correct": true,
+      "score": 0.9987314144770304,
+      "coverage": 1.0,
+      "flagged_fraction": 1.0,
+      "duration_seconds": 4.16,
+      "total_seconds": 12.635400393002783,
+      "error_codes": ""
+    }
+  ]
+}

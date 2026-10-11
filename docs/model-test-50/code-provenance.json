@@ -1,0 +1,25 @@
+{
+  "base_commit": "dfdd251461757ea4d70730f1bcb43e3bfe58118d",
+  "branch": "feature/model-test-50-videos",
+  "recorded_at_utc": "2026-10-11T01:21:24.312277+00:00",
+  "files": {
+    "visio/config.gend-pe.json": "bbb836358b3aea10c954d8586c83317b234bbc32632c35f95a3fa0a6ef75cc5d",
+    "visio/models.json": "0163dfece28824cc0b365d4426ca3280618b3103de4a88a87a9ee48c980c1568",
+    "visio/benchmark.py": "214e693f48aab493c81d410ed0232c052152ecb336a9264bce66e5a2993287cd",
+    "visio/core.py": "b9330beafe1fcaead84e8bce738ddd08cff1fbf694ff80d4f8f005b49793840a",
+    "visio/pipeline.py": "ed0a5673f95c0d9134c52ab4cb4cf2debea6c8dfb7b08df959ed342e18898094",
+    "visio/runner.py": "593dc69db18e15a6e6ed4d2b0daccbc3c43c6747270bbded0032f6bfb669201f",
+    "visio/worker.py": "0ec93f8f170cfd9562e953ac224f04477525d72bfadf6af54abb2c93f9dec971",
+    "visio/gend.py": "7647f6f030f42eb0b4260f6d1cf60ebb8e735e756a012703beafa6134b974d8b",
+    "visio/gend_pe.py": "82abae3d92b021b87a5050efe8535849dbcbdc3f473d5620a22ae5af4aafdaab",
+    "visio/models.py": "c59fdaaa8803a6014800a6a8494b0810f1cd95ac5a83892b589976993c8c4cbc",
+    "visio/vendor/gend_alignment.py": "b8ffc9ba108c7df0896139eabfd9e2f48c9e53e229911bda9f13f2f667f8696a",
+    "visio/vendor/gend_retinaface.py": "9d3335fdb17ba6afae510b830bbc3b8ca08246b5d9c1250640197cf2aeb7718b",
+    "visio/prepare_model_test_50.py": "7c0f85dcf3b7a91ef18d036576ef47cef607014419a982879df18b48d8626f59",
+    "visio/model_test_report.py": "da8e9196853b738db3f876fccbe25b6a3d045e4a3557c1a547b589b4c357b7f4"
+  },
+  "export_line_ending_fix": {
+    "previous_sha256": "0e78986ef769757a24d55e4a36160add7c35651c46e185861e2f74d69eb7dcba",
+    "description": "CSV newline changed from CRLF to LF after export; no metric or inference change."
+  }
+}

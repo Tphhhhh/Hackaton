@@ -1,0 +1,14 @@
+{
+  "tests": {
+    "command": "python -m pytest visio/tests/test_benchmark.py visio/tests/test_gend.py visio/tests/test_model_test_report.py -q",
+    "passed": 21
+  },
+  "runtime_check": {
+    "partition": "dev",
+    "new_test_videos_used": false,
+    "status": "completed",
+    "simulation": false
+  },
+  "application_changes": false,
+  "training_or_threshold_tuning": false
+}

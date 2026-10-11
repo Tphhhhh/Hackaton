@@ -1,0 +1,773 @@
+{
+  "seed": 20261011,
+  "excluded_subjects": [
+    "fadg0",
+    "faks0",
+    "fcft0",
+    "fdrd1",
+    "fedw0",
+    "fram1"
+  ],
+  "selection_rule": "25 of 26 remaining subjects, seeded sample of sorted IDs; sa1, higher_quality only",
+  "sources": [
+    "https://zenodo.org/records/4068245",
+    "https://zenodo.org/records/158963"
+  ],
+  "license": "CC-BY-NC-ND-4.0 in both Zenodo records; derived clips for local research only",
+  "archive_sha256": "9291bb413e0998484a3fbd7f875a3ec08f33093a6056dbcd746dfcf311650b59",
+  "archive_checksum": "md5:79b5dcee896ab825db43f1dfbdc8fdb5",
+  "ffmpeg_version": "ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers",
+  "transformation": "Full sa1 sequence, no audio, 25 fps, H264 CRF18 yuv420p, normalized timestamps; no crop/resize",
+  "pairs": [
+    {
+      "index": 1,
+      "subject": "fcmh0",
+      "donor": "fjre0",
+      "member": "DeepfakeTIMIT/higher_quality/fcmh0/sa1-video-fjre0.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/fcmh0.zip?download=1",
+      "real_archive_checksum": "md5:f0e170d0730140611f5cf7581c8e5b70",
+      "real_archive_sha256": "0ca81e3fdaa906130dc5dab8570b723e53abf63bf21479c786c5b1307518ebb7",
+      "real_frames_sha256": "d4c235fef9a79b80aa0cd07af50ba62a779d1d11a4678fd7e598895672fde8cc",
+      "fake_original_sha256": "4235d31c26f1a30c61138b5f9807ff72699b77a6da18181f722f85aded7869e3",
+      "real_source_frames": 97,
+      "fake_source_frames": 97,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "3.880000",
+          "nb_read_frames": "97"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "3.880000",
+          "nb_read_frames": "97"
+        }
+      }
+    },
+    {
+      "index": 2,
+      "subject": "fdac1",
+      "donor": "felc0",
+      "member": "DeepfakeTIMIT/higher_quality/fdac1/sa1-video-felc0.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/fdac1.zip?download=1",
+      "real_archive_checksum": "md5:6f5c14fd57e3bd24ecccab16ab76a824",
+      "real_archive_sha256": "56111562eaf88d0d38bb28b13cd9df2d0ebd1422257689709a2315a6993be41c",
+      "real_frames_sha256": "2ae08e17e69f243779551a3066a3b73bc9cf64530419a610ab4c94dead45e8c0",
+      "fake_original_sha256": "8013d9aa210213ff084ac72e022e29a92764dd7a43df692ad0a6f9f018790946",
+      "real_source_frames": 95,
+      "fake_source_frames": 95,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "3.800000",
+          "nb_read_frames": "95"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "3.800000",
+          "nb_read_frames": "95"
+        }
+      }
+    },
+    {
+      "index": 3,
+      "subject": "felc0",
+      "donor": "fdac1",
+      "member": "DeepfakeTIMIT/higher_quality/felc0/sa1-video-fdac1.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/felc0.zip?download=1",
+      "real_archive_checksum": "md5:e3d99d9392149b5e3b0550aafa284f11",
+      "real_archive_sha256": "3fbfef3c0bacac885c7dab0e667a674d01717865b7fef6a437b4085d22a700f7",
+      "real_frames_sha256": "7302c4ec964db32e4adc06b73424cc6d96a175258f2eef4aa752ac0a0d6b9c8c",
+      "fake_original_sha256": "0c373ea09718f5d762626258cec85b70543ed62f495f3ba5889c73ebc148397f",
+      "real_source_frames": 138,
+      "fake_source_frames": 138,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "5.520000",
+          "nb_read_frames": "138"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "5.520000",
+          "nb_read_frames": "138"
+        }
+      }
+    },
+    {
+      "index": 4,
+      "subject": "fjas0",
+      "donor": "fjwb0",
+      "member": "DeepfakeTIMIT/higher_quality/fjas0/sa1-video-fjwb0.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/fjas0.zip?download=1",
+      "real_archive_checksum": "md5:daf064d7fee3933ba63085a47eea5027",
+      "real_archive_sha256": "d362a74d932ed8f3f0b515b0245acbc47f313282a253f747f5bf9a9ace6638cb",
+      "real_frames_sha256": "c74aa2c5304e7eed1b7050ab37911651ca849ef10aa7267ece9dc2e4a3a8e551",
+      "fake_original_sha256": "4ef6eda71abde108b9b5f24c95a5241098ed880a390095a95ddfaae90aff47d7",
+      "real_source_frames": 111,
+      "fake_source_frames": 112,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.440000",
+          "nb_read_frames": "111"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.480000",
+          "nb_read_frames": "112"
+        }
+      }
+    },
+    {
+      "index": 5,
+      "subject": "fjem0",
+      "donor": "fkms0",
+      "member": "DeepfakeTIMIT/higher_quality/fjem0/sa1-video-fkms0.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/fjem0.zip?download=1",
+      "real_archive_checksum": "md5:65317e7da5ffb16dbf3b272e1cffdab4",
+      "real_archive_sha256": "d113ce46e64a45a8092e8392c42e7f54ad0b3140c8f5c85d867dfb4dbe05c767",
+      "real_frames_sha256": "70148f955be732dc5527b2c8cd727fbf06d8ecec7caa2cb899d0d5d1b64bae8a",
+      "fake_original_sha256": "bec1a58c371876d5cc965c6b3bb0f12e8b0207fd8cf7ed5d6f26e6071ec7bcf2",
+      "real_source_frames": 158,
+      "fake_source_frames": 158,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "6.320000",
+          "nb_read_frames": "158"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "6.320000",
+          "nb_read_frames": "158"
+        }
+      }
+    },
+    {
+      "index": 6,
+      "subject": "fjre0",
+      "donor": "fcmh0",
+      "member": "DeepfakeTIMIT/higher_quality/fjre0/sa1-video-fcmh0.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/fjre0.zip?download=1",
+      "real_archive_checksum": "md5:456f21746ee3f492226786b77d7adae7",
+      "real_archive_sha256": "e629b9359641933a0ad7118b767e63b207d409692477519c4abbb683af11215b",
+      "real_frames_sha256": "d78612eee9c264d2e8beca76a4d12ef34fb8b7856a3828a5ac1e76db7ad0fe40",
+      "fake_original_sha256": "7a7ea499a0912eff557bf97c7f4be160bbe30bf1756f03867263c0219ce171d4",
+      "real_source_frames": 112,
+      "fake_source_frames": 113,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.480000",
+          "nb_read_frames": "112"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.520000",
+          "nb_read_frames": "113"
+        }
+      }
+    },
+    {
+      "index": 7,
+      "subject": "fkms0",
+      "donor": "fjem0",
+      "member": "DeepfakeTIMIT/higher_quality/fkms0/sa1-video-fjem0.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/fkms0.zip?download=1",
+      "real_archive_checksum": "md5:6901ecd76007ae445f74d9991a0dd0e0",
+      "real_archive_sha256": "ab2f12ce591d94a9b6d65c90e197a89b94de27e99691a18efc858384470973b0",
+      "real_frames_sha256": "938feaaeb8895de076554cd301a8b1e8e1c19cf98a94c6eaa75c3f3ef2bce015",
+      "fake_original_sha256": "b70b45a07062e231547725dc719ad240c2bafbf21bd203d4824860f960a7626b",
+      "real_source_frames": 97,
+      "fake_source_frames": 97,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "3.880000",
+          "nb_read_frames": "97"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "3.880000",
+          "nb_read_frames": "97"
+        }
+      }
+    },
+    {
+      "index": 8,
+      "subject": "mccs0",
+      "donor": "mmdm2",
+      "member": "DeepfakeTIMIT/higher_quality/mccs0/sa1-video-mmdm2.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/mccs0.zip?download=1",
+      "real_archive_checksum": "md5:2874edde448e6b9b2ed9b985564c1587",
+      "real_archive_sha256": "0c1dbbc867d5a988f2a70636e1c72c1e4c7de9748cd4b187271a136659f80865",
+      "real_frames_sha256": "df0779e876d6336986ba167028bb81ebd5710aa7435636ac48f5e3649937c894",
+      "fake_original_sha256": "24dc50b5e5975c6f54b9ecce5bed4f8be40f3b0410475374420f9b6d18dd35ea",
+      "real_source_frames": 94,
+      "fake_source_frames": 94,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "3.760000",
+          "nb_read_frames": "94"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "3.760000",
+          "nb_read_frames": "94"
+        }
+      }
+    },
+    {
+      "index": 9,
+      "subject": "mcem0",
+      "donor": "mdld0",
+      "member": "DeepfakeTIMIT/higher_quality/mcem0/sa1-video-mdld0.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/mcem0.zip?download=1",
+      "real_archive_checksum": "md5:909078fbc528a307cb7958799f03fa28",
+      "real_archive_sha256": "0145b9c421932bd25de153db0e5c7f8f84738468f3aff0eae9e14d79fa42356d",
+      "real_frames_sha256": "1f08c1cf0b230c4ba55d70b84918226df08ab07048eddb0e2adc1be49e7be6ee",
+      "fake_original_sha256": "28f8a8ebdf726fcf377e363d7b3b9a128c8d037127b22f2cf42adb4913fcd022",
+      "real_source_frames": 102,
+      "fake_source_frames": 102,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.080000",
+          "nb_read_frames": "102"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.080000",
+          "nb_read_frames": "102"
+        }
+      }
+    },
+    {
+      "index": 10,
+      "subject": "mdab0",
+      "donor": "mpdf0",
+      "member": "DeepfakeTIMIT/higher_quality/mdab0/sa1-video-mpdf0.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/mdab0.zip?download=1",
+      "real_archive_checksum": "md5:702ab592049f8c571993cd02186df61d",
+      "real_archive_sha256": "3f1e64739eabffc46a2443330c0d35dc2501c26a205602ade0039b9dba8176cd",
+      "real_frames_sha256": "cf5601e309b62cacbea0240c72a9f8be311e25e230d13f1ebf45ead7239251f1",
+      "fake_original_sha256": "39bffbef5f34df4e38d05788316442c0ba33f4f08627e04d194b745fce63229b",
+      "real_source_frames": 149,
+      "fake_source_frames": 149,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "5.960000",
+          "nb_read_frames": "149"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "5.960000",
+          "nb_read_frames": "149"
+        }
+      }
+    },
+    {
+      "index": 11,
+      "subject": "mdbb0",
+      "donor": "mrcz0",
+      "member": "DeepfakeTIMIT/higher_quality/mdbb0/sa1-video-mrcz0.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/mdbb0.zip?download=1",
+      "real_archive_checksum": "md5:a659c5b162597e505c6fa8d0813b713e",
+      "real_archive_sha256": "266662cb5a254582d7f5a5d27cf8273ace63d0044e331e2c3f854736a2103809",
+      "real_frames_sha256": "9f12f3482d8fa57ea81f183926b7a196f6857a32e697d5b442f1b5e1227b91d1",
+      "fake_original_sha256": "19b16c0c4c3b694eff8222e4fddedfca3df6cc415280d50bd3132abd6bede004",
+      "real_source_frames": 100,
+      "fake_source_frames": 100,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.000000",
+          "nb_read_frames": "100"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.000000",
+          "nb_read_frames": "100"
+        }
+      }
+    },
+    {
+      "index": 12,
+      "subject": "mdld0",
+      "donor": "mcem0",
+      "member": "DeepfakeTIMIT/higher_quality/mdld0/sa1-video-mcem0.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/mdld0.zip?download=1",
+      "real_archive_checksum": "md5:bb678a3a97673bc9bfd061683bc9c93b",
+      "real_archive_sha256": "a12b65f5025698804129732b8f27a619a57e323204a82366709548b2a5514e3e",
+      "real_frames_sha256": "1f59465fca4852761d8056c85c828c037fce6bddb4e6f3640c5aee4f807a1fc0",
+      "fake_original_sha256": "d6d01862e1bc52fd3f0f89d34a44d4ce9b3d008996739e18c2931895b842bf09",
+      "real_source_frames": 105,
+      "fake_source_frames": 105,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.200000",
+          "nb_read_frames": "105"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.200000",
+          "nb_read_frames": "105"
+        }
+      }
+    },
+    {
+      "index": 13,
+      "subject": "mgwt0",
+      "donor": "mjar0",
+      "member": "DeepfakeTIMIT/higher_quality/mgwt0/sa1-video-mjar0.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/mgwt0.zip?download=1",
+      "real_archive_checksum": "md5:e77e67cbb7b9c8b25263459360924dc1",
+      "real_archive_sha256": "2e2ef71bb42c316a602d469336b233e6c5f203cf5be3e1ed778bb345eb3fce57",
+      "real_frames_sha256": "19d3b2aac009050f9f95ec3e788dd71a315eb9e06df4282cfdba0986ca0c53a3",
+      "fake_original_sha256": "0734ff914e23a1bd1d7dfbcdc8567a20d93640186223e7d8a41053cf68e0c415",
+      "real_source_frames": 125,
+      "fake_source_frames": 125,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "5.000000",
+          "nb_read_frames": "125"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "5.000000",
+          "nb_read_frames": "125"
+        }
+      }
+    },
+    {
+      "index": 14,
+      "subject": "mjar0",
+      "donor": "mgwt0",
+      "member": "DeepfakeTIMIT/higher_quality/mjar0/sa1-video-mgwt0.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/mjar0.zip?download=1",
+      "real_archive_checksum": "md5:3fb48e4a589f85e18f2a40f7370514f3",
+      "real_archive_sha256": "cbacb2c98aa30df27080045568f25aa05e7a7a72a5a779c9ab9f5c3f6bbb8c72",
+      "real_frames_sha256": "74249d79becff7e15aec0acd5939606b9db155de797c6017290b8bf824688b46",
+      "fake_original_sha256": "82a7c6037a69c9b13abbeb1e659c3d7b0d3fc6d56b4989ca1d8063c5bd65afe2",
+      "real_source_frames": 150,
+      "fake_source_frames": 150,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "6.000000",
+          "nb_read_frames": "150"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "6.000000",
+          "nb_read_frames": "150"
+        }
+      }
+    },
+    {
+      "index": 15,
+      "subject": "mjsw0",
+      "donor": "mmdb1",
+      "member": "DeepfakeTIMIT/higher_quality/mjsw0/sa1-video-mmdb1.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/mjsw0.zip?download=1",
+      "real_archive_checksum": "md5:ed7e28bfffe7b90d201a1516181e0a1f",
+      "real_archive_sha256": "67063f0278cb9a947d19919597cd73c7ba381a8ff735083cb9f0c261625d822d",
+      "real_frames_sha256": "2a050eae9c3ef5df6ce46c926fad7cc668d13d385f2a3096e1108e6b40d5c6b8",
+      "fake_original_sha256": "cd9ab7ec129f0fb1aea02b6f7fd9387f54a42a2d8b4fdce1c0adfc26f5690c12",
+      "real_source_frames": 94,
+      "fake_source_frames": 94,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "3.760000",
+          "nb_read_frames": "94"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "3.760000",
+          "nb_read_frames": "94"
+        }
+      }
+    },
+    {
+      "index": 16,
+      "subject": "mmdb1",
+      "donor": "mjsw0",
+      "member": "DeepfakeTIMIT/higher_quality/mmdb1/sa1-video-mjsw0.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/mmdb1.zip?download=1",
+      "real_archive_checksum": "md5:be3f739455de421609976c335b39b876",
+      "real_archive_sha256": "508066884cf2e601cf1d1a6ff2cb827f802b2f1c9b1e21c0a192c6013dcce75d",
+      "real_frames_sha256": "65a8de9257f6dd063ad94f437505e88efac80d35f0909c21dc0f80f417448928",
+      "fake_original_sha256": "6b4679fbc6aa1aba52a5253dbf252ed860ca53eb031410ff6fc2353f19aca029",
+      "real_source_frames": 123,
+      "fake_source_frames": 123,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.920000",
+          "nb_read_frames": "123"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.920000",
+          "nb_read_frames": "123"
+        }
+      }
+    },
+    {
+      "index": 17,
+      "subject": "mmdm2",
+      "donor": "mccs0",
+      "member": "DeepfakeTIMIT/higher_quality/mmdm2/sa1-video-mccs0.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/mmdm2.zip?download=1",
+      "real_archive_checksum": "md5:6763a84c0e8c50d89b4364e6d8d50651",
+      "real_archive_sha256": "58dcc56e7f1073844874a1ad49dc5d66d1a9fe81c14999f00bf737017fdfb62b",
+      "real_frames_sha256": "61469b76b35bbed85dec0c0a9b075a64676883707fb4cc4a8f75206e50b237cd",
+      "fake_original_sha256": "a5c9b8d71b816478edc772fdedb29e5391033215eb82c82271b8a9d7bcc0be5f",
+      "real_source_frames": 123,
+      "fake_source_frames": 123,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.920000",
+          "nb_read_frames": "123"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.920000",
+          "nb_read_frames": "123"
+        }
+      }
+    },
+    {
+      "index": 18,
+      "subject": "mpdf0",
+      "donor": "mdab0",
+      "member": "DeepfakeTIMIT/higher_quality/mpdf0/sa1-video-mdab0.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/mpdf0.zip?download=1",
+      "real_archive_checksum": "md5:27e5d0c8238ba3c75e6c4647334d0cb7",
+      "real_archive_sha256": "ed098f826f054ba4f5487270b6e2251c0481d1f0e5da9100a04262c2935da4c8",
+      "real_frames_sha256": "4b8de354a16a7e788a15aa0c4ba6dd9b529063bea164bc8f8e549624e7b22b9a",
+      "fake_original_sha256": "654ac0208d26244b4fca09e4127bd87b9ca711ebc75b667d3444c9975ba0a84e",
+      "real_source_frames": 125,
+      "fake_source_frames": 125,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "5.000000",
+          "nb_read_frames": "125"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "5.000000",
+          "nb_read_frames": "125"
+        }
+      }
+    },
+    {
+      "index": 19,
+      "subject": "mpgl0",
+      "donor": "mwbt0",
+      "member": "DeepfakeTIMIT/higher_quality/mpgl0/sa1-video-mwbt0.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/mpgl0.zip?download=1",
+      "real_archive_checksum": "md5:55203c36ea5011e32cc7ee4f20598889",
+      "real_archive_sha256": "9326d8bd3462809f7b088c2cec4fff3c5aaeaad973d03fcdc9e99ef1d224dab0",
+      "real_frames_sha256": "11826d2cb01dcd5d57a43a2c0f3dce745e6399f9639cf20c95b927eda466a1b4",
+      "fake_original_sha256": "6314d82da79b5d47944d198640722c5bdb1e672558b2db85f054a1eae5a102e5",
+      "real_source_frames": 103,
+      "fake_source_frames": 103,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.120000",
+          "nb_read_frames": "103"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.120000",
+          "nb_read_frames": "103"
+        }
+      }
+    },
+    {
+      "index": 20,
+      "subject": "mrcz0",
+      "donor": "mdbb0",
+      "member": "DeepfakeTIMIT/higher_quality/mrcz0/sa1-video-mdbb0.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/mrcz0.zip?download=1",
+      "real_archive_checksum": "md5:33c88c080be64f867519b15a9fe971e3",
+      "real_archive_sha256": "080c0fd4b2f3f901dfc44c711396ba72662e075eb36561a8330e32f0dca4dc35",
+      "real_frames_sha256": "4954e0e3e266e4c2c66077f76a5060c316cb6591764b5c9a0bb5896bc85124e0",
+      "fake_original_sha256": "a0b803febe029b1b10139979a8e4e23e892faeb922fcbcbb4ec205f653f4f479",
+      "real_source_frames": 105,
+      "fake_source_frames": 105,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.200000",
+          "nb_read_frames": "105"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.200000",
+          "nb_read_frames": "105"
+        }
+      }
+    },
+    {
+      "index": 21,
+      "subject": "mrgg0",
+      "donor": "msjs1",
+      "member": "DeepfakeTIMIT/higher_quality/mrgg0/sa1-video-msjs1.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/mrgg0.zip?download=1",
+      "real_archive_checksum": "md5:1131fa69e58431affacccf57fbb00b57",
+      "real_archive_sha256": "efa71812497e64c3e6897b0c0a8fb4a4881efc9c2bed23d7516cd962d808e022",
+      "real_frames_sha256": "921708721fa07c5d37030b4a9a615733a6f7454cfba5e26566ae140c70b57e20",
+      "fake_original_sha256": "eb6b8db2346be87003f6a78c12d307d3864a5c8957c401cee691cff7757ba57f",
+      "real_source_frames": 134,
+      "fake_source_frames": 134,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "5.360000",
+          "nb_read_frames": "134"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "5.360000",
+          "nb_read_frames": "134"
+        }
+      }
+    },
+    {
+      "index": 22,
+      "subject": "mrjo0",
+      "donor": "mstk0",
+      "member": "DeepfakeTIMIT/higher_quality/mrjo0/sa1-video-mstk0.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/mrjo0.zip?download=1",
+      "real_archive_checksum": "md5:c1238ece252e142ebf83850f17f505d2",
+      "real_archive_sha256": "09f38ed992e45101a670c6fad6c23d1d3edc19b0207d9bb01838d95d51446bc7",
+      "real_frames_sha256": "26e55019d3c01d9bb3334d0eb92f8f16d5c9f59aec0c3af8746944ae60fc31c4",
+      "fake_original_sha256": "a37bd88d94a2aa0ecc843dc0e0aaaf0945a9b294f63d6989cbf3f668448ebd2b",
+      "real_source_frames": 118,
+      "fake_source_frames": 118,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.720000",
+          "nb_read_frames": "118"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.720000",
+          "nb_read_frames": "118"
+        }
+      }
+    },
+    {
+      "index": 23,
+      "subject": "msjs1",
+      "donor": "mrgg0",
+      "member": "DeepfakeTIMIT/higher_quality/msjs1/sa1-video-mrgg0.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/msjs1.zip?download=1",
+      "real_archive_checksum": "md5:35139b3cc29974294c06a28bc5c884a8",
+      "real_archive_sha256": "522ca0ac584544219395d7639c79518a0bf75b813c2c6d6f249b1e42015a23ff",
+      "real_frames_sha256": "4cbf8a7b007ec82491d3dfed32a39d0d32af3aee69c98f153f5d0dab9080c293",
+      "fake_original_sha256": "648c3b6e7d8a906e120044b8a2e93150fcf473d5d2a5e031c3eb2e9305308e2e",
+      "real_source_frames": 115,
+      "fake_source_frames": 115,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.600000",
+          "nb_read_frames": "115"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.600000",
+          "nb_read_frames": "115"
+        }
+      }
+    },
+    {
+      "index": 24,
+      "subject": "mstk0",
+      "donor": "mrjo0",
+      "member": "DeepfakeTIMIT/higher_quality/mstk0/sa1-video-mrjo0.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/mstk0.zip?download=1",
+      "real_archive_checksum": "md5:8127c8bf2d50e1d130e59ec653bdc6a3",
+      "real_archive_sha256": "6263604c52c065158d2e987f218711784399f4043183a3d5db4d802e058dfe33",
+      "real_frames_sha256": "34fc326a8f625288ea1e0493198f7d6de54ee374b977ff555e4e817998d2c416",
+      "fake_original_sha256": "53c0e6aa8d01f0e1604af2b7e6201445af063c65e535ad716b2860c98819d691",
+      "real_source_frames": 93,
+      "fake_source_frames": 93,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "3.720000",
+          "nb_read_frames": "93"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "3.720000",
+          "nb_read_frames": "93"
+        }
+      }
+    },
+    {
+      "index": 25,
+      "subject": "mwbt0",
+      "donor": "mpgl0",
+      "member": "DeepfakeTIMIT/higher_quality/mwbt0/sa1-video-mpgl0.avi",
+      "utterance": "sa1",
+      "real_url": "https://zenodo.org/records/158963/files/mwbt0.zip?download=1",
+      "real_archive_checksum": "md5:63753f056f83c1d230159a4e40651b82",
+      "real_archive_sha256": "b002da9f4c185164b5693b6c3772a3a8f9703cad47289bfbedf1d7f67c85af40",
+      "real_frames_sha256": "cce561a2cf7321d695394d636c9c4614b8f29f86bd9d32d9a03d564a9a424a94",
+      "fake_original_sha256": "ffd04cf95242ef70bbac55d6e716c88550c7e1aebfe99068bb8d19bf7e5792d5",
+      "real_source_frames": 104,
+      "fake_source_frames": 104,
+      "media": {
+        "real": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.160000",
+          "nb_read_frames": "104"
+        },
+        "attack": {
+          "width": 512,
+          "height": 384,
+          "avg_frame_rate": "25/1",
+          "duration": "4.160000",
+          "nb_read_frames": "104"
+        }
+      }
+    }
+  ]
+}

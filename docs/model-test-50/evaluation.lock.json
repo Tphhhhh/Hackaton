@@ -1,0 +1,7 @@
+{
+  "schema_version": "1.0",
+  "purpose": "frozen_evaluation",
+  "dataset_sha256": "6665e9913df134bb7a8612cbb7dc5a2256f244ea6f2a69903a36ffe94f42baac",
+  "config_sha256": "866ffde74c94a1e307ac24fc44c8b6390ecde2c56296162fd7799489e5a05851",
+  "models_manifest_sha256": "f85e51eaeff834f69f24dcc9290ec21143bd486296c238321f2aca2d69d5f344"
+}
