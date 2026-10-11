@@ -1,0 +1,93 @@
+{
+  "schema_version": "1.0",
+  "session_id": "EXAMPLE-NOT-A-REAL-ANALYSIS",
+  "generation": 1,
+  "simulation": true,
+  "status": "completed",
+  "conclusion": "verify",
+  "freshness": "unverified",
+  "coverage": 1,
+  "sampled_frames": 8,
+  "duration_seconds": 4,
+  "detectors": {
+    "dima": {
+      "status": "ok",
+      "conclusion": "verify",
+      "coverage": 1.0,
+      "longest_gap_seconds": 0.5,
+      "score": 0.9,
+      "flagged_fraction": 1.0,
+      "observations": [
+        {
+          "time_seconds": 0.0,
+          "score": 0.9,
+          "reason": null
+        },
+        {
+          "time_seconds": 0.5,
+          "score": 0.9,
+          "reason": null
+        },
+        {
+          "time_seconds": 1.0,
+          "score": 0.9,
+          "reason": null
+        },
+        {
+          "time_seconds": 1.5,
+          "score": 0.9,
+          "reason": null
+        },
+        {
+          "time_seconds": 2.0,
+          "score": 0.9,
+          "reason": null
+        },
+        {
+          "time_seconds": 2.5,
+          "score": 0.9,
+          "reason": null
+        },
+        {
+          "time_seconds": 3.0,
+          "score": 0.9,
+          "reason": null
+        },
+        {
+          "time_seconds": 3.5,
+          "score": 0.9,
+          "reason": null
+        }
+      ],
+      "error": null,
+      "threats": [
+        "face_swap",
+        "reenactment"
+      ],
+      "revision": "EXAMPLE"
+    }
+  },
+  "errors": [],
+  "timing": {},
+  "provenance": {},
+  "config": {
+    "detectors": [
+      "dima"
+    ],
+    "threads": 2,
+    "sample_fps": 2.0,
+    "threshold": 0.5,
+    "aggregation": "fraction",
+    "flag_fraction": 0.5,
+    "window_seconds": 2.0,
+    "min_coverage": 0.8,
+    "max_gap_seconds": 2.0,
+    "timeout_seconds": 60.0
+  },
+  "config_sha256": "05c658f6d79260c14aa19c0d89278c00d1284ffbd21ddfe9360b168bf3b56d34",
+  "limitations": [
+    "Scores exploratoires non calibrés ; aucune décision d'embauche.",
+    "Ne prouve ni identité ni présence en direct.",
+    "Les intervalles non échantillonnés ne sont pas analysés."
+  ]
+}

@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entretien vidéo · Fjordlane</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/fjordlane.css">
+<style>
+  .hidden { display: none !important; }
+  .site-nav .portal { color: var(--muted); font-size: 15px; padding-left: 18px; border-left: 1px solid var(--line); }
+  /* Salle d'attente */
+  .lobby { display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 56px; padding-top: 52px; padding-bottom: 40px; }
+  @media (max-width: 980px) { .lobby { grid-template-columns: 1fr; gap: 32px; padding-top: 30px; } }
+  .lobby h1 { font: 700 clamp(32px, 4.4vw, 50px)/1.05 var(--display); letter-spacing: -.045em; margin: 10px 0 14px; text-wrap: balance; }
+  .lobby .lede { font-size: 18px; color: var(--ink-2); margin: 0 0 28px; max-width: 600px; }
+  .checks { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); margin-bottom: 24px; }
+  @media (max-width: 640px) { .checks { grid-template-columns: 1fr; } }
+  .checks > div { padding: 20px 22px; }
+  .checks > div + div { border-left: 1px solid var(--line); }
+  @media (max-width: 640px) { .checks > div + div { border-left: 0; border-top: 1px solid var(--line); } }
+  .checks h2 { font: 600 15px var(--body); margin: 0 0 10px; }
+  .checks ul { margin: 0; padding-left: 18px; color: var(--ink-2); font-size: 14.5px; } .checks li { margin: 4px 0; }
+  .checks p { font-size: 13.5px; color: var(--muted); margin: 12px 0 0; }
+  .where { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
+  @media (max-width: 640px) { .where { grid-template-columns: 1fr; } }
+  .join-row { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 22px; }
+  .room { background: var(--ink); color: #c9d2dc; border-radius: 18px; padding: 24px; align-self: start; }
+  .room .eyebrow { color: var(--aurora); }
+  .room h3 { color: #fff; font: 700 22px/1.2 var(--display); letter-spacing: -.02em; margin: 8px 0 4px; }
+  .room .when { font: 13px var(--mono); color: #8fa3b8; }
+  .people { list-style: none; margin: 20px 0 0; padding: 0; border-top: 1px solid #22344a; }
+  .people li { display: flex; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid #22344a; font-size: 14.5px; }
+  .people .av { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font: 700 13px var(--display); color: var(--ink); flex: none; }
+  .people b { color: #fff; display: block; font-weight: 600; } .people span { color: #8fa3b8; font-size: 13px; }
+  .people .wait { margin-left: auto; font: 11.5px var(--mono); color: var(--aurora); }
+
+  /* Appel */
+  .call { padding-top: 28px; padding-bottom: 40px; }
+  .call-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+  .call-head h1 { font: 700 26px var(--display); letter-spacing: -.03em; margin: 0; }
+  .call-head .mono { color: var(--muted); font-size: 13px; }
+  .stage { background: #0a1520; border-radius: 18px; padding: 14px; display: grid; grid-template-columns: minmax(0, 1fr) 240px; gap: 14px; }
+  @media (max-width: 900px) { .stage { grid-template-columns: 1fr; } }
+  .tile { position: relative; border-radius: 12px; overflow: hidden; background: #13222f; }
+  .tile video { width: 100%; height: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; background: #13222f; transform: scaleX(-1); }
+  .tile .name { position: absolute; left: 12px; bottom: 12px; background: rgba(10,21,32,.72); color: #fff; font: 500 13px var(--body); padding: 5px 10px; border-radius: 8px; backdrop-filter: blur(6px); }
+  .others { display: grid; gap: 14px; grid-template-rows: 1fr 1fr; }
+  @media (max-width: 900px) { .others { grid-template-columns: 1fr 1fr; grid-template-rows: none; } }
+  .others .tile { display: grid; place-items: center; min-height: 140px; }
+  .others .av { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; font: 700 22px var(--display); color: var(--ink); }
+  .bar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 14px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+  .bar select { width: auto; min-width: 240px; padding: 9px 12px; }
+  .bar .live { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink-2); margin-left: auto; }
+  .bar .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); animation: pulse 2s infinite; }
+  @keyframes pulse { 50% { opacity: .3; } }
+  .bar .timer { font: 500 14px var(--mono); padding: 6px 10px; background: var(--paper); border-radius: 8px; }
+  .warn { color: var(--err); font-size: 14px; }
+  details.sim { margin-top: 22px; border: 1px dashed var(--line); border-radius: 12px; padding: 12px 16px; background: var(--surface); }
+  details.sim summary { cursor: pointer; font: 500 12.5px var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  details.sim p { font-size: 14px; color: var(--muted); }
+  .demo { display: flex; gap: 8px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<div class="demo-strip"><div class="container"><b>DÉMO</b><span>Fjordlane est une entreprise fictive, créée pour le hackathon Secure Horizons.</span></div></div>
+
+<nav class="site-nav">
+  <div class="container">
+    <a class="wordmark" href="/apply" aria-label="Fjordlane">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#0d1b2a"/><path d="M8 10.5h16M8 16h6.5c3.2 0 4 5.5 7.5 5.5H24M8 21.5h4" stroke="#7cf2c9" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>
+      fjordlane
+    </a>
+    <span class="portal">Entretiens</span>
+    <div class="right"><span class="signin">Besoin d'aide ? rh@fjordlane.example</span></div>
+  </div>
+</nav>
+
+<section id="consent" class="container lobby">
+  <div>
+    <div class="eyebrow">Entretien vidéo · Ingénieur·e Backend Senior</div>
+    <h1>Votre entretien commence bientôt.</h1>
+    <p class="lede">Avant de rejoindre l'appel, prenez une minute pour lire ce que nous vérifions. Cela protège les candidats contre l'usurpation d'identité.</p>
+    <div class="checks">
+      <div>
+        <h2>Vérifié toutes les 5 secondes</h2>
+        <ul>
+          <li>Le nom de la caméra et du micro</li>
+          <li>Le fuseau horaire de l'ordinateur</li>
+          <li>Le nom de la carte graphique</li>
+          <li>L'adresse IP, son pays et son opérateur</li>
+          <li>Le temps de réponse de la connexion</li>
+          <li>La résolution et la cadence vidéo</li>
+        </ul>
+      </div>
+      <div>
+        <h2>Jamais utilisé</h2>
+        <ul>
+          <li>Votre langue, votre accent, votre nationalité ou votre origine</li>
+          <li>Le contenu de votre écran ou de vos fichiers</li>
+          <li>Votre position GPS</li>
+        </ul>
+        <p>Les mesures ne sont pas conservées après l'appel. Une personne décide toujours, jamais l'outil seul (AI Act, art. 50).</p>
+      </div>
+    </div>
+    <div class="where">
+      <div><label class="f" for="city">Ville où vous vous trouvez</label><input type="text" id="city" value="Paris"></div>
+      <div><label class="f" for="country">Pays</label>
+        <select id="country">
+          <option value="FR">France</option><option value="DE">Allemagne</option><option value="CH">Suisse</option>
+          <option value="BE">Belgique</option><option value="NL">Pays-Bas</option><option value="ES">Espagne</option>
+          <option value="IT">Italie</option><option value="PT">Portugal</option><option value="UK">Royaume-Uni</option>
+          <option value="IE">Irlande</option>
+        </select></div>
+    </div>
+    <label class="check"><input type="checkbox" id="agree"><span>J'ai compris ce qui est vérifié et j'accepte de rejoindre l'entretien.</span></label>
+    <div class="join-row"><button class="btn btn-ink" id="join" disabled>Rejoindre l'entretien <span class="arrow">→</span></button><span class="mono" style="font-size:13px;color:var(--muted)">Caméra et micro requis</span></div>
+  </div>
+  <aside class="room">
+    <div class="eyebrow">Salle d'entretien</div>
+    <h3>Entretien technique, équipe Paiements</h3>
+    <div class="when">45 min · visio Fjordlane</div>
+    <ul class="people">
+      <li><span class="av" style="background:#7cf2c9">TM</span><div><b>Thomas Mercier</b><span>Engineering Manager</span></div><span class="wait">en ligne</span></li>
+      <li><span class="av" style="background:#c9d6ff">IB</span><div><b>Inès Barre</b><span>Ingénieure backend senior</span></div><span class="wait">en ligne</span></li>
+      <li><span class="av" style="background:#f3e7c9">LM</span><div><b>Léa Morel</b><span>Talent Partner, observatrice</span></div></li>
+    </ul>
+  </aside>
+</section>
+
+<section id="call" class="container call hidden">
+  <div class="call-head">
+    <h1>Entretien technique · équipe Paiements</h1>
+    <span class="mono">Thomas Mercier, Inès Barre</span>
+  </div>
+  <div class="stage">
+    <div class="tile"><video id="preview" autoplay muted playsinline></video><span class="name">Vous</span></div>
+    <div class="others">
+      <div class="tile"><span class="av" style="background:#7cf2c9">TM</span><span class="name">Thomas Mercier</span></div>
+      <div class="tile"><span class="av" style="background:#c9d6ff">IB</span><span class="name">Inès Barre</span></div>
+    </div>
+  </div>
+  <div class="bar">
+    <span class="timer" id="timer">00:00</span>
+    <select id="camera" aria-label="Caméra"></select>
+    <span class="live"><span class="dot"></span><span id="status">Connexion…</span></span>
+  </div>
+  <p id="error" class="warn"></p>
+  <details class="sim">
+    <summary>Mode démo · simuler un fraudeur</summary>
+    <p>Secours si le Wi-Fi du lieu bloque le VPN ou la caméra virtuelle. Les mesures envoyées sont marquées « simulation » dans la console RH.</p>
+    <div class="demo">
+      <button class="btn btn-line btn-sm" id="simVpn">VPN lointain</button>
+      <button class="btn btn-line btn-sm" id="simCam">Caméra virtuelle</button>
+      <button class="btn btn-line btn-sm" id="simVm">Machine virtuelle</button>
+      <button class="btn btn-line btn-sm" id="simReset">Arrêter la simulation</button>
+    </div>
+  </details>
+</section>
+<script>
+const $ = (id) => document.getElementById(id);
+const appId = new URLSearchParams(location.search).get("app");
+const sessionId = appId || Math.random().toString(36).slice(2, 8).toUpperCase();
+if (appId) {  // arrivée depuis la page de candidature : on reprend le lieu déclaré
+  fetch("/api/applications/" + appId).then((r) => r.json()).then((a) => {
+    if (a.error) return;
+    $("city").value = a.city; $("country").value = a.country;
+    document.querySelector("#consent h1").textContent = `Bonjour${a.first_name ? " " + a.first_name : ""}, votre entretien commence bientôt.`;
+  });
+}
+const sim = { vpn: false, cam: false, vm: false };
+let stream = null, declared = null, lastIp = null, geo = {};
+const HOSTING = /amazon|aws|google|microsoft|azure|digitalocean|ovh|hetzner|linode|akamai|vultr|choopa|m247|datacamp|leaseweb|contabo|scaleway|oracle|alibaba|tencent|hosting|server|cloud|vpn/i;
+
+$("agree").onchange = () => { $("join").disabled = !$("agree").checked; };
+$("join").onclick = async () => {
+  declared = { city: $("city").value.trim(), country: $("country").value };
+  $("consent").classList.add("hidden");
+  $("call").classList.remove("hidden");
+  const t0 = Date.now();
+  setInterval(() => { const s = Math.floor((Date.now() - t0) / 1000); $("timer").textContent = `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`; }, 1000);
+  await startCamera();
+  await listCameras();
+  snapshot();
+  // Minuteur dans un Worker : Chrome ralentit fortement les minuteurs d'un onglet en arrière-plan,
+  // or pendant la démo le jury regarde l'onglet recruteur.
+  const ticker = new Worker(URL.createObjectURL(new Blob(["setInterval(() => postMessage(0), 5000)"])));
+  ticker.onmessage = () => snapshot();
+};
+$("camera").onchange = () => startCamera($("camera").value);
+$("simVpn").onclick = () => { sim.vpn = true; snapshot(); };
+$("simCam").onclick = () => { sim.cam = true; snapshot(); };
+$("simVm").onclick = () => { sim.vm = true; snapshot(); };
+$("simReset").onclick = () => { sim.vpn = sim.cam = sim.vm = false; snapshot(); };
+
+async function startCamera(deviceId) {
+  try {
+    if (stream) stream.getTracks().forEach((t) => t.stop());
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: deviceId ? { deviceId: { exact: deviceId } } : true, audio: true });
+    $("preview").srcObject = stream;
+    $("error").textContent = "";
+  } catch (e) {
+    $("error").textContent = "Caméra ou micro inaccessible : " + e.message;
+  }
+}
+
+async function listCameras() {
+  const devices = await navigator.mediaDevices.enumerateDevices();
+  const current = stream?.getVideoTracks()[0]?.getSettings().deviceId;
+  $("camera").innerHTML = devices.filter((d) => d.kind === "videoinput")
+    .map((d) => `<option value="${d.deviceId}" ${d.deviceId === current ? "selected" : ""}>${d.label || "Caméra"}</option>`).join("");
+}
+
+function gpuRenderer() {
+  try {
+    const gl = document.createElement("canvas").getContext("webgl");
+    const ext = gl.getExtension("WEBGL_debug_renderer_info");
+    return ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+  } catch { return "inconnu"; }
+}
+
+async function measureRtt() {
+  // Temps aller-retour vers un point de présence public : il grimpe quand la connexion passe par un pays lointain.
+  const out = [];
+  for (let i = 0; i < 3; i++) {
+    const t0 = performance.now();
+    try { await fetch(`https://www.cloudflare.com/cdn-cgi/trace?t=${Date.now()}${i}`, { mode: "no-cors", cache: "no-store" }); }
+    catch { continue; }
+    out.push(Math.round(performance.now() - t0));
+  }
+  return out;
+}
+
+async function publicIp() {
+  try {
+    const { ip } = await (await fetch("https://api.ipify.org?format=json", { cache: "no-store" })).json();
+    if (ip !== lastIp) {  // géolocalisation seulement quand l'IP change
+      lastIp = ip;
+      try {
+        const g = await (await fetch(`https://ipapi.co/${ip}/json/`)).json();
+        geo = { country: g.country_code === "GB" ? "UK" : g.country_code, org: g.org || "",
+                type: HOSTING.test(g.org || "") ? "datacenter" : "residential" };
+      } catch { geo = {}; }
+    }
+    return { address: ip, ...geo };
+  } catch { return {}; }
+}
+
+async function snapshot() {
+  const v = stream?.getVideoTracks()[0], a = stream?.getAudioTracks()[0];
+  const s = v?.getSettings() || {};
+  let ip = await publicIp(), rtt = await measureRtt();
+  let video = v ? [v.label] : [], gpu = gpuRenderer();
+  // Simulations du mode démo
+  if (sim.vpn) { ip = { address: "203.0.113.7", country: "SG", org: "M247 Ltd (simulation)", type: "datacenter" };
+                 rtt = (rtt.length ? rtt : [20, 22, 25]).map((r) => r + 240); }
+  if (sim.cam) video = ["OBS Virtual Camera"];
+  if (sim.vm) gpu = "Google SwiftShader";
+  const payload = {
+    session_id: sessionId, declared,
+    devices: { video, audio: a ? [a.label] : [] },
+    browser_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    browser_utc_offset: -new Date().getTimezoneOffset() / 60,
+    gpu_renderer: gpu,
+    video_settings: { width: s.width, height: s.height, frameRate: Math.round(s.frameRate || 0) },
+    rtt_ms: rtt, ip, simulated: sim.vpn || sim.cam || sim.vm,
+  };
+  try {
+    await fetch("/api/snapshot", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+    $("status").textContent = `Vérification de connexion active · ${new Date().toLocaleTimeString("fr-FR")}`;
+  } catch {
+    $("status").textContent = "Connexion au serveur perdue, nouvelle tentative dans 5 s.";
+  }
+}
+</script>
+</body>
+</html>

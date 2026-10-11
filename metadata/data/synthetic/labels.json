@@ -1,0 +1,344 @@
+{
+  "C001": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": []
+  },
+  "C002": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": [
+      "expat_tz",
+      "moved_house"
+    ]
+  },
+  "C003": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": []
+  },
+  "C004": {
+    "is_fraud": true,
+    "network": "N1",
+    "injected_signals": [
+      "crypto_payment",
+      "deepfake",
+      "forwarder",
+      "virtual_camera"
+    ]
+  },
+  "C005": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": [
+      "one_trip_abroad",
+      "weak_4g"
+    ]
+  },
+  "C006": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": [
+      "corporate_vpn"
+    ]
+  },
+  "C007": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": [
+      "camera_refused",
+      "expat_tz"
+    ]
+  },
+  "C008": {
+    "is_fraud": true,
+    "network": null,
+    "injected_signals": [
+      "address_change_after_hire",
+      "tz_mismatch",
+      "vm_gpu"
+    ]
+  },
+  "C009": {
+    "is_fraud": true,
+    "network": null,
+    "injected_signals": [
+      "high_latency",
+      "timeline_overlap"
+    ]
+  },
+  "C010": {
+    "is_fraud": true,
+    "network": null,
+    "injected_signals": [
+      "camera_refused",
+      "crypto_payment"
+    ]
+  },
+  "C011": {
+    "is_fraud": true,
+    "network": null,
+    "injected_signals": [
+      "camera_refused",
+      "multi_country_logins"
+    ]
+  },
+  "C012": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": []
+  },
+  "C013": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": []
+  },
+  "C014": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": []
+  },
+  "C015": {
+    "is_fraud": true,
+    "network": "N2",
+    "injected_signals": [
+      "forwarder",
+      "virtual_camera"
+    ]
+  },
+  "C016": {
+    "is_fraud": true,
+    "network": "N1",
+    "injected_signals": [
+      "crypto_payment",
+      "forwarder"
+    ]
+  },
+  "C017": {
+    "is_fraud": true,
+    "network": "N2",
+    "injected_signals": [
+      "forwarder"
+    ]
+  },
+  "C018": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": []
+  },
+  "C019": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": [
+      "expat_tz"
+    ]
+  },
+  "C020": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": [
+      "bootcamp"
+    ]
+  },
+  "C021": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": []
+  },
+  "C022": {
+    "is_fraud": true,
+    "network": "N4",
+    "injected_signals": [
+      "multi_country_logins",
+      "night_activity"
+    ]
+  },
+  "C023": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": []
+  },
+  "C024": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": [
+      "late_worker",
+      "one_trip_abroad"
+    ]
+  },
+  "C025": {
+    "is_fraud": true,
+    "network": "N4",
+    "injected_signals": []
+  },
+  "C026": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": [
+      "expat_tz",
+      "young_profile"
+    ]
+  },
+  "C027": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": [
+      "blur_background"
+    ]
+  },
+  "C028": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": [
+      "bootcamp"
+    ]
+  },
+  "C029": {
+    "is_fraud": true,
+    "network": "N3",
+    "injected_signals": []
+  },
+  "C030": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": [
+      "young_profile"
+    ]
+  },
+  "C031": {
+    "is_fraud": true,
+    "network": null,
+    "injected_signals": [
+      "forwarder",
+      "tz_mismatch"
+    ]
+  },
+  "C032": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": [
+      "moved_house"
+    ]
+  },
+  "C033": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": [
+      "camera_refused"
+    ]
+  },
+  "C034": {
+    "is_fraud": true,
+    "network": "N3",
+    "injected_signals": []
+  },
+  "C035": {
+    "is_fraud": true,
+    "network": "N2",
+    "injected_signals": [
+      "forwarder"
+    ]
+  },
+  "C036": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": []
+  },
+  "C037": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": [
+      "blur_background",
+      "late_worker"
+    ]
+  },
+  "C038": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": []
+  },
+  "C039": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": []
+  },
+  "C040": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": []
+  },
+  "C041": {
+    "is_fraud": true,
+    "network": null,
+    "injected_signals": [
+      "virtual_camera"
+    ]
+  },
+  "C042": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": []
+  },
+  "C043": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": []
+  },
+  "C044": {
+    "is_fraud": true,
+    "network": null,
+    "injected_signals": [
+      "forwarder",
+      "multi_country_logins",
+      "timeline_overlap",
+      "tz_mismatch"
+    ]
+  },
+  "C045": {
+    "is_fraud": true,
+    "network": null,
+    "injected_signals": [
+      "tz_mismatch",
+      "vm_gpu"
+    ]
+  },
+  "C046": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": [
+      "blur_background"
+    ]
+  },
+  "C047": {
+    "is_fraud": false,
+    "network": null,
+    "injected_signals": []
+  },
+  "C048": {
+    "is_fraud": true,
+    "network": null,
+    "injected_signals": [
+      "disposable_email",
+      "vm_gpu"
+    ]
+  },
+  "C049": {
+    "is_fraud": true,
+    "network": null,
+    "injected_signals": [
+      "address_change_after_hire",
+      "crypto_payment",
+      "tz_mismatch"
+    ]
+  },
+  "C050": {
+    "is_fraud": true,
+    "network": "N1",
+    "injected_signals": [
+      "crypto_payment",
+      "forwarder",
+      "multi_country_logins",
+      "young_profile"
+    ]
+  }
+}

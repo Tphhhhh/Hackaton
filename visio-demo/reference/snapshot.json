@@ -1,0 +1,13 @@
+{
+  "source": "/home/theophile/code/perso/Hackaton/visio/",
+  "snapshot_utc": "2026-10-10T15:53:45.044126+00:00",
+  "files": {
+    "examples/cancelled.json": "fc1585bc78334e9f23f408834694c5ef584782fa6835e1cd6a821dba5f627a61",
+    "examples/failed.json": "c563a1bf096ebadc3932d4648dff39dc56b72574ed1b9cbae169212cadae3871",
+    "examples/indeterminate.json": "31bc00c11d429bfde7141e6e2c1129ff35069629bd9fde9f7ef8a9d2b198be5d",
+    "examples/no_signal.json": "533ea836a5a943a3bb42ec8aec5f99131db9ddf9665fb90ce94e4c1879ef036f",
+    "examples/partial.json": "52b6c5d0cd5785638c15b7f75afee94324c2a32fd478e049f22f0bb4f70401f6",
+    "examples/verify.json": "b7d7d462df9c97a3d1195507265e9b151155bda967f2121130f98c88e2ebfcbd",
+    "schema.json": "a74d8368d4558072a18ebb102ad505830aa4f8d668b5c5e2a131cc75d3e6de48"
+  }
+}

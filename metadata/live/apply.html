@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ingénieur·e Backend Senior, Paiements · Carrières Fjordlane</title>
+<meta name="description" content="Rejoignez l'équipe Paiements de Fjordlane. CDI, full remote en Europe ou Paris.">
+<link rel="stylesheet" href="/assets/fjordlane.css">
+<style>
+  /* En-tête de l'offre */
+  .job-head { border-bottom: 1px solid var(--line); }
+  .job-head .container { display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 64px; align-items: center; padding-top: 56px; padding-bottom: 64px; }
+  @media (max-width: 1020px) { .job-head .container { grid-template-columns: 1fr; gap: 36px; padding-top: 36px; padding-bottom: 44px; } }
+  .crumbs { display: flex; gap: 10px; align-items: center; font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+  .crumbs a { text-decoration: none; color: var(--ink-2); } .crumbs a:hover { color: var(--ink); text-decoration: underline; }
+  .job-head h1 { font: 700 clamp(38px, 5.2vw, 64px)/1.02 var(--display); letter-spacing: -.045em; margin: 14px 0 22px; text-wrap: balance; }
+  .lede { font-size: 19px; line-height: 1.55; color: var(--ink-2); max-width: 620px; margin: 0 0 30px; }
+  .facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin: 0 0 32px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  @media (max-width: 760px) { .facts { grid-template-columns: 1fr 1fr; } }
+  .facts div { padding: 14px 18px 14px 0; margin-right: 18px; border-right: 1px solid var(--line); }
+  .facts div:last-child { border-right: 0; margin-right: 0; }
+  @media (max-width: 760px) { .facts div { border-right: 0; margin-right: 0; } }
+  .facts dt { font: 500 11.5px var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .facts dd { margin: 0; font-weight: 600; font-size: 15px; }
+  .cta-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .cta-row .ref { font: 12.5px var(--mono); color: var(--muted); flex-basis: 100%; margin-top: 4px; }
+  .rails { width: 100%; height: auto; border-radius: 18px; display: block; }
+  .rails .flow { stroke-dasharray: 2 14; animation: flow 3.2s linear infinite; }
+  @keyframes flow { to { stroke-dashoffset: -64; } }
+
+  /* Corps */
+  .job-body .body-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 72px; padding-top: 64px; }
+  @media (max-width: 1020px) { .job-body .body-grid { grid-template-columns: 1fr; gap: 40px; padding-top: 40px; } .aside { order: -1; } }
+  .sec { padding-bottom: 52px; margin-bottom: 52px; border-bottom: 1px solid var(--line); max-width: 720px; }
+  .sec:last-child { border-bottom: 0; }
+  .sec h2 { font: 700 30px/1.15 var(--display); letter-spacing: -.03em; margin: 8px 0 18px; }
+  .sec h3 { font: 600 18px/1.3 var(--display); letter-spacing: -.01em; margin: 30px 0 12px; }
+  .sec p, .sec li { color: var(--ink-2); }
+  .sec ul.dash { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .sec ul.dash li { position: relative; padding-left: 22px; }
+  .sec ul.dash li::before { content: ""; position: absolute; left: 0; top: .78em; width: 10px; height: 2px; background: var(--ink); }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 28px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+  @media (max-width: 640px) { .stats { grid-template-columns: 1fr; } }
+  .stats div { padding: 20px 22px; border-right: 1px solid var(--line); }
+  .stats div:last-child { border-right: 0; }
+  @media (max-width: 640px) { .stats div { border-right: 0; border-bottom: 1px solid var(--line); } }
+  .stats b { display: block; font: 700 34px/1 var(--display); letter-spacing: -.04em; margin-bottom: 6px; }
+  .stats span { font-size: 14px; color: var(--muted); }
+  .days { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 640px) { .days { grid-template-columns: 1fr; } }
+  .days div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; font-size: 15px; color: var(--ink-2); }
+  .days b { display: block; font: 600 12px var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--ink); margin-bottom: 8px; }
+  .stack { display: flex; flex-wrap: wrap; gap: 8px; }
+  .stack span { font: 500 13.5px var(--mono); padding: 7px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  @media (max-width: 640px) { .two { grid-template-columns: 1fr; } }
+  table.pay { width: 100%; border-collapse: collapse; font-size: 15px; }
+  table.pay td { padding: 14px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.pay td:first-child { width: 34%; color: var(--muted); font-weight: 500; padding-right: 20px; }
+  table.pay tr:first-child td { border-top: 1px solid var(--line); }
+  .process { list-style: none; padding: 0; margin: 0; counter-reset: s; }
+  .process li { counter-increment: s; display: grid; grid-template-columns: 44px 1fr auto; gap: 16px; padding: 18px 0; border-top: 1px solid var(--line); align-items: start; }
+  .process li:last-child { border-bottom: 1px solid var(--line); }
+  .process li::before { content: counter(s, decimal-leading-zero); font: 500 13px var(--mono); color: var(--muted); padding-top: 3px; }
+  .process b { display: block; color: var(--ink); }
+  .process span { font-size: 14.5px; color: var(--muted); }
+  .process .dur { font: 500 12.5px var(--mono); color: var(--ink-2); white-space: nowrap; padding-top: 3px; }
+  .verified { background: var(--ink); color: #d5dde5; border-radius: 16px; padding: 30px; }
+  .verified h2 { color: #fff; margin-top: 0; }
+  .verified p { color: #b9c4cf; }
+  .verified .eyebrow { color: var(--aurora); }
+  .verified .two { margin-top: 22px; padding-top: 22px; border-top: 1px solid #22344a; }
+  .verified h4 { margin: 0 0 10px; color: #fff; font: 600 14px var(--body); }
+  .verified ul { margin: 0; padding-left: 18px; font-size: 14.5px; } .verified li { color: #b9c4cf; margin: 4px 0; }
+  .verified a { color: var(--aurora); }
+
+  /* Colonne de droite */
+  .aside .sticky { position: sticky; top: 92px; display: grid; gap: 16px; }
+  .summary { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 22px; }
+  .summary .btn { width: 100%; }
+  .summary dl { margin: 18px 0 0; display: grid; }
+  .summary dl div { display: flex; justify-content: space-between; gap: 16px; padding: 11px 0; border-top: 1px solid var(--line-soft); font-size: 14.5px; }
+  .summary dt { color: var(--muted); } .summary dd { margin: 0; text-align: right; font-weight: 600; }
+  .lock { display: inline-flex; gap: 6px; align-items: center; }
+  .contact { display: flex; gap: 14px; align-items: center; padding: 18px 22px; border: 1px solid var(--line); border-radius: 16px; }
+  .avatar { width: 46px; height: 46px; border-radius: 50%; background: var(--aurora); color: var(--ink); font: 700 16px var(--display); display: grid; place-items: center; flex: none; }
+  .contact b { display: block; } .contact span { font-size: 13.5px; color: var(--muted); }
+
+  /* Formulaire */
+  #postuler { scroll-margin-top: 90px; }
+  .apply { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+  .apply-head { padding: 30px 32px 0; }
+  .apply-head h2 { margin: 6px 0 6px; }
+  .apply-head p { margin: 0; color: var(--muted); }
+  #stepper { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 26px 32px 22px; border-bottom: 1px solid var(--line-soft); }
+  #stepper > div i { display: block; height: 3px; background: var(--line-soft); border-radius: 3px; position: relative; overflow: hidden; }
+  #stepper > div i::after { content: ""; position: absolute; inset: 0; width: var(--w, 0); background: var(--ink); transition: width .35s; }
+  #stepper .lbl { font: 500 12px var(--mono); letter-spacing: .03em; color: var(--muted); margin-top: 9px; }
+  #stepper .on .lbl { color: var(--ink); }
+  .form-body { padding: 30px 32px 8px; }
+  .form-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 18px 32px 26px; }
+  @media (max-width: 640px) { .apply-head, #stepper, .form-body, .form-foot { padding-left: 18px; padding-right: 18px; } }
+  .pane { display: none; } .pane.active { display: block; animation: rise .3s ease; }
+  .drop { border: 1.5px dashed #bdb7a8; border-radius: 14px; padding: 46px 24px; text-align: center; background: var(--paper); cursor: pointer; transition: border-color .15s, background .15s; }
+  .drop:hover, .drop.drag { border-color: var(--ink); background: #efede5; }
+  .drop svg { width: 38px; height: 38px; color: var(--ink); margin-bottom: 14px; }
+  .drop .t { font: 600 19px var(--display); letter-spacing: -.01em; }
+  .drop .s { color: var(--muted); margin-top: 4px; font-size: 15px; } .drop .s u { color: var(--ink); text-underline-offset: 3px; }
+  .parse { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; animation: rise .3s ease; }
+  .parse-file { display: flex; align-items: center; gap: 14px; padding: 16px 18px; background: var(--paper); border-bottom: 1px solid var(--line); }
+  .parse-file .doc { width: 36px; height: 44px; border-radius: 6px; background: var(--surface); border: 1px solid var(--line); display: grid; place-items: center; font: 600 10px var(--mono); color: var(--err); flex: none; }
+  .parse-file div { flex: 1; min-width: 0; } .parse-file b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; }
+  .parse-file small { font: 12px var(--mono); color: var(--muted); }
+  .linkbtn { border: 0; background: none; font: 600 14px var(--body); color: var(--ink); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 0; }
+  .parse-steps { list-style: none; margin: 0; padding: 10px 18px 14px; }
+  .parse-steps li { display: flex; align-items: center; gap: 12px; padding: 8px 0; color: var(--muted); font-size: 15px; }
+  .parse-steps li i { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--line); flex: none; display: grid; place-items: center; font-style: normal; font-size: 11px; }
+  .parse-steps li.run { color: var(--ink); } .parse-steps li.run i { border-color: var(--ink); border-right-color: transparent; animation: spin .7s linear infinite; }
+  .parse-steps li.done { color: var(--ink); } .parse-steps li.done i { background: var(--ink); border-color: var(--ink); color: var(--aurora); }
+  .parse-steps li.done i::after { content: "✓"; }
+  .parse-steps li.fail i { background: var(--err); border-color: var(--err); }
+  .parse-steps small { font: 12px var(--mono); color: var(--muted); margin-left: 6px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .privacy { font-size: 13.5px; color: var(--muted); margin: 16px 0 0; display: flex; gap: 8px; align-items: flex-start; }
+  .privacy svg { width: 16px; height: 16px; flex: none; margin-top: 2px; }
+  .ai-banner { display: flex; gap: 12px; align-items: center; padding: 12px 16px; margin-bottom: 24px; border-radius: 10px; background: var(--aurora-soft); border: 1px solid #bfeedb; font-size: 14.5px; color: var(--aurora-ink); }
+  .ai-banner svg { width: 18px; height: 18px; flex: none; }
+  .ai-banner b { color: var(--ink); }
+  input.filled, textarea.filled, select.filled { background: #f4fbf8; border-color: #9fdcc4; }
+  .sub-h { display: flex; justify-content: space-between; align-items: center; margin: 32px 0 14px; padding-top: 24px; border-top: 1px solid var(--line-soft); }
+  .sub-h b { font: 600 17px var(--display); letter-spacing: -.01em; }
+  .exp { border: 1px solid var(--line); border-radius: 12px; padding: 18px; margin-bottom: 12px; position: relative; }
+  .exp .rm { position: absolute; top: 14px; right: 16px; border: 0; background: none; color: var(--muted); font: 500 13px var(--body); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  .exp .rm:hover { color: var(--err); }
+  .exp .grid { margin-top: 6px; }
+  .suffix { position: relative; } .suffix input { padding-right: 104px; }
+  .suffix span { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 14px; }
+  .notice { margin: 28px 0 18px; padding: 18px 20px; border-radius: 12px; background: var(--paper); border: 1px solid var(--line); font-size: 14px; color: var(--ink-2); }
+  .notice b { color: var(--ink); }
+  .notice a { color: var(--ink); }
+
+  /* Confirmation */
+  .success { padding: 48px 32px 40px; animation: rise .35s ease; }
+  .success .mark { width: 54px; height: 54px; border-radius: 50%; background: var(--ink); color: var(--aurora); display: grid; place-items: center; margin-bottom: 22px; }
+  .success .mark svg { width: 26px; height: 26px; }
+  .success h2 { font: 700 34px/1.1 var(--display); letter-spacing: -.035em; margin: 0 0 8px; }
+  .success .ref { font: 13px var(--mono); color: var(--muted); margin-bottom: 28px; }
+  .success ol { list-style: none; padding: 0; margin: 0 0 30px; border-top: 1px solid var(--line); }
+  .success ol li { display: grid; grid-template-columns: 110px 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 15px; color: var(--ink-2); }
+  .success ol li span { font: 500 12px var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--muted); padding-top: 2px; }
+  .success ol li.now span { color: var(--aurora-ink); }
+
+  /* Autres offres */
+  .others { margin-top: 24px; }
+  .others h2 { font: 700 30px/1.15 var(--display); letter-spacing: -.03em; margin: 0 0 18px; }
+  .others ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .others li { display: grid; grid-template-columns: 1fr 200px 220px 24px; gap: 16px; padding: 20px 0; border-bottom: 1px solid var(--line); align-items: center; cursor: default; }
+  @media (max-width: 760px) { .others li { grid-template-columns: 1fr 24px; } .others li span:nth-child(2), .others li span:nth-child(3) { display: none; } }
+  .others li b { font: 600 18px var(--display); letter-spacing: -.015em; }
+  .others li span { color: var(--muted); font-size: 15px; }
+  .others li:hover b { text-decoration: underline; text-underline-offset: 4px; }
+</style>
+</head>
+<body>
+<div class="demo-strip"><div class="container"><b>DÉMO</b><span>Fjordlane est une entreprise fictive, créée pour le hackathon Secure Horizons. Aucune candidature n'est réelle.</span></div></div>
+
+<nav class="site-nav">
+  <div class="container">
+    <a class="wordmark" href="/apply" aria-label="Fjordlane">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#0d1b2a"/><path d="M8 10.5h16M8 16h6.5c3.2 0 4 5.5 7.5 5.5H24M8 21.5h4" stroke="#7cf2c9" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>
+      fjordlane
+    </a>
+    <ul><li>Produit</li><li>Tarifs</li><li>Clients</li><li>Entreprise</li><li class="active">Carrières</li></ul>
+    <div class="right"><span class="signin">Se connecter</span><a class="btn btn-ink btn-sm" href="#postuler">Postuler</a></div>
+  </div>
+</nav>
+
+<header class="job-head">
+  <div class="container">
+    <div>
+      <div class="crumbs"><a href="#autres">← Toutes les offres</a><span>/</span><span>Engineering</span><span>/</span><span>Paiements</span></div>
+      <div class="eyebrow">Engineering · Équipe Paiements</div>
+      <h1>Ingénieur·e Backend Senior, Paiements</h1>
+      <p class="lede">Vous construirez les API qui font circuler l'argent de 40 000 entreprises européennes : virements, prélèvements, rapprochement bancaire. Un poste à fort impact, avec un accès direct aux systèmes de production.</p>
+      <dl class="facts">
+        <div><dt>Contrat</dt><dd>CDI</dd></div>
+        <div><dt>Lieu</dt><dd>Remote ou Paris</dd></div>
+        <div><dt>Salaire</dt><dd>65 – 80 k€</dd></div>
+        <div><dt>Démarrage</dt><dd>Novembre</dd></div>
+      </dl>
+      <div class="cta-row">
+        <a class="btn btn-ink" href="#postuler">Postuler à cette offre <span class="arrow">→</span></a>
+        <button class="btn btn-line" id="copyLink" type="button">Copier le lien</button>
+        <span class="ref">Réf. ENG-PAY-114 · publiée le 7 oct. 2026</span>
+      </div>
+    </div>
+    <svg class="rails" viewBox="0 0 440 340" role="img" aria-label="Les flux de paiement convergent vers la plateforme Fjordlane">
+      <rect width="440" height="340" rx="18" fill="#0d1b2a"/>
+      <g fill="none" stroke="#7cf2c9" stroke-width="1.4" stroke-linecap="round">
+        <path d="M24 64 C130 64 150 170 220 170 S310 52 416 52" opacity=".9"/>
+        <path d="M24 108 C130 108 150 170 220 170 S310 96 416 96" opacity=".65"/>
+        <path d="M24 152 C130 152 150 170 220 170 S310 140 416 140" opacity=".5"/>
+        <path d="M24 196 C130 196 150 170 220 170 S310 200 416 200" opacity=".5"/>
+        <path d="M24 240 C130 240 150 170 220 170 S310 244 416 244" opacity=".65"/>
+        <path d="M24 284 C130 284 150 170 220 170 S310 288 416 288" opacity=".9"/>
+        <path class="flow" d="M24 64 C130 64 150 170 220 170 S310 244 416 244" stroke="#fff" stroke-width="2.2"/>
+        <path class="flow" d="M24 240 C130 240 150 170 220 170 S310 52 416 52" stroke="#fff" stroke-width="2.2" style="animation-delay:-1.4s"/>
+      </g>
+      <circle cx="220" cy="170" r="26" fill="#0d1b2a" stroke="#7cf2c9" stroke-width="1.4"/>
+      <path d="M210 164h20M210 170h7c3 0 4 6 8 6h5M210 176h4" stroke="#7cf2c9" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <g font-family="JetBrains Mono, monospace" font-size="10.5" fill="#8fa3b8" letter-spacing=".04em">
+        <text x="24" y="54">SEPA SCT</text><text x="24" y="98">SCT INST</text><text x="24" y="142">SDD CORE</text>
+        <text x="24" y="186">SDD B2B</text><text x="24" y="230">CARTES</text><text x="24" y="274">SWIFT</text>
+        <text x="416" y="42" text-anchor="end">COMPTES CLIENTS</text><text x="416" y="306" text-anchor="end">BANQUES PARTENAIRES</text>
+        <text x="220" y="218" text-anchor="middle" fill="#7cf2c9">LEDGER</text>
+      </g>
+    </svg>
+  </div>
+</header>
+
+<div class="job-body">
+  <div class="container body-grid">
+    <main>
+      <section class="sec">
+        <div class="eyebrow">01 · Qui nous sommes</div>
+        <h2>Le compte pro et la plateforme de paiement des PME européennes</h2>
+        <p>Fondée à Paris en 2019, Fjordlane permet aux PME d'encaisser, de payer et de rapprocher leurs flux bancaires depuis une seule interface. Nous sommes 230, répartis entre Paris, Lisbonne et Berlin, et la moitié de l'équipe travaille à distance.</p>
+        <div class="stats">
+          <div><b>40 000</b><span>entreprises clientes</span></div>
+          <div><b>12 Md€</b><span>de flux traités en 2025</span></div>
+          <div><b>99,99 %</b><span>de disponibilité de l'API</span></div>
+        </div>
+      </section>
+
+      <section class="sec">
+        <div class="eyebrow">02 · L'équipe et le poste</div>
+        <h2>Tout ce qui fait bouger l'argent</h2>
+        <p>L'équipe Paiements compte huit ingénieur·es, une product manager et une designer. Elle gère l'émission et la réception des virements SEPA et instantanés, les prélèvements et le rapprochement avec nos banques partenaires. Vous reporterez à Thomas, Engineering Manager.</p>
+        <ul class="dash">
+          <li>Concevoir, livrer et opérer des API Node.js qui traitent des millions d'opérations par jour</li>
+          <li>Faire évoluer nos intégrations bancaires (SEPA, virements instantanés, prélèvements)</li>
+          <li>Participer aux revues de code, aux choix d'architecture et à la rotation d'astreinte</li>
+        </ul>
+        <h3>Vos 90 premiers jours</h3>
+        <div class="days">
+          <div><b>30 jours</b>Vous livrez en production une première évolution et maîtrisez notre chaîne de déploiement.</div>
+          <div><b>60 jours</b>Vous rejoignez l'astreinte et menez la refonte du moteur de relance des virements rejetés.</div>
+          <div><b>90 jours</b>Vous proposez le design technique des virements programmés et le défendez devant l'équipe.</div>
+        </div>
+        <h3>La stack</h3>
+        <div class="stack"><span>Node.js</span><span>TypeScript</span><span>PostgreSQL</span><span>Kafka</span><span>AWS</span><span>Terraform</span><span>Datadog</span><span>React</span></div>
+      </section>
+
+      <section class="sec">
+        <div class="eyebrow">03 · Profil</div>
+        <h2>Vous êtes probablement la bonne personne si…</h2>
+        <div class="two">
+          <ul class="dash">
+            <li>Vous avez au moins 5 ans d'expérience en développement backend</li>
+            <li>Vous avez déjà opéré un service critique en production</li>
+            <li>Vous écrivez clairement : l'équipe travaille beaucoup en asynchrone</li>
+            <li>Vous résidez dans l'Union européenne, au Royaume-Uni ou en Suisse</li>
+          </ul>
+          <div>
+            <h3 style="margin-top:0">Ce qui n'est pas indispensable</h3>
+            <ul class="dash">
+              <li>Un diplôme d'une école en particulier</li>
+              <li>Une expérience dans la finance : nous vous formerons</li>
+            </ul>
+          </div>
+        </div>
+        <p style="margin-top:24px;font-size:14.5px">Nous étudions chaque candidature sans distinction d'origine, de genre, d'âge, de handicap ou d'orientation.</p>
+      </section>
+
+      <section class="sec">
+        <div class="eyebrow">04 · Rémunération et avantages</div>
+        <h2>Ce que nous proposons</h2>
+        <table class="pay">
+          <tr><td>Salaire fixe</td><td>65 000 à 80 000 € brut annuel, selon votre expérience</td></tr>
+          <tr><td>Actionnariat</td><td>BSPCE, acquis sur 4 ans</td></tr>
+          <tr><td>Santé</td><td>Mutuelle prise en charge à 100 %</td></tr>
+          <tr><td>Télétravail</td><td>600 € pour équiper votre bureau, puis 50 € par mois</td></tr>
+          <tr><td>Congés</td><td>27 jours par an</td></tr>
+          <tr><td>Formation</td><td>1 500 € par an et une conférence de votre choix</td></tr>
+          <tr><td>Matériel</td><td>MacBook Pro préconfiguré, livré avant votre premier jour</td></tr>
+        </table>
+      </section>
+
+      <section class="sec">
+        <div class="eyebrow">05 · Processus</div>
+        <h2>Cinq étapes, trois semaines en moyenne</h2>
+        <ol class="process">
+          <li><div><b>Échange avec Léa, Talent Partner</b><span>Votre parcours, vos attentes, nos questions sur le poste.</span></div><span class="dur">30 min</span></li>
+          <li><div><b>Entretien technique</b><span>Avec deux ingénieur·es, sur du code que vous avez écrit. Pas d'exercice piège.</span></div><span class="dur">60 min</span></li>
+          <li><div><b>Étude de cas</b><span>Concevoir ensemble un service de virements fiable.</span></div><span class="dur">90 min</span></li>
+          <li><div><b>Rencontre avec Thomas et l'équipe</b><span>Votre future façon de travailler, et vos questions.</span></div><span class="dur">45 min</span></li>
+          <li><div><b>Vérifications et offre</b><span>Références et identité, puis proposition écrite.</span></div><span class="dur">2 – 3 jours</span></li>
+        </ol>
+      </section>
+
+      <section class="sec">
+        <div class="verified">
+          <div class="eyebrow">06 · Recrutement vérifié</div>
+          <h2>Pourquoi nous vérifions chaque candidature</h2>
+          <p>Ce poste donne accès aux données de paiement de nos clients. Comme beaucoup d'entreprises tech, nous recevons des candidatures sous fausse identité. Nous vérifions donc la cohérence de chaque dossier, pendant la candidature puis pendant l'entretien. Un outil nous aide à repérer les incohérences ; une personne de l'équipe prend toujours la décision.</p>
+          <div class="two">
+            <div><h4>Ce que nous vérifions</h4><ul>
+              <li>La cohérence de votre parcours (dates, ancienneté)</li>
+              <li>Les coordonnées partagées avec d'autres candidatures</li>
+              <li>Des informations techniques de connexion : fuseau horaire, adresse IP et pays, temps de réponse, carte graphique</li>
+            </ul></div>
+            <div><h4>Ce que nous ne demandons jamais</h4><ul>
+              <li>Photo, âge, nationalité, origine ou situation familiale</li>
+              <li>Votre langue maternelle ou votre accent</li>
+            </ul>
+            <p style="font-size:14px;margin:12px 0 0">Vos données : <a href="#postuler">rgpd@fjordlane.example</a></p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec" id="postuler">
+        <div class="apply">
+          <div id="formWrap">
+            <div class="apply-head">
+              <div class="eyebrow">07 · Postuler</div>
+              <h2>Votre candidature</h2>
+              <p>Environ trois minutes. Déposez votre CV : nous remplissons le formulaire, vous vérifiez.</p>
+            </div>
+            <div id="stepper">
+              <div class="on"><i></i><div class="lbl">01 · CV</div></div>
+              <div><i></i><div class="lbl">02 · Coordonnées</div></div>
+              <div><i></i><div class="lbl">03 · Parcours</div></div>
+              <div><i></i><div class="lbl">04 · Le poste</div></div>
+            </div>
+
+            <form id="form" novalidate>
+              <div class="form-body">
+                <!-- 1 : CV -->
+                <div class="pane active" data-step="0">
+                  <div class="drop" id="drop">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 18v-6M9 15l3-3 3 3"/></svg>
+                    <div class="t">Déposez votre CV ici</div>
+                    <div class="s">ou <u>choisissez un fichier</u> · PDF, 5 Mo maximum</div>
+                    <input type="file" id="cvFile" accept="application/pdf,.pdf" hidden>
+                  </div>
+                  <div class="parse" id="parse" hidden>
+                    <div class="parse-file">
+                      <span class="doc">PDF</span>
+                      <div><b id="pfName"></b><small id="pfSize"></small></div>
+                      <button type="button" class="linkbtn" id="changeCv">Changer</button>
+                    </div>
+                    <ol class="parse-steps">
+                      <li data-s="read"><i></i>Lecture du document</li>
+                      <li data-s="extract"><i></i>Extraction des informations<small id="engine"></small></li>
+                      <li data-s="fill"><i></i><span id="fillTxt">Pré-remplissage du formulaire</span></li>
+                    </ol>
+                  </div>
+                  <p class="privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Votre CV sert uniquement à pré-remplir ce formulaire. Vous relisez et corrigez chaque information avant l'envoi. Pas de photo, merci.<br>Seuls le CV et vos années d'expérience sont obligatoires ; tout le reste est facultatif.</p>
+                </div>
+
+                <!-- 2 : coordonnées -->
+                <div class="pane" data-step="1">
+                  <div class="ai-banner" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Champs remplis à partir de <b class="cvn"></b>. Relisez-les avant de continuer.</span></div>
+                  <div class="grid">
+                    <div><label class="f">Prénom</label><input type="text" name="first_name" autocomplete="given-name"></div>
+                    <div><label class="f">Nom</label><input type="text" name="last_name" autocomplete="family-name"></div>
+                    <div><label class="f">Email</label><input type="email" name="email" autocomplete="email"></div>
+                    <div><label class="f">Téléphone</label><input type="tel" name="phone" autocomplete="tel" placeholder="+33 6 12 34 56 78"></div>
+                    <div><label class="f">Ville de résidence</label><input type="text" name="city"></div>
+                    <div><label class="f">Pays de résidence</label>
+                      <select name="country">
+                        <option value="">Choisir…</option>
+                        <option value="FR">France</option><option value="DE">Allemagne</option><option value="BE">Belgique</option>
+                        <option value="CH">Suisse</option><option value="NL">Pays-Bas</option><option value="ES">Espagne</option>
+                        <option value="IT">Italie</option><option value="PT">Portugal</option><option value="UK">Royaume-Uni</option><option value="IE">Irlande</option>
+                      </select></div>
+                    <div><label class="f">LinkedIn</label><input type="url" name="linkedin_url" placeholder="https://linkedin.com/in/…"></div>
+                    <div><label class="f">GitHub ou portfolio</label><input type="url" name="github_url" placeholder="https://github.com/…"></div>
+                  </div>
+                </div>
+
+                <!-- 3 : parcours -->
+                <div class="pane" data-step="2">
+                  <div class="ai-banner" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Champs remplis à partir de <b class="cvn"></b>. Relisez-les avant de continuer.</span></div>
+                  <div class="grid">
+                    <div class="full"><label class="f">Titre actuel</label><input type="text" name="headline" placeholder="Ingénieure backend senior"></div>
+                    <div><label class="f">Années d'expérience <em>*</em></label><input type="number" name="years_experience" min="0" max="50" required></div>
+                    <div><label class="f">Compétences principales</label><input type="text" name="skills" placeholder="Node.js, PostgreSQL, AWS…"></div>
+                    <div class="full"><label class="f">Votre parcours en quelques lignes</label><textarea name="summary" placeholder="Ce que vous avez construit, ce que vous cherchez maintenant."></textarea></div>
+                  </div>
+                  <div class="sub-h"><b>Expériences</b><button type="button" class="btn btn-line btn-sm" id="addExp">Ajouter une expérience</button></div>
+                  <div id="exps"></div>
+                  <div class="sub-h"><b>Formation</b></div>
+                  <div class="grid">
+                    <div><label class="f">École</label><input type="text" id="eduSchool"></div>
+                    <div><label class="f">Diplôme et année</label>
+                      <div style="display:flex;gap:10px"><input type="text" id="eduDegree" placeholder="Master"><input type="number" id="eduYear" placeholder="2018" style="max-width:110px"></div></div>
+                  </div>
+                </div>
+
+                <!-- 4 : le poste -->
+                <div class="pane" data-step="3">
+                  <div class="grid">
+                    <div><label class="f">Prétentions salariales</label>
+                      <div class="suffix"><input type="number" name="salary_expectation" min="20" max="300" step="1" placeholder="70"><span>k€ brut / an</span></div></div>
+                    <div><label class="f">Disponible à partir du</label><input type="date" name="available_from"></div>
+                    <div class="full"><label class="f">Comment avez-vous connu ce poste ?</label>
+                      <select name="source">
+                        <option value="">Choisir…</option><option value="linkedin">LinkedIn</option><option value="fjordlane">Site carrières Fjordlane</option>
+                        <option value="referral">Recommandation</option><option value="other">Autre</option>
+                      </select></div>
+                    <div class="full"><label class="f">Un mot pour l'équipe</label>
+                      <textarea name="message" placeholder="Ce qui vous attire dans ce poste, vos questions…"></textarea></div>
+                  </div>
+                  <div class="notice">
+                    <b>Avant d'envoyer.</b> Votre candidature est vérifiée comme décrit dans la section « Recrutement vérifié » : parcours, coordonnées, et quelques informations techniques de connexion (fuseau horaire, adresse IP et pays, temps de réponse, carte graphique). Nous ne demandons jamais votre photo, âge, nationalité, origine, langue maternelle ou situation familiale. Une personne décide toujours (AI Act, art. 50).
+                  </div>
+                  <label class="check"><input type="checkbox" id="consent"><span>J'ai lu comment ma candidature est vérifiée et j'accepte qu'elle soit traitée ainsi. <span class="req">*</span></span></label>
+                </div>
+                <div class="err" id="err"></div>
+              </div>
+              <div class="form-foot">
+                <button type="button" class="btn btn-line" id="prev" style="visibility:hidden">Retour</button>
+                <button type="button" class="btn btn-ink" id="next">Continuer</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="success" id="success" style="display:none">
+            <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></div>
+            <h2>Merci<span id="okName"></span>, c'est envoyé.</h2>
+            <div class="ref">Référence de candidature : <span id="okRef"></span></div>
+            <ol>
+              <li class="now"><span>Maintenant</span>Vérification de la cohérence de votre dossier par notre équipe.</li>
+              <li><span>Ensuite</span>Entretien vidéo de 45 minutes avec l'équipe Paiements. Vous pouvez le passer dès maintenant.</li>
+              <li><span>Sous 5 jours</span>Léa revient vers vous, quelle que soit la réponse.</li>
+            </ol>
+            <a class="btn btn-ink" id="goInterview" href="/">Passer mon entretien vidéo <span class="arrow">→</span></a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="aside">
+      <div class="sticky">
+        <div class="summary">
+          <a class="btn btn-ink" href="#postuler">Postuler à cette offre</a>
+          <dl>
+            <div><dt>Équipe</dt><dd>Paiements</dd></div>
+            <div><dt>Contrat</dt><dd>CDI</dd></div>
+            <div><dt>Lieu</dt><dd>Remote Europe ou Paris 9e</dd></div>
+            <div><dt>Salaire</dt><dd>65 – 80 k€ brut / an</dd></div>
+            <div><dt>Accès</dt><dd class="lock"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Données de production</dd></div>
+          </dl>
+        </div>
+        <div class="contact">
+          <span class="avatar">LM</span>
+          <div><b>Léa Morel</b><span>Talent Partner, Engineering<br>Répond sous 5 jours ouvrés</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="container others" id="autres">
+    <h2>Autres postes ouverts</h2>
+    <ul>
+      <li><b>Ingénieur·e Sécurité Cloud</b><span>Sécurité</span><span>Remote Europe</span><span>→</span></li>
+      <li><b>Data Engineer</b><span>Data</span><span>Paris ou Lisbonne</span><span>→</span></li>
+      <li><b>Ingénieur·e SRE</b><span>Platform</span><span>Remote Europe</span><span>→</span></li>
+      <li><b>Product Designer Senior</b><span>Design</span><span>Paris</span><span>→</span></li>
+    </ul>
+  </div>
+</div>
+
+<footer class="site-foot">
+  <div class="container">
+    <div class="cols">
+      <div>
+        <span class="wordmark"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#17283b"/><path d="M8 10.5h16M8 16h6.5c3.2 0 4 5.5 7.5 5.5H24M8 21.5h4" stroke="#7cf2c9" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>fjordlane</span>
+        <p style="max-width:280px;margin-top:16px">Le compte pro et la plateforme de paiement des PME européennes.</p>
+      </div>
+      <div><h4>Produit</h4><ul><li>Compte pro</li><li>Virements et prélèvements</li><li>Rapprochement</li><li>API</li></ul></div>
+      <div><h4>Entreprise</h4><ul><li>À propos</li><li>Carrières</li><li>Presse</li><li>Sécurité</li></ul></div>
+      <div><h4>Candidats</h4><ul><li>Notre processus</li><li>Recrutement vérifié</li><li>Données personnelles</li></ul></div>
+    </div>
+    <div class="legal"><span>© 2026 Fjordlane · entreprise fictive, démonstration du hackathon Secure Horizons</span><span>Mentions légales · Confidentialité</span></div>
+  </div>
+</footer>
+
+<div class="demo-fab">
+  <div class="demo-menu" id="demoMenu">
+    <div class="t">Démo jury</div>
+    <button data-kind="honest" data-cv="CV_Camille_Laurent.pdf">Déposer le CV de Camille Laurent<small>Candidate honnête, parcours cohérent</small></button>
+    <button data-kind="fraud" data-cv="CV_Daniel_Kovac.pdf">Déposer le CV de Daniel Kovac<small>Fraudeur : recycle le téléphone d'un réseau connu</small></button>
+    <hr>
+    <a href="/demo-cvs/CV_Camille_Laurent.pdf" download>Télécharger le PDF de Camille</a>
+    <a href="/demo-cvs/CV_Daniel_Kovac.pdf" download>Télécharger le PDF de Daniel</a>
+    <a href="/recruiter" target="_blank">Ouvrir la console RH ↗</a>
+  </div>
+  <button id="demoBtn">Démo</button>
+</div>
+
+<script src="/vendor/pdf.min.js"></script>
+<script>
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+let step = 0, cvName = "";
+const panes = $$(".pane"), bars = $$("#stepper > div");
+if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = "/vendor/pdf.worker.min.js";
+
+/* ---------- Expériences ---------- */
+function addExp(e = {}, filled = false) {
+  const div = document.createElement("div");
+  div.className = "exp";
+  const f = (k) => `data-k="${k}" value="${esc(e[k])}" ${filled && e[k] ? 'class="filled"' : ""}`;
+  div.innerHTML = `
+    <button type="button" class="rm">Retirer</button>
+    <div class="grid">
+      <div><label class="f">Entreprise</label><input type="text" ${f("company")}></div>
+      <div><label class="f">Poste</label><input type="text" ${f("title")}></div>
+      <div><label class="f">Début</label><input type="month" ${f("start")}></div>
+      <div><label class="f">Fin</label><input type="month" ${f("end")}><div class="hint">Laisser vide si en cours</div></div>
+      <div class="full"><label class="f">Réalisations</label><input type="text" ${f("description")}></div>
+    </div>`;
+  $(".rm", div).onclick = () => div.remove();
+  $("#exps").appendChild(div);
+}
+$("#addExp").onclick = () => addExp();
+addExp();
+// Un champ pré-rempli que le candidat modifie n'est plus marqué comme venant du CV.
+$("#form").addEventListener("input", (e) => e.target.classList.remove("filled"));
+
+/* ---------- CV : lecture dans le navigateur (pdf.js), extraction côté serveur ---------- */
+const drop = $("#drop"), file = $("#cvFile");
+drop.onclick = () => file.click();
+drop.ondragover = (e) => { e.preventDefault(); drop.classList.add("drag"); };
+drop.ondragleave = () => drop.classList.remove("drag");
+drop.ondrop = (e) => { e.preventDefault(); drop.classList.remove("drag"); if (e.dataTransfer.files[0]) handleCv(e.dataTransfer.files[0]); };
+file.onchange = () => file.files[0] && handleCv(file.files[0]);
+$("#changeCv").onclick = () => { file.value = ""; file.click(); };
+
+async function pdfText(buf) {
+  const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+  const lines = [];
+  for (let p = 1; p <= Math.min(pdf.numPages, 5); p++) {
+    const { items } = await (await pdf.getPage(p)).getTextContent();
+    let line = "", y = null;
+    for (const it of items) {
+      const iy = Math.round(it.transform[5]);
+      if (y !== null && Math.abs(iy - y) > 2 && line.trim()) { lines.push(line.trim()); line = ""; }
+      line += it.str; y = iy;
+      if (it.hasEOL) { if (line.trim()) lines.push(line.trim()); line = ""; y = null; }
+    }
+    if (line.trim()) lines.push(line.trim());
+  }
+  return lines.join("\n");
+}
+
+function stage(name, state, note) {
+  const li = $(`.parse-steps [data-s=${name}]`);
+  li.className = state;
+  if (note !== undefined && name === "fill") $("#fillTxt").textContent = note;
+}
+
+async function handleCv(f) {
+  $("#err").textContent = "";
+  if (!/\.pdf$/i.test(f.name) && f.type !== "application/pdf") { $("#err").textContent = "Le pré-remplissage fonctionne avec un CV au format PDF."; return; }
+  if (f.size > 5e6) { $("#err").textContent = "Fichier trop lourd (5 Mo maximum)."; return; }
+  cvName = f.name;
+  drop.hidden = true; $("#parse").hidden = false;
+  $("#pfName").textContent = f.name; $("#pfSize").textContent = Math.max(1, Math.round(f.size / 1024)) + " Ko";
+  $("#engine").textContent = ""; ["read", "extract", "fill"].forEach((s) => stage(s, "", "Pré-remplissage du formulaire"));
+  $("#next").disabled = true;
+  try {
+    stage("read", "run");
+    const text = await pdfText(await f.arrayBuffer());
+    await sleep(350);
+    stage("read", "done");
+    stage("extract", "run");
+    const res = await fetch("/api/parse-cv", { method: "POST", headers: { "Content-Type": "application/json", "X-Visio-Request": "1" }, body: JSON.stringify({ text }) });
+    const { fields, engine } = await res.json();
+    await sleep(450);
+    stage("extract", "done"); $("#engine").textContent = ` · moteur : ${engine}`;
+    stage("fill", "run");
+    const n = await fill(fields);
+    stage("fill", "done", n ? `${n} champs pré-remplis` : "Aucune information reconnue : vous pouvez remplir à la main");
+    $$(".cvn").forEach((b) => b.textContent = f.name);
+    $$(".ai-banner").forEach((b) => b.hidden = !n);
+    $("#next").textContent = "Vérifier mes informations";
+  } catch (e) {
+    $$(".parse-steps .run").forEach((li) => li.className = "fail");
+    $("#err").textContent = "Lecture du CV impossible (" + e.message + "). Vous pouvez remplir le formulaire à la main.";
+  }
+  $("#next").disabled = false;
+}
+
+async function fill(fields) {
+  let n = 0;
+  for (const [k, v] of Object.entries(fields)) {
+    const el = $(`[name=${k}]`);
+    if (!el || v === "" || v == null || typeof v === "object") continue;
+    if (el.tagName === "SELECT" && !$(`option[value="${v}"]`, el)) continue;
+    el.value = v; el.classList.add("filled"); el.classList.remove("invalid"); n++;
+    stage("fill", "run", `Pré-remplissage… ${n} champs`); await sleep(70);
+  }
+  if (fields.experiences?.length) {
+    $("#exps").innerHTML = "";
+    for (const e of fields.experiences) { addExp(e, true); n += Object.values(e).filter(Boolean).length; stage("fill", "run", `Pré-remplissage… ${n} champs`); await sleep(120); }
+  }
+  const edu = (fields.education || [])[0];
+  if (edu) {
+    [["#eduSchool", edu.school], ["#eduDegree", edu.degree], ["#eduYear", edu.year]].forEach(([s, v]) => {
+      if (v) { $(s).value = v; $(s).classList.add("filled"); n++; }
+    });
+  }
+  return n;
+}
+
+/* ---------- Navigation entre étapes ---------- */
+function show(i) {
+  step = i;
+  panes.forEach((p, k) => p.classList.toggle("active", k === i));
+  bars.forEach((b, k) => { b.classList.toggle("on", k <= i); $("i", b).style.setProperty("--w", k < i ? "100%" : k === i ? "50%" : "0"); });
+  $("#prev").style.visibility = i ? "visible" : "hidden";
+  $("#next").textContent = i === panes.length - 1 ? "Envoyer ma candidature" : i === 0 ? "Vérifier mes informations" : "Continuer";
+  $("#err").textContent = "";
+}
+function valid(i) {
+  if (i === 0 && !cvName) { $("#err").textContent = "Déposez votre CV (PDF) pour continuer : il remplit le formulaire pour vous."; return false; }
+  let ok = true;
+  $$("[required]", panes[i]).forEach((el) => {
+    const bad = !el.value.trim() || (el.type === "email" && !/^\S+@\S+\.\S+$/.test(el.value));
+    el.classList.toggle("invalid", bad);
+    if (bad) ok = false;
+  });
+  if (!ok) { $("#err").textContent = "Indiquez vos années d'expérience pour continuer."; return false; }
+  if (i === panes.length - 1 && !$("#consent").checked) { $("#err").textContent = "Merci de confirmer avoir lu ce qui est vérifié."; return false; }
+  return true;
+}
+$("#prev").onclick = () => show(step - 1);
+$("#next").onclick = async () => {
+  if (!valid(step)) return;
+  if (step < panes.length - 1) { show(step + 1); $("#postuler").scrollIntoView(); return; }
+  await submit();
+};
+show(0);
+
+/* ---------- Métadonnées techniques (annoncées dans le formulaire) ---------- */
+const HOSTING = /amazon|aws|google|microsoft|azure|digitalocean|ovh|hetzner|linode|akamai|vultr|choopa|m247|datacamp|leaseweb|contabo|scaleway|oracle|alibaba|tencent|hosting|server|cloud|vpn/i;
+const withTimeout = (p, ms = 3000) => Promise.race([p, new Promise((_, r) => setTimeout(() => r(new Error("timeout")), ms))]);
+function gpu() {
+  try { const gl = document.createElement("canvas").getContext("webgl"); const x = gl.getExtension("WEBGL_debug_renderer_info");
+        return x ? gl.getParameter(x.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER); } catch { return ""; }
+}
+async function rtt() {
+  const out = [];
+  for (let i = 0; i < 3; i++) {
+    const t0 = performance.now();
+    try { await withTimeout(fetch(`https://www.cloudflare.com/cdn-cgi/trace?t=${Date.now()}${i}`, { mode: "no-cors", cache: "no-store" })); out.push(Math.round(performance.now() - t0)); } catch {}
+  }
+  return out;
+}
+async function ipInfo() {
+  try {
+    const { ip } = await (await withTimeout(fetch("https://api.ipify.org?format=json"))).json();
+    const g = await (await withTimeout(fetch(`https://ipapi.co/${ip}/json/`))).json();
+    return { address: ip, country: g.country_code === "GB" ? "UK" : g.country_code, org: g.org || "", type: HOSTING.test(g.org || "") ? "datacenter" : "residential" };
+  } catch { return {}; }
+}
+
+/* ---------- Envoi ---------- */
+async function submit() {
+  const btn = $("#next"); btn.disabled = true; btn.textContent = "Envoi…";
+  const data = Object.fromEntries(new FormData($("#form")).entries());
+  data.experiences = $$(".exp").map((d) => Object.fromEntries($$("[data-k]", d).map((i) => [i.dataset.k, i.value.trim()])));
+  data.education = $("#eduSchool").value ? [{ school: $("#eduSchool").value, degree: $("#eduDegree").value, year: Number($("#eduYear").value) || null }] : [];
+  data.cv_file_name = cvName;
+  try {
+    const res = await fetch("/api/apply", { method: "POST", headers: { "Content-Type": "application/json", "X-Visio-Request": "1" }, body: JSON.stringify(data) });
+    const out = await res.json();
+    if (!res.ok) throw new Error(out.error);
+    $("#formWrap").style.display = "none";
+    $("#success").style.display = "block";
+    $("#okName").textContent = data.first_name ? " " + data.first_name : "";
+    $("#okRef").textContent = out.id;
+    $("#goInterview").href = "/entretien?app=" + out.id;
+    $("#postuler").scrollIntoView();
+  } catch (e) {
+    $("#err").textContent = "L'envoi a échoué : " + e.message;
+    btn.disabled = false; btn.textContent = "Envoyer ma candidature";
+  }
+}
+
+/* ---------- Mode démo : dépose un vrai PDF de démo, puis remplit l'étape « Poste » ---------- */
+$("#demoBtn").onclick = () => $("#demoMenu").classList.toggle("open");
+$$("#demoMenu button").forEach((b) => b.onclick = async () => {
+  $("#demoMenu").classList.remove("open");
+  show(0); $("#postuler").scrollIntoView();
+  const blob = await (await fetch("/demo-cvs/" + b.dataset.cv)).blob();
+  await handleCv(new File([blob], b.dataset.cv, { type: "application/pdf" }));
+  const ex = await (await fetch("/api/demo-example?kind=" + b.dataset.kind)).json();
+  for (const k of ["salary_expectation", "available_from", "source", "message"]) $(`[name=${k}]`).value = ex[k] ?? "";
+  $("#consent").checked = true;
+});
+
+/* ---------- Copier le lien de l'offre ---------- */
+$("#copyLink").onclick = async () => {
+  try { await navigator.clipboard.writeText(location.href.split("#")[0]); $("#copyLink").textContent = "Lien copié"; }
+  catch { $("#copyLink").textContent = location.host + "/apply"; }
+  setTimeout(() => $("#copyLink").textContent = "Copier le lien", 2000);
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Espace nouvel arrivant · Fjordlane</title>
+<link rel="stylesheet" href="/assets/fjordlane.css">
+<style>
+  .site-nav .portal { color: var(--muted); font-size: 15px; padding-left: 18px; border-left: 1px solid var(--line); }
+  .me { width: 36px; height: 36px; border-radius: 50%; background: var(--aurora); display: grid; place-items: center; font: 700 14px var(--display); }
+  .layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 64px; padding-top: 48px; }
+  @media (max-width: 960px) { .layout { grid-template-columns: 1fr; gap: 28px; padding-top: 28px; } }
+  .side { position: sticky; top: 100px; align-self: start; }
+  @media (max-width: 960px) { .side { position: static; } }
+  .side .eyebrow { margin-bottom: 14px; }
+  .todo { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .todo li { display: flex; gap: 12px; align-items: center; padding: 13px 0; border-bottom: 1px solid var(--line); font-size: 15px; color: var(--ink-2); }
+  .todo li i { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--line); flex: none; display: grid; place-items: center; font-style: normal; font-size: 11px; }
+  .todo li.done { color: var(--muted); } .todo li.done i { background: var(--ink); border-color: var(--ink); color: var(--aurora); }
+  .todo li.done i::after { content: "✓"; }
+  .todo li.now { color: var(--ink); font-weight: 600; } .todo li.now i { border-color: var(--ink); box-shadow: inset 0 0 0 4px var(--paper), inset 0 0 0 10px var(--ink); }
+  .todo a { text-decoration: none; }
+  .first-day { margin-top: 22px; padding: 18px; border-radius: 14px; background: var(--ink); color: #c9d2dc; }
+  .first-day .eyebrow { color: var(--aurora); margin: 0 0 6px; }
+  .first-day b { display: block; color: #fff; font: 700 26px/1.1 var(--display); letter-spacing: -.03em; }
+  .first-day span { font-size: 13.5px; }
+  h1 { font: 700 clamp(34px, 4.6vw, 52px)/1.04 var(--display); letter-spacing: -.045em; margin: 10px 0 14px; }
+  .lede { font-size: 18px; color: var(--ink-2); max-width: 640px; margin: 0 0 36px; }
+  .block { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 28px 30px; margin-bottom: 18px; scroll-margin-top: 100px; }
+  @media (max-width: 640px) { .block { padding: 22px 18px; } }
+  .block-h { display: flex; gap: 16px; align-items: baseline; margin-bottom: 20px; }
+  .block-h .n { font: 500 12.5px var(--mono); color: var(--muted); }
+  .block-h h2 { font: 700 23px/1.2 var(--display); letter-spacing: -.025em; margin: 0; }
+  .block-h p { margin: 4px 0 0; color: var(--muted); font-size: 14.5px; }
+  .device { display: flex; gap: 18px; align-items: center; padding: 16px 18px; border-radius: 12px; background: var(--paper); border: 1px solid var(--line); margin-bottom: 18px; }
+  .device svg { width: 46px; height: 46px; flex: none; color: var(--ink); }
+  .device b { display: block; } .device span { font-size: 13.5px; color: var(--muted); }
+  .foot { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 24px; }
+  .success { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 40px 34px; animation: rise .35s ease; }
+  .success .mark { width: 54px; height: 54px; border-radius: 50%; background: var(--ink); color: var(--aurora); display: grid; place-items: center; margin-bottom: 22px; }
+  .success .mark svg { width: 26px; height: 26px; }
+  .success h2 { font: 700 34px/1.1 var(--display); letter-spacing: -.035em; margin: 0 0 8px; }
+  .success p { color: var(--ink-2); margin: 0 0 26px; }
+  .success ol { list-style: none; padding: 0; margin: 0 0 28px; border-top: 1px solid var(--line); }
+  .success ol li { display: grid; grid-template-columns: 110px 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); color: var(--ink-2); }
+  .success ol li span { font: 500 12px var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--muted); padding-top: 2px; }
+</style>
+</head>
+<body>
+<div class="demo-strip"><div class="container"><b>DÉMO</b><span>Fjordlane est une entreprise fictive, créée pour le hackathon Secure Horizons. Aucune donnée n'est réelle.</span></div></div>
+
+<nav class="site-nav">
+  <div class="container">
+    <a class="wordmark" href="/apply" aria-label="Fjordlane">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#0d1b2a"/><path d="M8 10.5h16M8 16h6.5c3.2 0 4 5.5 7.5 5.5H24M8 21.5h4" stroke="#7cf2c9" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>
+      fjordlane
+    </a>
+    <span class="portal">Espace nouvel arrivant</span>
+    <div class="right"><span class="signin">Aide</span><span class="me" id="me">·</span></div>
+  </div>
+</nav>
+
+<div class="container layout">
+  <aside class="side">
+    <div class="eyebrow">Votre arrivée</div>
+    <ol class="todo">
+      <li class="done"><i></i>Entretiens</li>
+      <li class="done"><i></i>Offre signée</li>
+      <li class="now"><i></i><a href="#adresse">Vos informations</a></li>
+      <li><i></i>Ordinateur expédié</li>
+      <li><i></i>Premier jour</li>
+    </ol>
+    <div class="first-day">
+      <div class="eyebrow">Premier jour</div>
+      <b id="startLbl">À planifier</b>
+      <span>Accueil en visio avec Thomas à 9 h 30</span>
+    </div>
+  </aside>
+
+  <main>
+    <div id="formWrap">
+      <div class="eyebrow">Ingénieur·e Backend Senior · Équipe Paiements</div>
+      <h1 id="hello">Bienvenue chez Fjordlane.</h1>
+      <p class="lede">Il nous manque quelques informations pour préparer votre contrat, votre paie et l'envoi de votre ordinateur. Comptez cinq minutes.</p>
+
+      <form id="form" novalidate>
+        <section class="block" id="adresse">
+          <div class="block-h"><span class="n">01</span><div><h2>Adresse de résidence</h2><p>Elle figure sur votre contrat de travail et vos bulletins de paie.</p></div></div>
+          <div class="grid">
+            <div class="full"><label class="f">Adresse <em>*</em></label><input type="text" name="address" autocomplete="street-address" required placeholder="Numéro et rue"></div>
+            <div><label class="f">Code postal <em>*</em></label><input type="text" name="postcode" autocomplete="postal-code" required></div>
+            <div><label class="f">Ville <em>*</em></label><input type="text" name="city" required></div>
+            <div class="full"><label class="f">Pays</label><input type="text" id="countryRo" readonly><div class="hint">Celui indiqué dans votre candidature. Pour le modifier, écrivez à Léa.</div></div>
+          </div>
+        </section>
+
+        <section class="block" id="ordinateur">
+          <div class="block-h"><span class="n">02</span><div><h2>Votre ordinateur</h2><p>Préconfiguré par notre équipe IT, expédié sous 48 h, remis contre signature.</p></div></div>
+          <div class="device">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="10" width="30" height="21" rx="2"/><path d="M4 36h40l-3 3H7z"/><path d="M20 20.5l3 3 5-6" stroke-linecap="round"/></svg>
+            <div><b>MacBook Pro 14 pouces, M3 Pro</b><span>Disque chiffré, gestion à distance activée, accès à la production après votre formation sécurité.</span></div>
+          </div>
+          <label class="check"><input type="checkbox" id="sameAddr" checked><span>Livrer à mon adresse de résidence</span></label>
+          <div id="shipWrap" style="display:none;margin-top:16px">
+            <label class="f">Adresse de livraison <em>*</em></label><input type="text" name="shipping_address" placeholder="Adresse complète, code postal, ville, pays">
+            <div class="hint">Par exemple votre espace de coworking. Le colis est remis contre signature.</div>
+          </div>
+        </section>
+
+        <section class="block" id="paie">
+          <div class="block-h"><span class="n">03</span><div><h2>Votre paie</h2><p>Votre salaire est versé par virement SEPA le dernier jour ouvré du mois.</p></div></div>
+          <div class="grid">
+            <div class="full"><label class="f">IBAN <em>*</em></label><input type="text" name="iban" required placeholder="FR76 …" autocomplete="off" style="font-family:var(--mono)"></div>
+            <div class="full"><label class="f">Titulaire du compte <em>*</em></label><input type="text" name="account_holder" required placeholder="Prénom Nom"><div class="hint">Le compte doit être à votre nom.</div></div>
+          </div>
+        </section>
+
+        <section class="block" id="demarrage">
+          <div class="block-h"><span class="n">04</span><div><h2>Votre premier jour</h2><p>Nous vous proposons un lundi ; Léa confirmera avec vous.</p></div></div>
+          <div class="grid">
+            <div><label class="f">Date souhaitée <em>*</em></label><input type="date" name="start_date" required></div>
+          </div>
+        </section>
+
+        <label class="check" style="margin-top:8px"><input type="checkbox" id="certify"><span>Je certifie l'exactitude de ces informations. Elles sont vérifiées comme ma candidature, et une personne de l'équipe examine toujours le résultat. <span class="req">*</span></span></label>
+        <div class="err" id="err"></div>
+        <div class="foot">
+          <a class="btn btn-line" href="/apply">Enregistrer et finir plus tard</a>
+          <button type="button" class="btn btn-ink" id="send">Valider mes informations</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="success" id="success" style="display:none">
+      <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></div>
+      <h2>C'est noté, <span id="okName"></span>.</h2>
+      <p>Votre contrat arrive par email. Voici la suite :</p>
+      <ol>
+        <li><span>Sous 48 h</span>Notre équipe RH valide votre dossier.</li>
+        <li><span>J − 7</span>Votre ordinateur est expédié, avec un numéro de suivi.</li>
+        <li><span>Jour 1</span>Accueil en visio avec Thomas, puis formation sécurité avant tout accès à la production.</li>
+      </ol>
+      <a class="btn btn-line" href="/apply">Retour au site</a>
+    </div>
+  </main>
+</div>
+
+<footer class="site-foot">
+  <div class="container">
+    <div class="legal" style="margin-top:0;border-top:0;padding-top:0"><span>© 2026 Fjordlane · entreprise fictive, démonstration du hackathon Secure Horizons</span><span>Une question ? rh@fjordlane.example</span></div>
+  </div>
+</footer>
+
+<div class="demo-fab">
+  <div class="demo-menu" id="demoMenu">
+    <div class="t">Démo jury</div>
+    <button data-kind="honest">Remplir : candidate honnête<small>Adresse à Lyon, compte à son nom</small></button>
+    <button data-kind="fraud">Remplir : fraudeur<small>Livraison chez un transitaire, salaire versé à un tiers</small></button>
+    <hr>
+    <a href="/recruiter" target="_blank">Ouvrir la console RH ↗</a>
+  </div>
+  <button id="demoBtn">Démo</button>
+</div>
+
+<script>
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const COUNTRIES = { FR: "France", DE: "Allemagne", BE: "Belgique", CH: "Suisse", NL: "Pays-Bas", ES: "Espagne", IT: "Italie", PT: "Portugal", UK: "Royaume-Uni", IE: "Irlande" };
+const appId = new URLSearchParams(location.search).get("app");
+let app = null;
+
+async function load() {
+  if (!appId) { $("#err").textContent = "Lien d'onboarding incomplet : ouvrez-le depuis la console RH."; return; }
+  const a = await (await fetch("/api/applications/" + appId)).json();
+  if (a.error) { $("#err").textContent = "Ce lien d'onboarding n'est plus valide."; return; }
+  app = a;
+  $("#hello").textContent = `Bienvenue chez Fjordlane${a.first_name ? ", " + a.first_name : ""}.`;
+  $("#me").textContent = a.name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
+  $("#countryRo").value = COUNTRIES[a.country] || a.country;
+  $("[name=city]").value = a.city;
+}
+load();
+
+$("#sameAddr").onchange = () => { $("#shipWrap").style.display = $("#sameAddr").checked ? "none" : "block"; };
+$("[name=start_date]").onchange = (e) => {
+  $("#startLbl").textContent = e.target.value
+    ? new Date(e.target.value).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })
+    : "À planifier";
+};
+
+$("#send").onclick = async () => {
+  let ok = true;
+  $$("[required]").forEach((el) => { const bad = !el.value.trim(); el.classList.toggle("invalid", bad); if (bad) ok = false; });
+  const ship = $("[name=shipping_address]");
+  if (!$("#sameAddr").checked && !ship.value.trim()) { ship.classList.add("invalid"); ok = false; }
+  if (!ok) { $("#err").textContent = "Quelques champs obligatoires sont manquants."; return; }
+  if (!$("#certify").checked) { $("#err").textContent = "Merci de certifier l'exactitude des informations."; return; }
+  if (!app) return;
+  const data = Object.fromEntries(new FormData($("#form")).entries());
+  data.app_id = appId;
+  if ($("#sameAddr").checked) data.shipping_address = "";
+  $("#send").disabled = true; $("#send").textContent = "Envoi…";
+  try {
+    const res = await fetch("/api/onboarding", { method: "POST", headers: { "Content-Type": "application/json", "X-Visio-Request": "1" }, body: JSON.stringify(data) });
+    const out = await res.json();
+    if (!res.ok) throw new Error(out.error);
+    $("#formWrap").style.display = "none"; $("#success").style.display = "block";
+    $("#okName").textContent = app.first_name || "merci";
+    $$(".todo li")[2].className = "done";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  } catch (e) {
+    $("#err").textContent = "L'envoi a échoué : " + e.message;
+    $("#send").disabled = false; $("#send").textContent = "Valider mes informations";
+  }
+};
+
+/* Mode démo */
+$("#demoBtn").onclick = () => $("#demoMenu").classList.toggle("open");
+$$("#demoMenu button").forEach((b) => b.onclick = async () => {
+  const ex = await (await fetch("/api/demo-onboarding?kind=" + b.dataset.kind)).json();
+  for (const k of ["address", "postcode", "city", "iban", "account_holder", "start_date", "shipping_address"]) $(`[name=${k}]`).value = ex[k] || "";
+  $("#sameAddr").checked = !ex.shipping_address; $("#sameAddr").onchange();
+  $("[name=start_date]").onchange({ target: $("[name=start_date]") });
+  $("#certify").checked = true;
+  $$(".invalid").forEach((el) => el.classList.remove("invalid"));
+  $("#demoMenu").classList.remove("open");
+});
+</script>
+</body>
+</html>

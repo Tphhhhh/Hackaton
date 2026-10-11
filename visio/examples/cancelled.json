@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "session_id": "EXAMPLE-NOT-A-REAL-ANALYSIS",
+  "generation": 1,
+  "simulation": true,
+  "status": "cancelled",
+  "conclusion": null,
+  "freshness": "unverified",
+  "coverage": null,
+  "sampled_frames": 0,
+  "duration_seconds": null,
+  "detectors": {},
+  "errors": [
+    {
+      "code": "AnalysisCancelled",
+      "message": "Exemple simulé.",
+      "action": "Relancer après correction.",
+      "retryable": false,
+      "docs": "visio/README.md#erreurs",
+      "cause": null
+    }
+  ],
+  "timing": {},
+  "provenance": {},
+  "config": {
+    "detectors": [
+      "dima",
+      "prithiv",
+      "minifasnet"
+    ],
+    "threads": 2,
+    "sample_fps": 2.0,
+    "threshold": 0.5,
+    "aggregation": "fraction",
+    "flag_fraction": 0.5,
+    "window_seconds": 2.0,
+    "min_coverage": 0.8,
+    "max_gap_seconds": 2.0,
+    "timeout_seconds": 60.0
+  },
+  "config_sha256": "faff143527cb036a0975f651dc8383a1b70c963a84e22fabd3d2f687ea5474bc",
+  "limitations": [
+    "Scores exploratoires non calibrés ; aucune décision d'embauche.",
+    "Ne prouve ni identité ni présence en direct.",
+    "Les intervalles non échantillonnés ne sont pas analysés."
+  ]
+}

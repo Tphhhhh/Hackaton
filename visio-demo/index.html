@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content="#2A38E6" />
+  <meta name="description" content="Faro : votre caméra et sa version transformée, analysées côte à côte, en direct et sans enregistrement." />
+  <link rel="icon" href="data:," />
+  <title>Faro — Deux flux, un score</title>
+</head>
+<body class="compare-mode">
+  <div class="meeting-app">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Faro, accueil"><svg class="brand-mark" viewBox="205 295 700 575" aria-hidden="true"><path class="beam" d="M215 307 553 405 215 503ZM891 307 553 405 891 503Z"/><path class="eye" d="M448 405Q553 320 658 405Q553 490 448 405Z" fill="none" stroke-width="22" stroke-linejoin="round"/><ellipse class="tower" cx="553" cy="405" rx="32" ry="28"/><path class="tower" d="M497 497H610L620 595H487ZM483 627H624L633 715H474ZM470 747H636L645 828H462Z"/><rect class="tower" x="413" y="828" width="281" height="34" rx="9"/></svg><span class="brand-name">Faro</span></a>
+      <nav class="workspace-jumps" aria-label="Accès aux zones de travail"><a href="#comparison-video">Comparaison</a><a href="#session-panel">Analyse</a><a href="#video-signal-layers">Signaux</a></nav>
+      <div class="header-right">
+        <button id="open-sources" class="button secondary compact" aria-haspopup="dialog"><span data-icon="folder"></span><span>Sources & simulations</span></button>
+      </div>
+    </header>
+    <main class="meeting-layout">
+      <div class="workspace-grid">
+      <div class="comparison-workspace">
+      <section id="comparison-video" class="conference" aria-label="Vidéo de la conférence" tabindex="-1">
+        <div class="room-heading"><span class="room-title">01 · Original</span><span id="source-label" class="recording-label">Webcam · en direct</span></div>
+        <div class="media-card">
+        <div class="stage-frame"><div id="stage-shell" class="stage-shell">
+          <div id="stage-empty" class="stage-empty"><span class="empty-kicker">Flux 01</span><h2>Votre caméra</h2><button id="start-camera" class="button primary"><span data-icon="video"></span><span>Activer la caméra</span></button><button id="choose-video" class="text-button">Importer une vidéo</button><span class="stage-formats">Aucun enregistrement · traitement local</span></div>
+          <div id="video-stage" hidden></div>
+          <svg id="face-overlay" aria-label="Coordonnées faciales fournies par le moteur" xmlns="http://www.w3.org/2000/svg" hidden></svg>
+          <div id="stage-top" class="stage-top" hidden><span class="stage-chip"><span class="status-dot"></span><span id="source-chip">LECTURE LOCALE</span></span><span id="overlay-chip" class="stage-chip">Coordonnées en attente</span></div>
+          <div id="stage-name" class="stage-name" hidden><span data-icon="film"></span><span id="stage-filename"></span></div>
+          <button id="stage-replace" class="icon-button stage-replace" aria-label="Changer la vidéo" title="Changer la vidéo" hidden><span data-icon="folder"></span></button>
+          <label class="points-chip live-only"><span class="visually-hidden">Points</span><select id="original-landmarks" aria-label="Points du visage original"><option value="none">Sans points</option><option value="light" selected>Points légers</option><option value="full">Tous les points</option></select></label>
+        </div></div>
+        <div class="card-footer">
+          <div id="video-alert" class="alert" role="alert" hidden></div><p id="video-info" class="file-info" aria-live="polite"></p>
+          <div class="playback-strip"><span id="current-time">00:00</span><input id="timeline" type="range" min="0" max="20" step="0.01" value="0" aria-label="Position de lecture" disabled /><span id="total-time">00:00</span></div>
+          <div class="meeting-controls"><div class="session-info"><span id="session-state">Extrait en attente</span></div><div class="control-group"><button id="stop-camera" class="button secondary" hidden>Arrêter la caméra</button><button id="mute-video" class="control-button" aria-label="Activer le son" title="Activer le son" disabled><span data-icon="volume-off"></span></button><button id="restart-video" class="control-button" aria-label="Revenir au début" title="Revenir au début" disabled><span data-icon="restart"></span></button><button id="play-video" class="control-button play-button" aria-label="Lire la vidéo" title="Lire la vidéo" disabled><span data-icon="play"></span></button><span class="control-divider"></span><button id="fullscreen-video" class="control-button" aria-label="Agrandir la vidéo" title="Agrandir la vidéo" disabled><span data-icon="expand"></span></button><button id="clear-video" class="control-button end-button" aria-label="Fermer l’extrait" title="Fermer l’extrait" hidden><span data-icon="close"></span></button></div></div>
+          <div class="demo-score original"><div><span>Indice de manipulation</span><small id="original-score-note">En attente d’une mesure</small></div><strong id="original-score">—</strong><div class="demo-score-track"><i id="original-score-rail"></i></div></div>
+          <div class="tracking-bar"><span class="tracking-icon" data-icon="scan"></span><div class="tracking-text"><strong>Suivi du visage</strong><p id="tracking-status" role="status">En attente de coordonnées du moteur</p></div><span id="tracking-count" class="tracking-count">— point</span><button id="toggle-tracking" class="switch" aria-label="Afficher le suivi du visage" aria-pressed="true" title="Afficher ou masquer les coordonnées"><span></span></button></div>
+        </div>
+        </div>
+        <div class="room-note"><span data-icon="lock"></span><p>Analyse sur cet ordinateur, sans envoi externe.</p></div>
+      </section>
+      <section id="filtered-panel" class="conference" aria-label="Visage transformé">
+        <div class="room-heading"><span id="filtered-name" class="room-title">02 · Brad Pitt</span><span class="recording-label" id="filter-source-label">Face swap neuronal · GPU</span></div>
+        <div class="media-card">
+          <div class="stage-frame"><div id="filtered-stage" class="stage-shell">
+            <div id="filtered-placeholder" class="stage-empty"><span class="empty-kicker">Flux 02</span><h2>Version transformée</h2><p>Le second flux apparaîtra ici dès que la caméra sera active.</p></div>
+            <canvas id="filtered-canvas" aria-label="Flux transformé en direct" hidden></canvas>
+            <p id="filter-status" class="visually-hidden" role="status">En attente de la caméra</p>
+
+            <div class="stage-top"><span class="stage-chip">VISAGE TRANSFORMÉ</span></div>
+          </div></div>
+          <div class="card-footer">
+            <p id="external-alert" class="alert" role="alert" hidden></p>
+            <div class="filter-controls"><label id="portrait-control" class="landmark-control"><span class="label-text">Visage</span><select id="filter-portrait" aria-label="Visage du filtre"><option value="brad-pitt">Brad Pitt</option><option value="sam-altman">Sam Altman</option><option value="emmanuel-macron">Emmanuel Macron</option><option value="nicolas-sarkozy">Nicolas Sarkozy</option></select></label><button id="toggle-filter" class="button secondary" aria-pressed="true" disabled>Désactiver le filtre</button></div>
+            <div class="demo-score transformed"><div><span>Indice de manipulation</span><small id="filtered-score-note">En attente d’une mesure</small></div><strong id="filtered-score">—</strong><div class="demo-score-track"><i id="filtered-score-rail"></i></div></div>
+            <div class="tracking-bar filter-tracking"><p id="filtered-tracking" class="small-note filter-note">Suivi partagé avec le flux original</p></div>
+          </div>
+        </div>
+
+      </section>
+      </div>
+      <div id="rail" class="rail">
+      <aside id="analysis-panel" class="analysis-panel" aria-label="Analyse et rapprochement">
+        <div class="panel-header"><h2>L’analyse</h2><span class="panel-label">Lecture seule</span></div>
+        <div class="tabs" role="tablist" aria-label="Sources d’analyse"><button id="tab-visio" role="tab" aria-selected="true" aria-controls="panel-visio">Visio</button><button id="tab-metadata" role="tab" aria-selected="false" aria-controls="panel-metadata" tabindex="-1">Métadonnées<span id="metadata-dot" class="pending-dot"></span></button></div>
+        <div class="panel-scroll">
+          <section id="panel-visio" role="tabpanel" aria-labelledby="tab-visio"><div class="section-heading"><button id="clear-result" class="text-button" hidden>Effacer</button></div><div class="local-actions"><button id="analyze-local" class="button primary wide" disabled>Analyser avec GenD</button><button id="cancel-local" class="text-button" hidden>Annuler l’analyse</button><p id="engine-status" class="small-note" role="status">Connexion au moteur local…</p></div><div id="result" aria-live="polite"></div><button id="import-result" class="button secondary wide"><span data-icon="upload"></span>Importer le résultat JSON</button><div id="json-alert" class="alert" role="alert" hidden></div><p id="json-info" class="small-note" aria-live="polite">Le résultat peut être consulté sans vidéo.</p></section>
+          <section id="panel-metadata" role="tabpanel" aria-labelledby="tab-metadata" hidden><div id="metadata-result" aria-live="polite"></div><button id="import-metadata" class="button secondary wide"><span data-icon="upload"></span>Importer les métadonnées JSON</button><div id="metadata-alert" class="alert" role="alert" hidden></div></section>
+          <section class="crosscheck-card" aria-label="Rapprochement des sources"><div class="section-heading"><h3>Croiser les deux sources</h3></div><div class="crosscheck-sources"><span><i id="video-source-dot"></i>Visio</span><span class="cross-line"></span><span><i id="meta-source-dot"></i>Métadonnées</span></div><p id="crosscheck-status">En attente des deux sources pour le même extrait.</p><p class="small-note">La cohérence des sources ne prouve pas l’identité.</p></section>
+        </div>
+        <div class="panel-footer">Les résultats ne constituent pas une preuve d’identité.</div>
+      </aside>
+      <details id="live-summary" class="live-summary" hidden><summary>Détails techniques</summary><div class="live-summary-content"><p id="live-status" role="status">Connexion…</p><dl class="summary-metrics"><div class="metric"><dt>Repères calculés</dt><dd id="live-points">—</dd></div><div class="metric"><dt>Calcul du suivi</dt><dd id="live-latency">—</dd></div></dl><details class="session-info-details"><summary>Traitement local & limites de l’analyse</summary><p class="small-note">Les images sont traitées en mémoire sur cet ordinateur. Aucun enregistrement. Microphone désactivé par défaut ; mesure facultative dans le panneau.</p><p class="small-note">La console regroupe l’analyse vidéo et les métadonnées. Les alertes appareil retirent des points au score vidéo. Un score élevé ne prouve pas l’authenticité.</p></details></div></details>
+      </div>
+
+      </div>
+    </main>
+    <footer class="page-footer"><span class="footer-brand"><svg class="brand-mark" viewBox="205 295 700 575" aria-hidden="true"><path class="beam" d="M215 307 553 405 215 503ZM891 307 553 405 891 503Z"/><path class="eye" d="M448 405Q553 320 658 405Q553 490 448 405Z" fill="none" stroke-width="22" stroke-linejoin="round"/><ellipse class="tower" cx="553" cy="405" rx="32" ry="28"/><path class="tower" d="M497 497H610L620 595H487ZM483 627H624L633 715H474ZM470 747H636L645 828H462Z"/><rect class="tower" x="413" y="828" width="281" height="34" rx="9"/></svg><span class="brand-name">Faro</span></span><span class="footer-meta">Traitement local · Aucun enregistrement</span></footer>
+  </div>
+  <dialog id="sources-dialog" aria-labelledby="sources-title"><div class="dialog-header"><div><p class="eyebrow"><span class="pixel-trio" aria-hidden="true"><i></i><i></i><i></i></span>Configurer la démo</p><h2 id="sources-title">Sources & simulations</h2></div><button id="close-sources" class="icon-button" aria-label="Fermer les sources"><span data-icon="close"></span></button></div><p class="hint">Le bouton Analyser transmet le clip au moteur local sur cet ordinateur. La copie temporaire est supprimée après traitement.</p><div class="source-options"><button id="source-camera" class="button primary">Activer la webcam</button><button id="source-video" class="button secondary"><span data-icon="film"></span>Choisir une vidéo</button><button id="source-result" class="button secondary"><span data-icon="upload"></span>Résultat visio JSON</button><button id="source-tracking" class="button secondary"><span data-icon="scan"></span>Coordonnées faciales JSON</button><button id="source-metadata" class="button secondary"><span data-icon="layers"></span>Métadonnées JSON</button></div><p class="small-note">Les coordonnées doivent provenir du moteur. Aucun point de visage n’est inventé dans cette démo.</p><div id="tracking-alert" class="alert" role="alert" hidden></div><p id="media-reference" class="media-reference">Chargez une vidéo pour obtenir sa référence d’intégration.</p><section class="dialog-section" aria-labelledby="filter-settings-title"><div class="section-heading"><h3 id="filter-settings-title">Flux transformé</h3></div><div class="dialog-row"><button id="connect-external" class="button secondary" disabled>Partager un flux externe</button><button id="disconnect-external" class="button secondary" hidden>Revenir au filtre intégré</button>        <label class="landmark-control dialog-points">Points du visage transformé<select id="filtered-landmarks" aria-label="Points du visage transformé"><option value="none" selected>Sans points</option><option value="light">Points légers</option><option value="full">Tous les points</option></select></label></div><p>Lancez Deep-Live-Cam, choisissez votre portrait puis « Live ». Cliquez sur « Partager un flux externe » et partagez uniquement sa fenêtre d’aperçu. Le flux externe peut avoir un léger décalage. Le suivi facial est recalculé sur cette image.</p><p>Si la webcam est déjà utilisée, libérez-la dans l’autre application ou utilisez une source virtuelle OBS. Fermer le partage revient au filtre intégré.</p>        <p class="filter-credit" id="filter-credit">Portrait : <span id="portrait-author">© Glenn Francis / PacificProDigital.com</span> — <a id="portrait-source" href="https://commons.wikimedia.org/wiki/File:Brad_Pitt_2019_by_Glenn_Francis.jpg" target="_blank" rel="noreferrer">source</a> · <a id="portrait-license" href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noreferrer">CC BY-SA 4.0</a>. Portrait de référence pour le face swap.</p></section><section class="simulation-panel"><div class="section-heading"><h3>Explorer les états d’analyse</h3><span class="badge simulation">simulation</span></div><p class="hint">Six résultats fictifs, indépendants de la vidéo et du suivi facial.</p><div id="examples" class="examples"></div></section></dialog>
+  <input type="file" id="video-file" accept="video/mp4,video/webm,.mp4,.webm" hidden />
+  <input type="file" id="json-file" accept="application/json,.json" hidden />
+  <input type="file" id="tracking-file" accept="application/json,.json" hidden />
+  <input type="file" id="metadata-file" accept="application/json,.json" hidden />
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

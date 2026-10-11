@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Visio demo frontend metadata adapter v1",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "media_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "session_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "simulation": {
+      "type": "boolean"
+    },
+    "status": {
+      "enum": [
+        "pending",
+        "completed",
+        "partial",
+        "failed"
+      ]
+    },
+    "checks": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "status": {
+            "enum": [
+              "consistent",
+              "mismatch",
+              "indeterminate"
+            ]
+          },
+          "video_value": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2000
+          },
+          "metadata_value": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2000
+          },
+          "detail": {
+            "type": "string",
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "status",
+          "video_value",
+          "metadata_value",
+          "detail"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "errors": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "media_id",
+    "session_id",
+    "source",
+    "simulation",
+    "status",
+    "checks",
+    "errors",
+    "limitations"
+  ],
+  "additionalProperties": false
+}

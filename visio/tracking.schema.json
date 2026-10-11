@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Visio demo frontend tracking adapter v1",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "media_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "simulation": {
+      "const": false
+    },
+    "coordinate_space": {
+      "const": "normalized"
+    },
+    "frames": {
+      "type": "array",
+      "maxItems": 1200,
+      "items": {
+        "type": "object",
+        "properties": {
+          "time_seconds": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 20
+          },
+          "faces": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "box": {
+                  "type": "object",
+                  "properties": {
+                    "x": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "y": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "width": {
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 1
+                    },
+                    "height": {
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "x",
+                    "y",
+                    "width",
+                    "height"
+                  ],
+                  "additionalProperties": false
+                },
+                "landmarks": {
+                  "type": "array",
+                  "maxItems": 1024,
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "x": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      "y": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      "name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 500
+                      }
+                    },
+                    "required": [
+                      "x",
+                      "y"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "box",
+                "landmarks"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "time_seconds",
+          "faces"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "media_id",
+    "source",
+    "simulation",
+    "coordinate_space",
+    "frames"
+  ],
+  "additionalProperties": false
+}

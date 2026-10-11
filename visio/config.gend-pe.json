@@ -1,0 +1,12 @@
+{
+  "detectors": ["gend_pe"],
+  "threads": 2,
+  "sample_fps": 2.0,
+  "threshold": 0.5,
+  "aggregation": "fraction",
+  "flag_fraction": 0.5,
+  "window_seconds": 2.0,
+  "min_coverage": 0.8,
+  "max_gap_seconds": 2.0,
+  "timeout_seconds": 60.0
+}
