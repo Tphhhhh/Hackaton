@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#ffffff" />
+  <meta name="theme-color" content="#EEF0F3" />
   <meta name="description" content="Visio : une salle de démonstration locale avec analyse vidéo et rapprochement des métadonnées." />
   <link rel="icon" href="data:," />
   <title>Visio — Salle de démonstration</title>
@@ -16,12 +16,15 @@
       <div class="header-right"><button id="open-sources" class="button secondary" aria-haspopup="dialog"><span data-icon="folder"></span><span>Sources & simulations</span></button></div>
     </header>
     <main class="meeting-layout">
+      <section class="workspace-intro" aria-labelledby="workspace-title">
+        <div class="workspace-title"><p class="eyebrow"><span class="pixel-mark" aria-hidden="true"></span>Comparaison en direct</p><h1 id="workspace-title">Deux flux.<br>Une même analyse.</h1><p class="intro-caption">Votre caméra et sa version transformée.</p></div>
+      </section>
       <div class="comparison-workspace">
       <section id="comparison-video" class="conference" aria-label="Vidéo de la conférence" tabindex="-1">
-        <div class="room-heading"><span>01 · Vous, en direct</span><span id="source-label" class="recording-label">Webcam · en direct</span></div>
+        <div class="room-heading"><span>01 · Original</span><span id="source-label" class="recording-label">Webcam · en direct</span></div>
         <div class="media-card">
         <div id="stage-shell" class="stage-shell">
-          <div id="stage-empty" class="stage-empty"><div class="empty-video-icon" data-icon="play"></div><h2>Caméra</h2><button id="start-camera" class="button primary"><span data-icon="video"></span>Activer la caméra</button><button id="choose-video" class="text-button">Importer une vidéo</button><span class="stage-formats">Sans enregistrement · Microphone désactivé</span></div>
+          <div id="stage-empty" class="stage-empty"><div class="empty-video-icon" data-icon="play"></div><h2>Votre caméra</h2><button id="start-camera" class="button primary"><span data-icon="video"></span>Activer la caméra</button><button id="choose-video" class="text-button">Importer une vidéo</button><span class="stage-formats">Aucun enregistrement</span></div>
           <div id="video-stage" hidden></div>
           <svg id="face-overlay" aria-label="Coordonnées faciales fournies par le moteur" xmlns="http://www.w3.org/2000/svg" hidden></svg>
           <div id="stage-top" class="stage-top" hidden><span class="stage-chip"><span class="status-dot"></span><span id="source-chip">LECTURE LOCALE</span></span><span id="overlay-chip" class="stage-chip">Coordonnées en attente</span></div>
@@ -39,7 +42,7 @@
         <div class="room-heading"><span id="filtered-name">02 · Brad Pitt</span><span class="recording-label" id="filter-source-label">Face swap neuronal · GPU</span></div>
         <div class="media-card">
           <div id="filtered-stage" class="stage-shell">
-            <div id="filtered-placeholder" class="stage-empty"><h2>Flux transformé</h2><p>En attente de la caméra</p></div>
+            <div id="filtered-placeholder" class="stage-empty"><h2>Version transformée</h2><p>Le second flux apparaîtra ici.</p></div>
             <canvas id="filtered-canvas" aria-label="Flux transformé en direct" hidden></canvas>
             <div class="stage-top"><span class="stage-chip">VISAGE TRANSFORMÉ</span></div>
           </div>

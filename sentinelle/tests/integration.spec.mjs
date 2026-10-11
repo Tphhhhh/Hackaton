@@ -103,7 +103,15 @@ test('optional microphone stops with the camera, including a late permission',as
 });
 test('console and five segments fit desktop and mobile widths',async({page})=>{
  await page.goto('/');
- await page.evaluate(()=>document.getElementById('console-overall-score').textContent='100');
+ await expect(page.locator('#console-overall-score')).toHaveText('En attente');
+ await expect(page.locator('.score-unit')).toBeHidden();
+ await expect(page.locator('#console-meta-state')).toBeHidden();
+ expect(await page.locator('#console-overall-score').evaluate(el=>parseFloat(getComputedStyle(el).fontSize))).toBeLessThanOrEqual(16);
+ await page.getByText('Étudier les métadonnées',{exact:true}).click();
+ await expect(page.locator('#console-meta-state')).toBeVisible();
+ await page.getByText('Étudier les métadonnées',{exact:true}).click();
+ await page.evaluate(()=>{const score=document.getElementById('console-overall-score');score.textContent='100';score.dataset.tone='positive';});
+ await expect(page.locator('.score-unit')).toBeVisible();
  for(const width of [1440,1250,1024,390]){
   await page.setViewportSize({width,height:900});
   await expect(page.locator('#console-video-bars i')).toHaveCount(5);
@@ -123,7 +131,7 @@ test('metadata subtracts points without a green bonus; selection and missing sou
   await route.fulfill({json:{...data,points,measured_count:4}});
  });
  await page.goto('/');
- await expect(page.locator('#console-overall-score')).toHaveText('—');
+ await expect(page.locator('#console-overall-score')).toHaveText('En attente');
  await expect(page.locator('#console-video-bars')).toHaveAttribute('data-tone','unknown');
  await page.locator('#start-camera').click();
  await expect(page.locator('#console-overall-score')).toHaveText('80',{timeout:30000});
@@ -140,17 +148,17 @@ test('metadata subtracts points without a green bonus; selection and missing sou
  points=40;
  await expect(page.locator('#console-overall-score')).toHaveText('0',{timeout:10000});
  fail=true;
- await expect(page.locator('#console-overall-score')).toHaveText('—',{timeout:10000});
+ await expect(page.locator('#console-overall-score')).toHaveText('En attente',{timeout:10000});
  await expect(page.locator('#console-meta-bars')).toHaveAttribute('data-tone','unknown');
  await expect(page.locator('#console-video-bars-value')).toHaveText('1 / 5');
  fail=false;points=0;
  await expect(page.locator('#console-overall-score')).toHaveText('20',{timeout:10000});
  await page.route('**/api/live/score',route=>route.fulfill({status:503,json:{error:'test video outage'}}));
- await expect(page.locator('#console-overall-score')).toHaveText('—',{timeout:10000});
+ await expect(page.locator('#console-overall-score')).toHaveText('En attente',{timeout:10000});
  await expect(page.locator('#console-meta-bars-value')).toHaveText('5 / 5');
  await expect(page.locator('#console-video-bars')).toHaveAttribute('data-tone','unknown');
  await page.locator('#stop-camera').click();
- await expect(page.locator('#console-overall-score')).toHaveText('—');
+ await expect(page.locator('#console-overall-score')).toHaveText('En attente');
  await expect(page.locator('#console-meta-bars')).toHaveAttribute('data-tone','unknown');
 });
 

@@ -34,7 +34,7 @@ export function createAnalysisConsole({ onSource = () => {} } = {}) {
     $('console-video-state').textContent=visual===null?'En attente d’une image analysable':selected==='original'?'Flux original · GenD PE':'Flux transformé · GenD PE';
     $('console-video-detail').textContent=current?.note?.replace('Score lissé · brut :','Indices GenD bruts :') || 'Aucun résultat vidéo disponible.';
     $('console-meta-state').textContent=metadata?`${metadata.measured_count} contrôles · ${penalty===0?'aucune pénalité':format(penalty)+' points retirés'}`:'Vérifications de l’appareil en attente';
-    $('console-overall-score').textContent=format(overall);
+    $('console-overall-score').textContent=overall===null?'En attente':format(overall);
     $('console-overall-score').dataset.tone=overall===null?'unknown':overall>=80?'positive':overall>=60?'medium':'warning';
     $('console-overall-state').textContent=overall===null ? visual===null?'En attente de l’analyse vidéo':'En attente des métadonnées'
       : `Vidéo ${format(visualConfidence)} − pénalité ${format(penalty)}`;

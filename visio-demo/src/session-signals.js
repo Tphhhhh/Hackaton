@@ -11,10 +11,10 @@ export function createSessionSignals({ onMetadata = () => {}, onAudio = () => {}
     <div class="console-header"><div class="signals-heading"><div><h2>Analyse de session</h2></div><span id="signals-dot" class="signals-dot"></span></div>
     <div class="console-source-field"><p class="console-source-label" id="console-source-label">Flux analysé</p>
     <div class="console-source" role="group" aria-labelledby="console-source-label"><button id="console-source-original" aria-pressed="true">Original</button><button id="console-source-filtered" aria-pressed="false">Transformé</button></div></div></div>
-    <div class="console-result"><div class="console-overall"><span>Confiance</span><div><strong id="console-overall-score">—</strong><span> / 100</span></div><p id="console-overall-state">En attente des analyses</p></div>
+    <div class="console-result"><div class="console-overall"><span>Confiance</span><div><strong id="console-overall-score" data-tone="unknown">En attente</strong><span class="score-unit"> / 100</span></div><p id="console-overall-state">En attente des analyses</p></div>
     <p class="console-legend"><span>0 · Inquiétant</span><span>100 · Rassurant</span></p>
     </div>
-    <section class="console-group" aria-labelledby="console-video-title">
+    <details class="console-group console-video-inspector"><summary>Analyse vidéo</summary><div class="console-group-content">
       <div class="console-group-heading"><h3 id="console-video-title">Analyse vidéo</h3><span id="console-video-bars-value">— / 5</span></div>
       <div id="console-video-bars" class="console-bars" role="meter" aria-valuemin="0" aria-valuemax="5" aria-label="Analyse vidéo indisponible"><i></i><i></i><i></i><i></i><i></i></div>
       <p id="console-video-state" class="signals-help">En attente d’une image analysable</p>
@@ -24,12 +24,13 @@ export function createSessionSignals({ onMetadata = () => {}, onAudio = () => {}
         <p class="signals-help">Le moteur vérifie qu’un seul visage est exploitable, puis examine ses pixels. Ces contrôles n’ont pas de scores séparés.</p>
         <p id="live-score-status" class="signals-help" role="status">En attente de la caméra</p>
       </details>
-    </section>
-    <section class="console-group" aria-labelledby="console-meta-title">
+    <details class="console-detail console-method"><summary>Calcul du score global</summary><p id="console-formula" class="signals-help"></p></details>
+    </div></details>
+    <details id="console-metadata-details" class="console-group console-meta-inspector"><summary>Étudier les métadonnées</summary><div class="console-group-content">
       <div class="console-group-heading"><h3 id="console-meta-title">Métadonnées</h3><span id="console-meta-bars-value">— / 5</span></div>
       <div id="console-meta-bars" class="console-bars" role="meter" aria-valuemin="0" aria-valuemax="5" aria-label="Métadonnées indisponibles"><i></i><i></i><i></i><i></i><i></i></div>
       <p id="console-meta-state" class="signals-help">Vérifications de l’appareil en attente</p>
-      <details id="console-metadata-details" class="console-detail"><summary>Étudier les métadonnées</summary>
+      <div class="console-detail">
         <dl class="console-facts"><div><dt>Pénalité appareil</dt><dd id="console-meta-score">— / 100</dd></div></dl>
         <p class="signals-help"><span id="signals-count">—</span> <span id="signals-caption">En attente de mesures</span></p>
         <p id="signals-state" class="signals-help" role="status">Activez la caméra pour démarrer.</p>
@@ -64,11 +65,10 @@ export function createSessionSignals({ onMetadata = () => {}, onAudio = () => {}
       <p id="signals-challenge-result" role="status" class="signals-help">Aucun défi réalisé.</p>
     </details>
     <details class="signals-section"><summary>Comprendre les indices</summary><p id="signals-points" class="signals-help">Les règles seront détaillées après la première mesure.</p><p class="signals-help">X1 conserve le bonus de combinaison du module métadonnées. Il n’élimine pas les faux positifs. VPN, webcam virtuelle ou rendu logiciel peuvent avoir des usages légitimes.</p><p class="signals-help">Les métadonnées concernent ce navigateur, pas l’ordinateur d’un participant distant. La comparaison d’IP WebRTC est indisponible : cette démo n’établit pas d’appel WebRTC.</p></details>
-      </details>
-    </section>
-    <details class="console-detail console-method"><summary>Calcul du score global</summary><p id="console-formula" class="signals-help"></p></details>
+      </div>
+    </div></details>
     <p class="console-footnote">Indice expérimental, pas une preuve d’authenticité.</p>`;
-  document.querySelector('.meeting-layout').prepend(panel);
+  document.querySelector('.workspace-intro').append(panel);
   let stream=null, video=null, generation=0, interval, frameId, frames=[], lastPresentation, previousCamera, previousSettings;
   let cameraChanges=0, settingsChanges=0, gpu='', deviceError='', controls=[], interactions={moves:0,keys:0,pastes:0}, keyTimes=[];
   let activeRequest=null, revision=0, debounce, networkPending=false, networkEpoch=0, networkControllers=new Set(), network={ip:'',org:'',rtt_ms:[]}, lastIP='', ipChanges=0, networkAt=0;
