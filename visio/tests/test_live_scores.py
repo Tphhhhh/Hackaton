@@ -6,7 +6,9 @@ from io import BytesIO
 import pytest
 from PIL import Image
 
-from visio.live_scores import LivePEScorer
+import numpy as np
+
+from visio.live_scores import LivePEScorer, dominant_face
 from visio.server import DemoServer
 from visio.tests.test_live_swap import request, jpeg
 
@@ -27,6 +29,21 @@ def test_pair_uses_pixels_independently_and_preserves_abstention():
     identical = model.score_pair(jpeg(),jpeg())
     assert identical['original'] == identical['filtered']
 
+
+
+def test_dominant_face_keeps_the_speaker_but_not_comparable_faces():
+    speaker = [100, 100, 300, 300, .9]   # 200 x 200
+    background = [500, 400, 560, 460, .8]  # 60 x 60
+    twin = [320, 100, 500, 280, .9]        # 180 x 180
+    points = lambda n: np.zeros((n, 5, 2))
+    boxes, marks = dominant_face(np.array([background, speaker]), points(2))
+    assert boxes.tolist() == [speaker] and marks.shape == (1, 5, 2)
+    boxes, marks = dominant_face(np.array([speaker, twin]), points(2))
+    assert len(boxes) == 2 and marks.shape == (2, 5, 2)
+    single = np.array([speaker])
+    assert dominant_face(single, points(1))[0] is single
+    empty = np.zeros((0, 5))
+    assert dominant_face(empty, points(0))[0] is empty
 
 @pytest.fixture
 def score_server(tmp_path):
