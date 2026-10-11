@@ -4,12 +4,12 @@ export function createSignalPanel({ onMicrophone }) {
   const panel = document.createElement('div');
   panel.id = 'video-signal-layers';
   panel.tabIndex = -1;
-  panel.innerHTML = `<div class="signal-layers-heading"><h4>Indicateurs complémentaires</h4><span>Expérimental</span></div>
-    <p class="signals-help">Flux <span class="signal-source-original">original</span><span class="signal-source-filtered">transformé</span> · 10 dernières secondes. Ces observations ne modifient pas le score.</p>
+  panel.innerHTML = `<div class="signal-layers-heading"><h4>Signaux complémentaires</h4><span>Expérimental</span></div>
+    <p class="signals-help">Flux <span class="signal-source-original">original</span><span class="signal-source-filtered">transformé</span> · 10 secondes · hors score</p>
     <div id="signal-layer-rows"></div>
     <div class="signal-audio"><button id="layers-microphone" class="text-button" type="button" disabled>Activer la cohérence voix / bouche</button>
-    <p class="signals-help">Micro local facultatif, sans enregistrement. Comparaison d’activité, sans lecture labiale.</p></div>`;
-  document.getElementById('session-panel').after(panel);
+    <p class="signals-help">Micro facultatif · sans enregistrement</p></div>`;
+  document.getElementById('live-summary').before(panel);
   let selected = 'original';
   const results = { original: unavailableSignals(), filtered: unavailableSignals() };
   const rows = {};
