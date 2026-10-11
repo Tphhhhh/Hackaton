@@ -1,6 +1,8 @@
-import '@fontsource/inter/latin-400.css';
-import '@fontsource/inter/latin-500.css';
-import '@fontsource/inter-tight/latin-700.css';
+import '@fontsource/space-grotesk/latin-400.css';
+import '@fontsource/space-grotesk/latin-500.css';
+import '@fontsource/space-grotesk/latin-600.css';
+import '@fontsource/geist-mono/latin-400.css';
+import '@fontsource/geist-mono/latin-500.css';
 import './style.css';
 import { createLiveComparison } from './live-comparison.js';
 import { startLiveCamera } from './live-camera.js';
@@ -54,7 +56,7 @@ const signals = createSessionSignals({
 });
 signalPanel = createSignalPanel({ onMicrophone: () => signals.toggleMicrophone() });
 layers = createSignalLayers({ onResults: signalPanel.update });
-analysisConsole = createAnalysisConsole({ onSource: signalPanel.select });
+analysisConsole = createAnalysisConsole({ onSource: signalPanel.select, useMetadata: false });
 const comparison = createLiveComparison({ onVideoScore: analysisConsole.video, onSignalFrame: layers.frame, onSignalReset: layers.reset });
 if (new URLSearchParams(location.search).get('mode') === 'clip') document.body.classList.remove('compare-mode');
 
@@ -237,6 +239,8 @@ function enterClipWorkspace() {
 for (const id of ['import-result', 'source-result']) $(id).addEventListener('click', () => { enterClipWorkspace(); $('sources-dialog').close(); selectTab('visio'); $('json-file').click(); });
 for (const id of ['import-metadata', 'source-metadata']) $(id).addEventListener('click', () => { enterClipWorkspace(); $('sources-dialog').close(); selectTab('metadata'); $('metadata-file').click(); });
 $('source-tracking').addEventListener('click', () => $('tracking-file').click());
+// Sharing a window or returning to the built-in filter happens from the dialog; close it first.
+for (const id of ['connect-external', 'disconnect-external']) $(id).addEventListener('click', () => $('sources-dialog').close());
 
 function clearSupplemental(kind) {
   supplementalSequence[kind]++;

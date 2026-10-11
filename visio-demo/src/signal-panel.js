@@ -1,15 +1,15 @@
 import { SIGNAL_LABELS, unavailableSignals } from './video-signals.js';
 
 export function createSignalPanel({ onMicrophone }) {
-  const panel = document.createElement('div');
-  panel.id = 'video-signal-layers';
+  const panel = document.createElement('section');
+  panel.id = 'video-signal-layers'; panel.setAttribute('aria-labelledby', 'signal-layers-title');
   panel.tabIndex = -1;
-  panel.innerHTML = `<div class="signal-layers-heading"><h4>Signaux complémentaires</h4><span>Expérimental</span></div>
-    <p class="signals-help">Flux <span class="signal-source-original">original</span><span class="signal-source-filtered">transformé</span> · 10 secondes · hors score</p>
-    <div id="signal-layer-rows"></div>
-    <div class="signal-audio"><button id="layers-microphone" class="text-button" type="button" disabled>Activer la cohérence voix / bouche</button>
-    <p class="signals-help">Micro facultatif · sans enregistrement</p></div>`;
-  document.getElementById('live-summary').before(panel);
+  panel.innerHTML = `<div class="signal-layers-heading"><h2 id="signal-layers-title">Signaux complémentaires</h2>
+    <p class="signals-help">Cinq observations sur le flux <span class="signal-source-original">original</span><span class="signal-source-filtered">transformé</span>, mesurées sur dix secondes. Elles n’entrent pas dans le score.</p>
+    <div class="signal-audio"><button id="layers-microphone" class="button secondary" type="button" disabled>Activer la cohérence voix / bouche</button>
+    <p class="signals-help">Micro facultatif, sans enregistrement.</p></div></div>
+    <div id="signal-layer-rows"></div>`;
+  document.querySelector('.comparison-workspace').after(panel);
   let selected = 'original';
   const results = { original: unavailableSignals(), filtered: unavailableSignals() };
   const rows = {};

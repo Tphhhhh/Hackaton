@@ -131,7 +131,7 @@ test('model failure closes camera and clears the live state', async ({ page }) =
 test('comparison changes actual pixels, scores come from the inference response, and toggling restores the original', async ({ page }) => {
   await camera(page); await page.goto('/'); await page.locator('#start-camera').click();
   await expect(page.locator('#filter-status')).toContainText('Face swap Brad Pitt actif', { timeout: 30000 });
-  await expect(page.locator('#session-panel')).toContainText('Analyse de session');
+  await expect(page.locator('#session-panel')).toContainText('Indice de confiance');
   await expect(page.locator('#filtered-canvas')).toHaveAttribute('data-filter-applied', 'true');
   // Compare the two canvases at the same JS turn. A color tweak or static poster
   // cannot pass the round trip to byte-identical source pixels when disabled.
@@ -148,9 +148,11 @@ test('comparison changes actual pixels, scores come from the inference response,
   await expect(page.locator('#original-score')).toHaveText('23 / 100');
   await expect(page.locator('#filtered-score')).toHaveText('41 / 100');
   await expect(page.locator('#filtered-canvas')).toHaveAttribute('data-point-count', '0');
+  await page.locator('#open-sources').click();
   await page.locator('#filtered-landmarks').selectOption('light');
   await expect(page.locator('#filtered-canvas')).toHaveAttribute('data-point-count', '32');
   await page.locator('#filtered-landmarks').selectOption('none');
+  await page.locator('#close-sources').click();
   await page.locator('#toggle-filter').click();
   await expect(page.locator('#filtered-canvas')).toHaveAttribute('data-filter-applied', 'false');
   await expect.poll(difference).toBe(0);
@@ -183,16 +185,17 @@ test('external window has its own detection and stopping releases both streams',
   });
   await page.goto('/'); await page.locator('#start-camera').click();
   await expect(page.locator('#live-points')).toHaveText('478', { timeout: 30000 });
-  await page.locator('#connect-external').click();
+  await page.locator('#open-sources').click(); await page.locator('#connect-external').click();
+  await expect(page.locator('#sources-dialog')).toBeHidden();
   await expect(page.locator('#filter-status')).toContainText('Flux externe', { timeout: 30000 });
   await expect(page.locator('#filtered-tracking')).toHaveText('Aucun visage détecté');
   await expect(page.locator('#live-points')).toHaveText('478');
   await expect(page.locator('#filtered-score')).toHaveText('—');
   expect(await page.evaluate(() => window.displayConstraints.audio)).toBe(false);
-  await page.locator('#disconnect-external').click();
+  await page.locator('#open-sources').click(); await page.locator('#disconnect-external').click();
   expect(await page.evaluate(() => window.testExternal.getTracks()[0].readyState)).toBe('ended');
   await expect(page.locator('#filter-status')).toContainText('Face swap Brad Pitt actif');
-  await page.locator('#connect-external').click();
+  await page.locator('#open-sources').click(); await page.locator('#connect-external').click();
   await expect.poll(() => page.evaluate(() => window.testExternal.getTracks()[0].readyState)).toBe('live');
   await page.locator('#stop-camera').click();
   expect(await page.evaluate(() => [...window.testStreams[0].getTracks(), ...window.testExternal.getTracks()].every(t => t.readyState === 'ended'))).toBe(true);

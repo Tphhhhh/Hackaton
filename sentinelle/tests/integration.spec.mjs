@@ -23,15 +23,11 @@ test('single page, local observations, both scores and clean stop',async({page})
  await expect(page.locator('#filtered-score')).toHaveText('80 / 100');
  await expect(page.locator('#signals-state')).toContainText('Mesures actualisées');
  await expect(page.locator('#signals-rows')).toContainText('Changement de caméra');
- await page.getByText('Étudier les métadonnées',{exact:true}).click();
- await page.getByText('Observations du navigateur',{exact:true}).click();
  await expect(page.locator('#signals-observations')).toContainText('outil de test');
  await expect(page.locator('#signals-observations')).toContainText('i/s',{timeout:15000});
- await page.getByText('Observations du navigateur',{exact:true}).click();
  await page.locator('#filter-portrait').selectOption('sam-altman');
  await expect(page.locator('#filtered-score')).toHaveText('80 / 100',{timeout:15000});
  expect(await page.evaluate(()=>window.cameraCalls)).toBe(1);
- await page.getByText('Étudier les métadonnées',{exact:true}).click();
  await page.screenshot({path:'test-results/signals-desktop.png',fullPage:true});
  await page.setViewportSize({width:390,height:844});
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
@@ -41,30 +37,12 @@ test('single page, local observations, both scores and clean stop',async({page})
  expect(await page.evaluate(()=>window.testStream.getTracks().every(t=>t.readyState==='ended'))).toBe(true);
  expect(errors).toEqual([]);expect(external).toEqual([]);
 });
-test('optional network, heuristic label, contacts, challenge, and network reset',async({page})=>{
- await camera(page);
- await page.route('https://api.ipify.org/**',r=>r.fulfill({json:{ip:'203.0.113.7'},headers:{'Access-Control-Allow-Origin':'*'}}));
- await page.route('https://ipapi.co/**',r=>r.fulfill({json:{org:'Example hosting'},headers:{'Access-Control-Allow-Origin':'*'}}));
- await page.route('https://www.cloudflare.com/**',r=>r.fulfill({body:'test'}));
- await page.goto('/');await page.locator('#start-camera').click();
- await page.getByText('Étudier les métadonnées',{exact:true}).click();await page.getByText('Vérifications facultatives',{exact:true}).click();await page.locator('#signals-network').check();
- const ip=page.locator('.signal-row').filter({hasText:'Adresse réseau'});await ip.locator('summary').click();
- await expect(ip).toContainText('heuristique',{timeout:30000});
- await page.locator('#signals-email').fill('demo@mailinator.com');
- await expect(page.locator('.signal-row').filter({hasText:'Email jetable'})).toContainText('À vérifier');
- await page.getByText('Défis guidés',{exact:true}).click();await page.locator('#signals-challenge').selectOption('code');
- await page.locator('#signals-start-challenge').click();await expect(page.locator('#signals-prompt')).toContainText('Lisez le code');
- await page.locator('#signals-confirm').click();await expect(page.locator('#signals-challenge-result')).toContainText('confirmée manuellement');
- await page.locator('#signals-network').uncheck();await expect(ip).toContainText('Non vérifié');
- await page.locator('#stop-camera').click();await expect(page.locator('#signals-challenge-result')).toHaveText('Aucun défi actif.');
- await page.goto('/recruiter');await expect(page).toHaveURL('/');
-});
 test('denied camera is unavailable, not a reported refusal',async({page})=>{
  await page.addInitScript(()=>{navigator.mediaDevices.getUserMedia=async()=>{throw new DOMException('Denied','NotAllowedError');};});
  await page.goto('/');await page.locator('#start-camera').click();
  await expect(page.locator('#signals-state')).toContainText('refusé');
  await expect(page.locator('#signals-count')).toHaveText('—');
- await page.getByText('Étudier les métadonnées',{exact:true}).click();await page.getByText('Vérifications facultatives',{exact:true}).click();await expect(page.locator('#signals-refused')).not.toBeChecked();
+ await expect(page.locator('#signals-refused')).not.toBeChecked();
 });
 test('late results cannot restore a stopped session',async({page})=>{
  await camera(page);let release;const waiting=new Promise(resolve=>release=resolve);let held=false;
@@ -76,8 +54,6 @@ test('late results cannot restore a stopped session',async({page})=>{
 test('optional microphone stops with the camera, including a late permission',async({page})=>{
  await camera(page);await page.goto('/');await page.locator('#start-camera').click();
  await expect(page.locator('#signals-state')).toContainText('Mesures actualisées');
- await page.getByText('Étudier les métadonnées',{exact:true}).click();
- await page.getByText('Observations du navigateur',{exact:true}).click();
  await page.evaluate(()=>{
   const original=navigator.mediaDevices.getUserMedia;
   navigator.mediaDevices.getUserMedia=async constraints=>{
@@ -88,34 +64,32 @@ test('optional microphone stops with the camera, including a late permission',as
    return destination.stream;
   };
  });
- await page.locator('#signals-mic').click();await expect(page.locator('#signals-mic')).toHaveText('Arrêter le microphone');
+ await page.locator('#layers-microphone').click();await expect(page.locator('#signals-mic')).toHaveText('Arrêter le microphone');
  await expect(page.locator('#signals-observations')).toContainText('dBFS');
  await page.locator('#stop-camera').click();
  expect(await page.evaluate(()=>window.audioStream.getTracks().every(t=>t.readyState==='ended'))).toBe(true);
  await page.evaluate(()=>window.audioContextForTest.close());
- await page.locator('#start-camera').click();await expect(page.locator('#signals-mic')).toBeEnabled();
- await page.evaluate(()=>window.delayAudio=true);await page.locator('#signals-mic').click();
+ await page.locator('#start-camera').click();await expect(page.locator('#layers-microphone')).toBeEnabled();
+ await page.evaluate(()=>window.delayAudio=true);await page.locator('#layers-microphone').click();
  await expect.poll(()=>page.evaluate(()=>typeof window.allowAudio)).toBe('function');
  await page.locator('#stop-camera').click();await page.evaluate(()=>window.allowAudio());
  await expect.poll(()=>page.evaluate(()=>window.audioStream.getTracks().every(t=>t.readyState==='ended'))).toBe(true);
  await page.evaluate(()=>window.audioContextForTest.close());
  await expect(page.locator('#signals-count')).toHaveText('—');
 });
-test('console and five segments fit desktop and mobile widths',async({page})=>{
+test('console fits desktop and mobile widths; metadata stays out of the interface',async({page})=>{
  await page.goto('/');
  await expect(page.locator('#console-overall-score')).toHaveText('En attente');
  await expect(page.locator('.score-unit')).toBeHidden();
  await expect(page.locator('#console-meta-state')).toBeHidden();
+ await expect(page.getByText('Étudier les métadonnées',{exact:true})).toBeHidden();
+ await expect(page.locator('#console-overall-gauge i')).toHaveCount(25);
  expect(await page.locator('#console-overall-score').evaluate(el=>parseFloat(getComputedStyle(el).fontSize))).toBeLessThanOrEqual(16);
- await page.getByText('Étudier les métadonnées',{exact:true}).click();
- await expect(page.locator('#console-meta-state')).toBeVisible();
- await page.getByText('Étudier les métadonnées',{exact:true}).click();
  await page.evaluate(()=>{const score=document.getElementById('console-overall-score');score.textContent='100';score.dataset.tone='positive';});
  await expect(page.locator('.score-unit')).toBeVisible();
  for(const width of [1440,1250,1024,390]){
   await page.setViewportSize({width,height:900});
   await expect(page.locator('#console-video-bars i')).toHaveCount(5);
-  await expect(page.locator('#console-meta-bars i')).toHaveCount(5);
   expect(await page.evaluate(()=>{
    const score=document.getElementById('console-overall-score').getBoundingClientRect();
    const panel=document.getElementById('session-panel').getBoundingClientRect();
@@ -123,10 +97,9 @@ test('console and five segments fit desktop and mobile widths',async({page})=>{
   })).toBe(true);
  }
 });
-test('metadata subtracts points without a green bonus; selection and missing sources are explicit',async({page})=>{
- await camera(page);let points=0,fail=false;
+test('global index is the video confidence alone; metadata points never change it',async({page})=>{
+ await camera(page);let points=0;
  await page.route('**/api/session/analyze',async route=>{
-  if(fail)return route.fulfill({status:503,json:{error:'test metadata outage'}});
   const response=await route.fetch();const data=await response.json();
   await route.fulfill({json:{...data,points,measured_count:4}});
  });
@@ -136,30 +109,20 @@ test('metadata subtracts points without a green bonus; selection and missing sou
  await page.locator('#start-camera').click();
  await expect(page.locator('#console-overall-score')).toHaveText('80',{timeout:30000});
  await expect(page.locator('#console-video-bars-value')).toHaveText('4 / 5');
- await expect(page.locator('#console-meta-bars-value')).toHaveText('5 / 5');
- await expect(page.locator('#console-meta-state')).toContainText('aucune pénalité');
- points=15;
- await expect(page.locator('#console-overall-score')).toHaveText('65',{timeout:10000});
- await expect(page.locator('#console-overall-state')).toHaveText('Vidéo 80 − pénalité 15');
- await page.locator('#console-source-filtered').click();
- await expect(page.locator('#console-overall-score')).toHaveText('5');
- await expect(page.locator('#console-video-bars')).toHaveAttribute('data-tone','warning');
- await expect(page.locator('#console-video-bars-value')).toHaveText('1 / 5');
+ await expect(page.locator('#console-overall-state')).toHaveText('Flux original · GenD PE');
  points=40;
- await expect(page.locator('#console-overall-score')).toHaveText('0',{timeout:10000});
- fail=true;
- await expect(page.locator('#console-overall-score')).toHaveText('En attente',{timeout:10000});
- await expect(page.locator('#console-meta-bars')).toHaveAttribute('data-tone','unknown');
- await expect(page.locator('#console-video-bars-value')).toHaveText('1 / 5');
- fail=false;points=0;
- await expect(page.locator('#console-overall-score')).toHaveText('20',{timeout:10000});
+ await expect(page.locator('#signals-state')).toContainText('Mesures actualisées',{timeout:10000});
+ await page.waitForTimeout(3000);
+ await expect(page.locator('#console-overall-score')).toHaveText('80');
+ await page.locator('#console-source-filtered').click();
+ await expect(page.locator('#console-overall-score')).toHaveText('20');
+ await expect(page.locator('#console-video-bars')).toHaveAttribute('data-tone','warning');
+ await expect(page.locator('#console-overall-state')).toHaveText('Flux transformé · GenD PE');
  await page.route('**/api/live/score',route=>route.fulfill({status:503,json:{error:'test video outage'}}));
  await expect(page.locator('#console-overall-score')).toHaveText('En attente',{timeout:10000});
- await expect(page.locator('#console-meta-bars-value')).toHaveText('5 / 5');
  await expect(page.locator('#console-video-bars')).toHaveAttribute('data-tone','unknown');
  await page.locator('#stop-camera').click();
  await expect(page.locator('#console-overall-score')).toHaveText('En attente');
- await expect(page.locator('#console-meta-bars')).toHaveAttribute('data-tone','unknown');
 });
 
 test('five live layers use each source independently and expire on stop', async ({page}) => {
@@ -220,4 +183,8 @@ test('voice-mouth button samples local audio, stays unknown in silence and relea
  expect(await page.evaluate(()=>window.layerAudioStream.getTracks().every(t=>t.readyState==='ended'))).toBe(true);
  await page.evaluate(()=>window.layerAudioContext.close());
  await page.locator('#stop-camera').click();
+});
+
+test('legacy candidate pages redirect to the single page',async({page})=>{
+ await page.goto('/recruiter');await expect(page).toHaveURL('/');
 });

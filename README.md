@@ -12,7 +12,7 @@ visio/.venv-gpu/bin/python -m sentinelle.server --port 8765
 
 Ouvrir **http://127.0.0.1:8765/**, puis activer la caméra. Un seul serveur doit utiliser ce port. La démo indépendante sur **8770** ne doit pas être arrêtée.
 
-La même caméra alimente le suivi, les filtres, GenD PE et les observations techniques. La console calcule un indice de confiance global : **max(0, 100 − indices GenD PE lissés − points d’alerte métadonnées)**. Aucune alerte appareil n’ajoute de points. Les composantes sont affichées avec cinq segments, verts pour un indice de confiance élevé et rouges pour un indice faible, sans interprétation probabiliste. Le choix Original / Transformé sélectionne la vidéo évaluée ; les métadonnées sont communes. Une composante absente empêche le calcul global. Les métadonnées décrivent **cet appareil**, commun aux deux vues, et non l’ordinateur d’un interlocuteur distant. Ce POC n’établit pas d’appel Zoom/Meet/WebRTC.
+La même caméra alimente le suivi, les filtres et GenD PE. La console affiche un indice de confiance : **100 − indice GenD PE lissé** du flux choisi (Original / Transformé). Il est affiché avec une jauge pixel et cinq segments, verts pour un indice élevé et rouges pour un indice faible, sans interprétation probabiliste. Les métadonnées de session sont toujours mesurées en arrière-plan mais ne sont plus affichées et n’entrent pas dans l’indice. Ce POC n’établit pas d’appel Zoom/Meet/WebRTC.
 
 ## Indicateurs vidéo complémentaires
 
