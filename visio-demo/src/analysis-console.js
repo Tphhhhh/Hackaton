@@ -25,6 +25,8 @@ export function createAnalysisConsole({ onSource = () => {}, useMetadata = true 
   function render() {
     const current=video[selected];
     const visual=current?.score ?? null;
+    // When GenD PE abstains, say why (lighting, distance, several faces…) instead of a bare wait.
+    const waiting=current?.note&&current.note!=='En attente d’une mesure'?current.note:'En attente d’un visage analysable';
     const penalty=metadata?.points ?? null;
     const visualConfidence=visual===null?null:100-visual;
     const overall=useMetadata?confidenceScore(visual,penalty):visualConfidence;
@@ -32,7 +34,7 @@ export function createAnalysisConsole({ onSource = () => {}, useMetadata = true 
     $('console-video-quality').textContent=visual===null?'Non vérifiable':'Image exploitable';
     $('console-video-score').textContent=`${format(visualConfidence)} / 100`;
     $('console-meta-score').textContent=penalty===null?'—':penalty===0?'Aucun point retiré':`−${format(penalty)} points`;
-    $('console-video-state').textContent=visual===null?'En attente d’une image analysable':selected==='original'?'Flux original · GenD PE':'Flux transformé · GenD PE';
+    $('console-video-state').textContent=visual===null?waiting:selected==='original'?'Flux original · GenD PE':'Flux transformé · GenD PE';
     $('console-video-detail').textContent=current?.note?.replace('Score lissé · brut :','Indices GenD bruts :') || 'Aucun résultat vidéo disponible.';
     $('console-meta-state').textContent=metadata?`${metadata.measured_count} contrôles · ${penalty===0?'aucune pénalité':format(penalty)+' points retirés'}`:'Vérifications de l’appareil en attente';
     $('console-overall-score').textContent=overall===null?'En attente':format(Math.round(overall));
@@ -40,7 +42,7 @@ export function createAnalysisConsole({ onSource = () => {}, useMetadata = true 
     $('console-overall-score').dataset.tone=tone;
     const gauge=$('console-overall-gauge');gauge.dataset.tone=tone;
     [...gauge.children].forEach((segment,i)=>segment.dataset.filled=String(overall!==null&&i<Math.round(overall/4)));
-    $('console-overall-state').textContent=!useMetadata ? visual===null?'En attente d’un visage analysable':`Flux ${selected==='original'?'original':'transformé'} · GenD PE`
+    $('console-overall-state').textContent=!useMetadata ? visual===null?waiting:`Flux ${selected==='original'?'original':'transformé'} · GenD PE`
       : overall===null ? visual===null?'En attente de l’analyse vidéo':'En attente des métadonnées'
       : `Vidéo ${format(visualConfidence)} − pénalité ${format(penalty)}`;
     $('console-formula').textContent=useMetadata?'Score vidéo (100 − indices GenD PE) moins les points d’alerte métadonnées, avec un minimum de 0. Aucune alerte n’ajoute de points.'
